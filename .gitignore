@@ -1,0 +1,50 @@
+### 1. JetBrains (IntelliJ IDEA) 관련
+# 개인 설정 파일과 빌드 폴더를 제외합니다.
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### 2. 빌드 결과물 (Maven)
+# 컴파일된 클래스 파일과 최종 패키징 파일이 들어가는 폴더입니다.
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.utils_backup
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+### 3. 메이븐 래퍼
+.mvn/
+mvnw
+mvnw.cmd
+
+### 4. 로그 및 임시 파일
+# 서버 실행 시 생성되는 로그와 임시 저장 파일입니다.
+*.log
+logs/
+temp/
+tmp/
+
+### 5. OS 및 기타 시스템 파일
+# 윈도우와 맥의 시스템 캐시 파일입니다.
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+### 6. 로컬 환경 설정 (중요!)
+# 나중에 DB 비밀번호 등을 담을 설정 파일입니다.
+# 실무에서는 중요 정보 유출 방지를 위해 반드시 포함합니다.
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
