@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whythem.shop.member.mapper.MemberMapper">
+
+    <insert id="joinMember"
+            parameterType="MemberVO"
+            useGeneratedKeys="true"
+            keyProperty="memberId"
+            keyColumn="MEMBER_ID">
+        INSERT INTO MEMBER (MEMBER_ID,USER_ID,USER_PW,MEMBER_NAME,EMAIL,PHONE_NUMBER,CREATED_AT,STATUS,MEMBER_GRADE)
+        VALUES (MEMBER_SEQ.NEXTVAL,#{userId},#{userPw},#{memberName},#{email},#{phoneNumber},CURRENT_TIMESTAMP,'Y','N')
+    </insert>
+
+    <select id="getMemberById" resultType="MemberVO">
+        SELECT MEMBER_ID,USER_ID,USER_PW,EMAIL,PHONE_NUMBER,CREATED_AT,STATUS,MEMBER_GRADE
+        FROM MEMBER WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <select id="getMemberAddresses" resultType="MemberVO">
+        SELECT ADDRESS_ID,MEMBER_ID,ADDRESS_NAME,RECIPIENT_NAME,RECIPIENT_PHONE,
+               ZIP_CODE,BASE_ADDRESS,DETAIL_ADDRESS,IS_DEFAULT
+        FROM MEMBER_ADDRESS
+        WHERE MEMBER_ID = #{memberId} ORDER BY IS_DEFAULT DESC,ADDRESS_ID DESC
+    </select>
+
+    <select id="getDefaultAddress" resultType="MemberVO">
+        SELECT * FROM MEMBER_ADDRESS
+        WHERE MEMBER_ID = #{memberId} AND IS_DEFAULT = 'Y'
+    </select>
+
+    <select id="loginMember" resultType="com.whythem.shop.member.vo.MemberVO">
+        SELECT * FROM MEMBER
+        WHERE USER_ID = #{userId}
+          AND USER_PW = #{userPw}
+    </select>
+
+</mapper>
