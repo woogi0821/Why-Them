@@ -2,164 +2,81 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>LALA BOUTIQUE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Sans+KR:wght@100;300;400&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
-        body { background: #fcfcfc; font-family: 'Cormorant Garamond', serif; color: #111; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-        #main-wrapper { opacity: 0; transition: 0.1s; } 
-        #main-wrapper.show { opacity: 1; }
-        .top-utils { position: absolute; top: 20px; right: 40px; font-size: 10px; display: flex; gap: 25px; letter-spacing: 1px; color: #999; text-transform: uppercase; font-family: 'Noto Sans KR'; z-index: 1001; }
-        .top-utils span { cursor: pointer; transition: 0.3s; }
-        .top-utils span:hover { color: #000; }
-        header { height: 140px; display: flex; justify-content: center; align-items: center; cursor: pointer; background: #fff; }
-        .logo { font-size: 38px; letter-spacing: 18px; text-transform: uppercase; font-weight: 300; margin-right: -18px; }
-        .nav-wrapper { position: sticky; top: 0; z-index: 1000; background: rgba(255,255,255,0.98); border-bottom: 1px solid #f2f2f2; }
-        .menu-bar { width: 100%; max-width: 1100px; margin: auto; height: 50px; display: flex; justify-content: space-around; align-items: center; }
-        .menu-link { font-size: 12px; font-weight: 300; letter-spacing: 4px; color: #222; text-transform: uppercase; cursor: pointer; width: 110px; text-align: center; }
-        .full-dropdown { display: none; position: absolute; top: 51px; left: 0; width: 100%; background: #fff; border-bottom: 1px solid #eee; padding: 25px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
-        .nav-wrapper:hover .full-dropdown { display: block; }
-        .drop-container { width: 100%; max-width: 1100px; margin: auto; display: flex; justify-content: space-around; }
-        .drop-column { width: 110px; text-align: center; display: flex; flex-direction: column; gap: 8px; }
-        .drop-link { font-size: 10px; color: #bbb; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; font-family: 'Noto Sans KR'; transition: 0.2s; }
-        .drop-link:hover { color: #000; }
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px 15px; padding: 0 40px; margin: 40px 0 80px; }
-        .card { position: relative; cursor: pointer; opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out; }
-        .card.show { opacity: 1; transform: translateY(0); }
-        .img-box { width: 100%; aspect-ratio: 9/16; overflow: hidden; position: relative; background: #000; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.7s ease; opacity: 1; }
-        .card:hover .img-box img { transform: scale(1.1); opacity: 0.75; }
-        .card-btns { position: absolute; bottom: 0; left: 0; width: 100%; display: flex; opacity: 0; transition: 0.3s; z-index: 10; }
-        .card:hover .card-btns { opacity: 1; }
-        .card-btns button { flex: 1; height: 45px; border: none; background: rgba(0,0,0,0.8); color: #fff; font-size: 10px; cursor: pointer; letter-spacing: 1px; font-family: 'Noto Sans KR'; }
-        .info-text { padding: 15px 0; text-align: center; }
-        .info-text p:first-child { font-size: 10px; letter-spacing: 1px; margin-bottom: 3px; text-transform: uppercase; }
-        .info-text p:last-child { font-size: 12px; color: #888; font-family: 'Noto Sans KR'; }
-        footer { padding: 60px 40px; border-top: 1px solid #eee; font-size: 10px; color: #ccc; text-align: center; letter-spacing: 1px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>라라 부티크 | LALA BOUTIQUE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Sans+KR:wght@100;300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/homepage.css">
 </head>
 <body>
-    <div id="main-wrapper">
-        <div class="top-utils" id="top-utils">
-            </div>
-        <header onclick="location.reload()"><div class="logo">lala boutique</div></header>
-        <nav class="nav-wrapper">
-            <div class="menu-bar">
-                <span class="menu-link">TOP</span><span class="menu-link">BOTTOM</span><span class="menu-link">SET</span><span class="menu-link">SHOES</span><span class="menu-link">ACC</span>
-            </div>
-            <div class="full-dropdown">
-                <div class="drop-container">
-                    <div class="drop-column">
-                        <span class="drop-link" onclick="loadProducts('top/coat','COAT')">COAT</span>
-                        <span class="drop-link" onclick="loadProducts('top/shirts','SHIRTS')">SHIRTS</span>
-                        <span class="drop-link" onclick="loadProducts('top/knit','KNIT')">KNIT</span>
-                    </div>
-                    <div class="drop-column">
-                        <span class="drop-link" onclick="loadProducts('bottom/pants','PANTS')">PANTS</span>
-                        <span class="drop-link" onclick="loadProducts('bottom/skirt','SKIRT')">SKIRT</span>
-                    </div>
-                    <div class="drop-column">
-                        <span class="drop-link" onclick="loadProducts('set/onepiece','ONEPIECE')">ONEPIECE</span>
-                        <span class="drop-link" onclick="loadProducts('set/suit','SUIT')">SUIT</span>
-                    </div>
-                    <div class="drop-column">
-                        <span class="drop-link" onclick="loadProducts('shoes/sandals','SANDALS')">SANDALS</span>
-                        <span class="drop-link" onclick="loadProducts('shoes/boots','BOOTS')">BOOTS</span>
-                    </div>
-                    <div class="drop-column">
-                        <span class="drop-link" onclick="loadProducts('acc/bag','BAG')">BAG</span>
-                        <span class="drop-link" onclick="loadProducts('acc/jewelry','JEWELRY')">JEWELRY</span>
-                    </div>
+
+    <div class="top-utils">
+        <span id="auth-btn" onclick="toggleLogin()">로그인</span>
+        <span onclick="location.href='join.html'">회원가입</span>
+        <span onclick="checkAuthAndGo('wishlist')">위시리스트</span>
+        <span onclick="checkAuthAndGo('cart')">장바구니<span id="cart-count" class="cart-count">0</span></span>
+    </div>
+
+    <header onclick="location.href='index.html'">
+        <div class="logo">lala boutique</div>
+    </header>
+
+    <nav class="nav-wrapper">
+        <div class="menu-bar">
+            <span class="menu-link" onclick="loadCategory('top/coat', 'TOPS')">Tops</span>
+            <span class="menu-link" onclick="loadCategory('bottom/pants', 'BOTTOMS')">Bottoms</span>
+            <span class="menu-link" onclick="loadCategory('top/shirts', 'SHIRTS')">Shirts</span>
+            <span class="menu-link" onclick="loadCategory('shoes/dressshoe', 'SHOES')">Shoes</span>
+            <span class="menu-link" onclick="loadCategory('acc/bag', 'ACC')">Acc</span>
+        </div>
+        <div class="full-dropdown">
+            <div class="drop-container">
+                <div class="drop-column">
+                    <span class="drop-link" onclick="loadCategory('top/coat', 'COAT')">COAT</span>
+                    <span class="drop-link" onclick="loadCategory('top/shirts', 'SHIRTS')">SHIRTS</span>
+                    <span class="drop-link" onclick="loadCategory('top/sweater', 'SWEATER')">SWEATER</span>
+                </div>
+                <div class="drop-column">
+                    <span class="drop-link" onclick="loadCategory('bottom/pants', 'PANTS')">PANTS</span>
+                    <span class="drop-link" onclick="loadCategory('bottom/skirts', 'SKIRTS')">SKIRTS</span>
+                </div>
+                <div class="drop-column">
+                    <span class="drop-link" onclick="loadCategory('set/onepiece', 'DRESS')">DRESS</span>
+                    <span class="drop-link" onclick="loadCategory('set/suit', 'SUIT')">SUIT</span>
+                </div>
+                <div class="drop-column">
+                    <span class="drop-link" onclick="loadCategory('shoes/dressshoe', 'DRESS SHOES')">DRESS SHOES</span>
+                    <span class="drop-link" onclick="loadCategory('shoes/sandal', 'SANDAL')">SANDAL</span>
+                </div>
+                <div class="drop-column">
+                    <span class="drop-link" onclick="loadCategory('acc/bag', 'BAG')">BAG</span>
+                    <span class="drop-link" onclick="loadCategory('acc/hat', 'HAT')">HAT</span>
                 </div>
             </div>
-        </nav>
-        <main id="main-area"></main>
-        <footer><p>© 2026 LALA BOUTIQUE. ALL RIGHTS RESERVED.</p></footer>
+        </div>
+    </nav>
+
+    <div class="search-filter-section">
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="SEARCH" onkeyup="if(window.event.keyCode==13){handleSearch()}">
+            <button onclick="handleSearch()" style="background:none; border:none; cursor:pointer;">🔍</button>
+        </div>
+        <div class="filter-btns">
+            <button id="btn-new" onclick="sortItems('new')" class="active">신상품순</button>
+            <button id="btn-low" onclick="sortItems('low')">가격 낮은 순</button>
+            <button id="btn-high" onclick="sortItems('high')">가격 높은 순</button>
+        </div>
     </div>
-<script>
-    /**
-     * 페이지 초기화 함수
-     */
-    function initialize() {
-        document.getElementById('main-wrapper').classList.add('show');
-        checkLoginStatus();
-        loadProducts('top/coat', 'COAT');
-    }
 
-    /**
-     * 로그인 상태를 확인하여 상단 메뉴를 변경하는 함수
-     */
-    function checkLoginStatus() {
-        const utils = document.getElementById('top-utils');
-        const loginUser = JSON.parse(localStorage.getItem('login_session'));
-        
-        if(loginUser) {
-            // 로그인 상태인 경우: 환영 메시지와 로그아웃 버튼 노출
-            utils.innerHTML = `
-                <span style="color:#222; font-weight:400;">WELCOME, ${loginUser.name}</span>
-                <span onclick="doLogout()">LOGOUT</span>
-                <span onclick="location.href='wish.html'">WISH LIST</span>
-                <span onclick="location.href='cart.html'">CART</span>
-            `;
-        } else {
-            // 로그아웃 상태인 경우: 로그인 및 회원가입 버튼 노출
-            utils.innerHTML = `
-                <span onclick="location.href='login.html'">SIGN IN</span>
-                <span onclick="location.href='join.html'">JOIN</span>
-                <span onclick="location.href='wish.html'">WISH LIST</span>
-                <span onclick="location.href='cart.html'">CART</span>
-            `;
-        }
-    }
+    <main id="main-content"></main>
 
-    /**
-     * 로그아웃 처리 함수
-     */
-    function doLogout() {
-        localStorage.removeItem('login_session');
-        alert("로그아웃 되었습니다.");
-        location.reload();
-    }
+    <footer>
+        <div class="footer-info">
+            <p>회사명: 라라 부티크 | 대표자: 행님 | 사업자등록번호: 123-45-67890</p>
+            <p>통신판매업신고: 제 2026-부산-0000호 | 주소: 부산광역시 라라구 부티크로 88</p>
+        </div>
+        <p>© 2026 LALA BOUTIQUE. ALL RIGHTS RESERVED.</p>
+    </footer>
 
-    /**
-     * 카테고리별 상품 목록을 불러오는 함수
-     */
-    function loadProducts(path, title) {
-        const area = document.getElementById('main-area');
-        area.innerHTML = `<h2 style="text-align:center; margin-top:50px; letter-spacing:12px; font-weight:300; text-transform:uppercase;">${title}</h2><div class="grid" id="product-grid"></div>`;
-        const grid = document.getElementById('product-grid');
-        for(let i=1; i<=12; i++) {
-            grid.innerHTML += `
-                <div class="card" onclick="location.href='detail.html?id=${i}&path=${path}&title=${title}'">
-                    <div class="img-box">
-                        <img src="img/${path}/${i}.jpg" alt="${title}" onerror="this.src='https://via.placeholder.com/900x1600/f4f4f4/999?text=LALA'">
-                        <div class="card-btns">
-                            <button onclick="event.stopPropagation(); addToStorage('w_l', ${i}, '${path}', '${title}')">WISH</button>
-                            <button onclick="event.stopPropagation(); addToStorage('c_l', ${i}, '${path}', '${title}')">CART</button>
-                        </div>
-                    </div>
-                    <div class="info-text"><p>PREMIUM COLLECTION NO.${i}</p><p>₩ 285,000</p></div>
-                </div>`;
-        }
-        // 카드 등장 애니메이션 처리
-        setTimeout(() => {
-            document.querySelectorAll('.card').forEach((card, index) => {
-                setTimeout(() => card.classList.add('show'), index * 40); 
-            });
-        }, 10);
-    }
-
-    /**
-     * 장바구니 및 위시리스트 저장 함수
-     */
-    function addToStorage(key, id, path, title) {
-        let list = JSON.parse(localStorage.getItem(key)) || [];
-        list.push({ id: id, n: `${title} NO.${id}`, p: 285000, img: `img/${path}/${id}.jpg`, qty: 1 });
-        localStorage.setItem(key, JSON.stringify(list));
-        alert(key === 'w_l' ? "위시리스트에 추가되었습니다." : "장바구니에 추가되었습니다.");
-    }
-    
-    window.onload = initialize;
-</script>
+    <script src="./js/Homepage.js"></script>
 </body>
 </html>

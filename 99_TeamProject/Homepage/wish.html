@@ -3,72 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>WISH LIST | LALA BOUTIQUE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&family=Noto+Sans+KR:wght@100;300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Sans+KR:wght@100;300;400&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { padding: 60px; font-family: 'Noto Sans KR', sans-serif; background: #fcfcfc; color: #111; }
-        .title { font-family: 'Cormorant Garamond', serif; text-align: center; letter-spacing: 15px; font-size: 30px; margin-bottom: 80px; text-transform: uppercase; }
-        .item-row { display: flex; align-items: center; padding: 30px 0; border-bottom: 1px solid #eee; gap: 40px; max-width: 1000px; margin: auto; }
-        .thumb { width: 100px; aspect-ratio: 9/16; object-fit: cover; }
-        .info { flex: 1; }
-        .info h3 { font-size: 14px; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
-        .info strong { font-size: 13px; font-weight: 400; }
-        .btn-group { display: flex; gap: 10px; }
-        .btn { border: 1px solid #111; background: none; padding: 10px 20px; cursor: pointer; font-size: 10px; letter-spacing: 1px; font-family: 'Noto Sans KR'; }
-        .btn:hover { background: #111; color: #fff; }
-        .empty-msg { text-align: center; font-size: 13px; color: #999; padding: 100px 0; }
+        body { background: #fcfcfc; font-family: 'Noto Sans KR', sans-serif; }
+        header { height: 100px; display: flex; justify-content: center; align-items: center; cursor: pointer; background: #fff; border-bottom: 1px solid #f2f2f2; }
+        .logo { font-family: 'Cormorant Garamond', serif; font-size: 24px; letter-spacing: 12px; text-transform: uppercase; font-weight: 300; }
+        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; }
+        .wish-table { width: 100%; border-collapse: collapse; }
+        .wish-table th { border-bottom: 1px solid #222; padding: 15px 0; font-size: 12px; }
+        .wish-table td { padding: 20px 0; border-bottom: 1px solid #eee; text-align: center; }
+        .btn-cart { background: #000; color: #fff; padding: 8px 15px; border: none; cursor: pointer; font-size: 11px; }
     </style>
 </head>
 <body>
-    <h1 class="title">WISH LIST</h1>
-    <div id="content"></div>
-    <button class="btn" style="display:block; margin:60px auto; min-width: 200px;" onclick="location.href='homepage.html'">BACK TO SHOPPING</button>
+    <header onclick="location.href='homepage.html'"><div class="logo">lala boutique</div></header>
+    <div class="container">
+        <h1 style="text-align:center; font-family:'Cormorant Garamond'; margin-bottom:50px;">WISH LIST</h1>
+        <table class="wish-table">
+            <thead>
+                <tr><th>상품정보</th><th>판매가</th><th>선택</th></tr>
+            </thead>
+            <tbody id="wish-items"></tbody>
+        </table>
+        <div id="empty-area" style="display:none; text-align:center; padding:100px;">
+            <p>위시리스트가 비어 있습니다.</p>
+            <a href="homepage.html" style="display:inline-block; margin-top:20px; padding:15px 30px; border:1px solid #000; color:#000; text-decoration:none;">쇼핑 계속하기</a>
+        </div>
+    </div>
 
-    <script>
-        let wishList = JSON.parse(localStorage.getItem('w_l')) || [];
-
-        function render() {
-            const container = document.getElementById('content');
-            if (wishList.length === 0) {
-                container.innerHTML = "<p class='empty-msg'>위시리스트가 비어 있습니다.</p>";
-                return;
-            }
-            container.innerHTML = "";
-            wishList.forEach((item, index) => {
-                container.innerHTML += `
-                    <div class="item-row">
-                        <img src="${item.img}" class="thumb" onerror="this.src='https://via.placeholder.com/100x178'">
-                        <div class="info">
-                            <h3>${item.n}</h3>
-                            <strong>₩ ${item.p.toLocaleString()}</strong>
-                        </div>
-                        <div class="btn-group">
-                            <button class="btn" onclick="moveToCart(${index})">ADD TO CART</button>
-                            <button class="btn" style="color:#999; border-color:#eee;" onclick="removeItem(${index})">REMOVE</button>
-                        </div>
-                    </div>`;
-            });
-        }
-
-        function moveToCart(index) {
-            let cart = JSON.parse(localStorage.getItem('c_l')) || [];
-            cart.push(wishList[index]);
-            localStorage.setItem('c_l', JSON.stringify(cart));
-            
-            // 장바구니로 이동 후 위시리스트에서 삭제
-            wishList.splice(index, 1);
-            localStorage.setItem('w_l', JSON.stringify(wishList));
-            alert("상품이 장바구니로 이동되었습니다.");
-            render();
-        }
-
-        function removeItem(index) {
-            wishList.splice(index, 1);
-            localStorage.setItem('w_l', JSON.stringify(wishList));
-            render();
-        }
-
-        window.onload = render;
-    </script>
+<script>
+    function render() {
+        const list = JSON.parse(localStorage.getItem('w_l')) || [];
+        const container = document.getElementById('wish-items');
+        const empty = document.getElementById('empty-area');
+        if(list.length === 0) { empty.style.display = 'block'; return; }
+        container.innerHTML = list.map((item, idx) => `
+            <tr>
+                <td><img src="${item.img}" width="60"> ${item.n}</td>
+                <td>₩ ${item.p.toLocaleString()}</td>
+                <td><button class="btn-cart" onclick="toCart(${idx})">장바구니 담기</button></td>
+            </tr>
+        `).join('');
+    }
+    function toCart(idx) {
+        let wish = JSON.parse(localStorage.getItem('w_l'));
+        let cart = JSON.parse(localStorage.getItem('c_l')) || [];
+        cart.push(wish[idx]);
+        wish.splice(idx, 1);
+        localStorage.setItem('c_l', JSON.stringify(cart));
+        localStorage.setItem('w_l', JSON.stringify(wish));
+        render();
+        alert("장바구니로 이동되었습니다.");
+    }
+    window.onload = render;
+</script>
 </body>
 </html>
