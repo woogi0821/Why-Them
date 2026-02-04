@@ -1,45 +1,54 @@
-        /* [기본 설정 및 레이아웃] */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        body { background: #fff; color: #111; }
-        header { position: fixed; top: 0; width: 100%; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; background: #fff; border-bottom: 1px solid #eee; z-index: 1000; }
-        .logo { font-size: 20px; font-weight: 900; letter-spacing: 1px; cursor: pointer; }
-        
-        /* [통합 메가 메뉴] */
-        nav { display: flex; height: 100%; align-items: center; }
-        .nav-item { height: 100%; display: flex; align-items: center; padding: 0 20px; cursor: pointer; }
-        .mega-menu { display: none; position: absolute; top: 60px; left: 0; width: 100%; background: #fff; border-bottom: 1px solid #eee; padding: 40px; justify-content: center; gap: 80px; box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
-        nav:hover .mega-menu { display: flex; }
-        .menu-column h3 { font-size: 16px; margin-bottom: 15px; border-bottom: 2px solid #111; }
-        .menu-column div { font-size: 14px; color: #666; padding: 5px 0; cursor: pointer; }
+/* 기본 리셋 및 폰트 설정 */
+* { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+body { background: #fcfcfc; font-family: 'Noto Sans KR', sans-serif; color: #111; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; min-height: 100vh; }
 
-        /* [우측 아이콘 & 보안] */
-        .header-right { display: flex; align-items: center; }
-        .auth-links { font-size: 12px; font-weight: bold; margin-right: 15px; display: flex; gap: 10px; }
-        .icons { display: flex; align-items: center; width: 110px; justify-content: flex-end; }
-        .icon-box { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; transition: 0.2s; }
-        .icon-box:hover { transform: scale(1.6); }
-        .heart:hover { color: #ff4d4d; }
+/* 상단 유틸리티 바 */
+.top-utils { position: absolute; top: 30px; right: 60px; font-size: 10px; display: flex; gap: 25px; color: #999; z-index: 1001; align-items: center; }
+.top-utils span { cursor: pointer; transition: 0.3s; }
+.top-utils span:hover { color: #111; }
+.cart-count { background: #111; color: #fff; padding: 1px 5px; border-radius: 10px; font-size: 9px; margin-left: 5px; }
 
-        /* [화면 섹션 관리] */
-        section { display: none; margin-top: 100px; padding: 40px; }
-        .active { display: block !important; }
+/* 헤더 & 로고 */
+header { height: 160px; display: flex; justify-content: center; align-items: center; cursor: pointer; background: #fff; }
+.logo { font-family: 'Cormorant Garamond', serif; font-size: 42px; letter-spacing: 20px; text-transform: uppercase; font-weight: 300; margin-right: -20px; }
 
-        /* [메인 그리드 스타일] */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; }
-        .p-card { cursor: pointer; text-align: center; }
-        .img-wrap { width: 100%; aspect-ratio: 1/1; background: #f9f9f9; overflow: hidden; margin-bottom: 10px; }
-        .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        .male img { object-position: top; } /* 남성 상의 포커스 */
-        .female img { object-position: bottom; } /* 여성 하의 포커스 */
+/* 스티키 네비게이션 */
+.nav-wrapper { position: sticky; top: 0; z-index: 1000; background: #fff; border-bottom: 1px solid #f2f2f2; }
+.menu-bar { width: 100%; max-width: 1100px; margin: auto; height: 60px; display: flex; justify-content: space-around; align-items: center; }
+.menu-link { font-size: 13px; font-weight: 300; letter-spacing: 4px; cursor: pointer; text-transform: uppercase; }
 
-        /* [상세페이지 스타일] */
-        .detail-container { max-width: 1100px; margin: 0 auto; display: flex; gap: 60px; text-align: left; }
-        .detail-img-box { flex: 1.2; }
-        .detail-info { flex: 1; }
-        .buy-btn { width: 100%; padding: 18px; background: #000; color: #fff; border: none; font-weight: bold; cursor: pointer; margin-top: 20px; }
+/* 드롭다운 메뉴 */
+.full-dropdown { display: none; width: 100%; background: #fff; padding: 40px 0; border-bottom: 1px solid #eee; box-shadow: 0 10px 10px rgba(0,0,0,0.02); }
+.nav-wrapper:hover .full-dropdown { display: block; }
+.drop-container { width: 100%; max-width: 1100px; margin: auto; display: flex; justify-content: space-around; }
+.drop-column { width: 150px; text-align: center; }
+.drop-link { font-size: 11px; color: #bbb; cursor: pointer; margin-bottom: 15px; display: block; text-decoration: none; transition: 0.2s; }
+.drop-link:hover { color: #000; font-weight: 500; }
 
-        /* [기타 모달 및 하단 버튼] */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 2000; justify-content: center; align-items: center; }
-        .auth-box { width: 350px; text-align: center; padding: 40px; border: 1px solid #eee; background: #fff; }
-        .auth-box input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; }
-        .footer-opt { position: fixed; bottom: 20px; right: 20px; font-size: 11px; color: #ddd; cursor: pointer; }
+/* 검색 및 필터 섹션 */
+.search-filter-section { width: 100%; max-width: 1100px; margin: 50px auto 0; padding: 0 40px; display: flex; flex-direction: column; align-items: flex-end; gap: 15px; }
+.search-box { display: flex; align-items: center; border-bottom: 1px solid #111; padding-bottom: 8px; width: 240px; }
+.search-box input { border: none; background: none; font-size: 12px; width: 100%; text-align: right; }
+.filter-btns { display: flex; gap: 20px; }
+.filter-btns button { background: none; border: none; font-size: 11px; color: #aaa; cursor: pointer; transition: 0.2s; }
+.filter-btns button.active { color: #000; font-weight: 600; }
+
+/* 그리드 레이아웃 */
+main { flex: 1; width: 100%; padding-bottom: 120px; }
+.section-title { text-align: center; margin: 100px 0 50px; letter-spacing: 15px; font-size: 28px; font-weight: 300; font-family: 'Cormorant Garamond', serif; text-transform: uppercase; }
+.grid { display: grid; gap: 70px 25px; padding: 0 40px; margin: 0 auto; max-width: 1100px; }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+/* 상품 카드 */
+.card { cursor: pointer; display: flex; flex-direction: column; }
+.img-box { width: 100%; aspect-ratio: 3 / 4; overflow: hidden; background: #f9f9f9; margin-bottom: 20px; position: relative; }
+.img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); position: absolute; top: 0; left: 0; }
+.card:hover img { transform: scale(1.08); }
+
+.info-text { text-align: center; }
+.info-text .p-name { font-size: 12px; margin-bottom: 10px; color: #333; font-weight: 300; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.info-text .p-price { font-size: 12px; color: #000; font-weight: 600; }
+
+/* 푸터 */
+footer { padding: 80px 0; border-top: 1px solid #eee; text-align: center; font-size: 11px; color: #bbb; line-height: 2; background: #fff; margin-top: auto; }
