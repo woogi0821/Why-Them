@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>WISH LIST | LALA BOUTIQUE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&family=Noto+Sans+KR:wght@100;300&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { padding: 60px; font-family: 'Noto Sans KR', sans-serif; background: #fcfcfc; color: #111; }
+        .title { font-family: 'Cormorant Garamond', serif; text-align: center; letter-spacing: 15px; font-size: 30px; margin-bottom: 80px; text-transform: uppercase; }
+        .item-row { display: flex; align-items: center; padding: 30px 0; border-bottom: 1px solid #eee; gap: 40px; max-width: 1000px; margin: auto; }
+        .thumb { width: 100px; aspect-ratio: 9/16; object-fit: cover; }
+        .info { flex: 1; }
+        .info h3 { font-size: 14px; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+        .info strong { font-size: 13px; font-weight: 400; }
+        .btn-group { display: flex; gap: 10px; }
+        .btn { border: 1px solid #111; background: none; padding: 10px 20px; cursor: pointer; font-size: 10px; letter-spacing: 1px; font-family: 'Noto Sans KR'; }
+        .btn:hover { background: #111; color: #fff; }
+        .empty-msg { text-align: center; font-size: 13px; color: #999; padding: 100px 0; }
+    </style>
+</head>
+<body>
+    <h1 class="title">WISH LIST</h1>
+    <div id="content"></div>
+    <button class="btn" style="display:block; margin:60px auto; min-width: 200px;" onclick="location.href='homepage.html'">BACK TO SHOPPING</button>
+
+    <script>
+        let wishList = JSON.parse(localStorage.getItem('w_l')) || [];
+
+        function render() {
+            const container = document.getElementById('content');
+            if (wishList.length === 0) {
+                container.innerHTML = "<p class='empty-msg'>위시리스트가 비어 있습니다.</p>";
+                return;
+            }
+            container.innerHTML = "";
+            wishList.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="item-row">
+                        <img src="${item.img}" class="thumb" onerror="this.src='https://via.placeholder.com/100x178'">
+                        <div class="info">
+                            <h3>${item.n}</h3>
+                            <strong>₩ ${item.p.toLocaleString()}</strong>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn" onclick="moveToCart(${index})">ADD TO CART</button>
+                            <button class="btn" style="color:#999; border-color:#eee;" onclick="removeItem(${index})">REMOVE</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function moveToCart(index) {
+            let cart = JSON.parse(localStorage.getItem('c_l')) || [];
+            cart.push(wishList[index]);
+            localStorage.setItem('c_l', JSON.stringify(cart));
+            
+            // 장바구니로 이동 후 위시리스트에서 삭제
+            wishList.splice(index, 1);
+            localStorage.setItem('w_l', JSON.stringify(wishList));
+            alert("상품이 장바구니로 이동되었습니다.");
+            render();
+        }
+
+        function removeItem(index) {
+            wishList.splice(index, 1);
+            localStorage.setItem('w_l', JSON.stringify(wishList));
+            render();
+        }
+
+        window.onload = render;
+    </script>
+</body>
+</html>
