@@ -17,4 +17,8 @@ public class MemberService {
     public MemberVO loginMember(MemberVO memberVO){
         return memberMapper.loginMember(memberVO);
     }
+
+    public int checkId(String loginId){
+        return memberMapper.checkId(loginId);
+    }
 }

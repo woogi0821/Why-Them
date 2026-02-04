@@ -10,12 +10,12 @@
             useGeneratedKeys="true"
             keyProperty="memberId"
             keyColumn="MEMBER_ID">
-        INSERT INTO MEMBER (MEMBER_ID,USER_ID,USER_PW,MEMBER_NAME,EMAIL,PHONE_NUMBER,CREATED_AT,STATUS,MEMBER_GRADE)
-        VALUES (MEMBER_SEQ.NEXTVAL,#{userId},#{userPw},#{memberName},#{email},#{phoneNumber},CURRENT_TIMESTAMP,'Y','N')
+        INSERT INTO MEMBER (MEMBER_ID,LOGIN_ID,LOGIN_PW,MEMBER_NAME,EMAIL,PHONE_NUMBER,CREATED_AT,STATUS,MEMBER_GRADE)
+        VALUES (MEMBER_SEQ.NEXTVAL,#{loginId},#{loginPw},#{memberName},#{email},#{phoneNumber},CURRENT_TIMESTAMP,'Y','N')
     </insert>
 
     <select id="getMemberById" resultType="MemberVO">
-        SELECT MEMBER_ID,USER_ID,USER_PW,EMAIL,PHONE_NUMBER,CREATED_AT,STATUS,MEMBER_GRADE
+        SELECT MEMBER_ID,LOGIN_ID,LOGIN_PW,EMAIL,PHONE_NUMBER,CREATED_AT,STATUS,MEMBER_GRADE
         FROM MEMBER WHERE MEMBER_ID = #{memberId}
     </select>
 
@@ -33,8 +33,12 @@
 
     <select id="loginMember" resultType="com.whythem.shop.member.vo.MemberVO">
         SELECT * FROM MEMBER
-        WHERE USER_ID = #{userId}
-          AND USER_PW = #{userPw}
+        WHERE LOGIN_ID = #{loginId}
+          AND LOGIN_PW = #{loginPw}
     </select>
 
+    <select id="checkId" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM MEMBER
+        WHERE LOGIN_ID = #{loginId}
+    </select>
 </mapper>

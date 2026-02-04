@@ -82,86 +82,73 @@
         cursor: pointer;
     }
 
-    /* 유효성 검사 에러 메시지 (필요 시 사용) */
-    .error-msg { color: #d9534f; font-size: 11px; margin-top: 5px; display: none; }
+    .error-msg { color: #d9534f; font-size: 11px; margin-top: 5px;}
 </style>
 
-<div class="join-container">
-    <h2 class="page-title">Create Account</h2>
+        <div class="join-container">
+            <h2 class="page-title">Create Account</h2>
 
-    <form action="/member/join" method="post" onsubmit="return joinCheck()">
+            <form action="/member/join" method="post" onsubmit="return joinCheck()">
 
-        <div class="input-group">
-            <label class="input-label">ID</label>
-            <input type="text" id="userId" name="userId" class="lala-input" placeholder="아이디를 입력하세요" required>
+                <div class="input-group">
+                    <label class="input-label">ID</label>
+                    <input type="text" id="userId" name="loginId" class="lala-input" placeholder="아이디를 입력하세요">
+                    <span id="idMsg" class="error-msg"></span>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Password</label>
+                    <input type="password" id="userPw" name="loginPw" class="lala-input" placeholder="8자리 이상 입력하세요">
+                    <span id="pwMsg" class="error-msg"></span>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Name</label>
+                    <input type="text" id="memberName" name="memberName" class="lala-input" placeholder="이름">
+                    <span id="nameMsg" class="error-msg"></span>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Email</label>
+                    <input type="email" id="email" name="email" class="lala-input" placeholder="example@lala.com">
+                    <span id="emailMsg" class="error-msg"></span>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Phone</label>
+                    <input type="text" id="phoneNumber" name="phoneNumber" class="lala-input" placeholder="010-0000-0000">
+                    <span id="phoneMsg" class="error-msg"></span>
+                </div>
+
+                <hr style="margin: 40px 0; border: none; border-top: 1px solid #eee;">
+
+                <div class="input-group">
+                    <label class="input-label">Address</label>
+                    <div style="position: relative;">
+                        <input type="text" id="zipCode" name="zipCode" class="lala-input" placeholder="우편번호" readonly style="width: 100%;">
+                        <button type="button" class="addr-btn" onclick="kakaoPostcode()">SEARCH</button>
+                    </div>
+                    <span id="addrMsg" class="error-msg"></span>
+                </div>
+
+                <div id="wrap" style="display:none; border:1px solid #111; width:100%; height:300px; margin:5px 0; position:relative">
+                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="baseAddress" name="baseAddress" class="lala-input" placeholder="기본 주소" readonly>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="detailAddress" name="detailAddress" class="lala-input" placeholder="상세 주소를 입력하세요">
+                </div>
+
+                <button type="submit" class="lala-btn">JOIN MEMBER</button>
+                <button type="button" class="lala-btn lala-btn-sub" onclick="location.href='/'">CANCEL</button>
+
+            </form>
         </div>
-
-        <div class="input-group">
-            <label class="input-label">Password</label>
-            <input type="password" id="userPw" name="userPw" class="lala-input" placeholder="8자리 이상 입력하세요" required>
-        </div>
-
-        <div class="input-group">
-            <label class="input-label">Name</label>
-            <input type="text" id="memberName" name="memberName" class="lala-input" placeholder="이름" required>
-        </div>
-
-        <div class="input-group">
-            <label class="input-label">Email</label>
-            <input type="email" id="email" name="email" class="lala-input" placeholder="example@lala.com">
-        </div>
-
-        <div class="input-group">
-            <label class="input-label">Phone</label>
-            <input type="text" id="phoneNumber" name="phoneNumber" class="lala-input" placeholder="010-0000-0000">
-        </div>
-
-        <hr style="margin: 40px 0; border: none; border-top: 1px solid #eee;">
-
-        <div class="input-group">
-            <label class="input-label">Address</label>
-            <div style="position: relative;">
-                <input type="text" id="zipCode" name="zipCode" class="lala-input" placeholder="우편번호" readonly style="width: 100%;">
-                <button type="button" class="addr-btn" onclick="kakaoPostcode()">SEARCH</button>
-            </div>
-        </div>
-
-        <div id="wrap" style="display:none; border:1px solid #111; width:100%; height:300px; margin:5px 0; position:relative">
-            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
-        </div>
-
-        <div class="input-group">
-            <input type="text" id="baseAddress" name="baseAddress" class="lala-input" placeholder="기본 주소" readonly>
-        </div>
-
-        <div class="input-group">
-            <input type="text" id="detailAddress" name="detailAddress" class="lala-input" placeholder="상세 주소를 입력하세요">
-        </div>
-
-        <button type="submit" class="lala-btn">JOIN MEMBER</button>
-        <button type="button" class="lala-btn lala-btn-sub" onclick="location.href='/'">CANCEL</button>
-
-    </form>
-</div>
 
 <jsp:include page="/common/footer.jsp" />
 
 <script src="/js/join.js"></script>
-
-<script>
-    // join.js가 로드된 후에 실행되도록 설정
-    // 기존 kakaoPostcode 함수 내부의 theme 설정을 이걸로 참고하세요.
-    /*
-    theme: {
-        bgColor: "#FFFFFF",
-        searchBgColor: "#FFFFFF",
-        contentBgColor: "#FFFFFF",
-        pageBgColor: "#FFFFFF",
-        textColor: "#111111",
-        queryTextColor: "#111111",
-        postcodeTextColor: "#111111",
-        emphTextColor: "#111111",
-        outlineColor: "#DDDDDD"
-    }
-    */
-</script>

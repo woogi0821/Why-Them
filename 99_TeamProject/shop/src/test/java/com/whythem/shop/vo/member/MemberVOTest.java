@@ -28,8 +28,8 @@ class MemberVOTest {
     @DisplayName("회원가입 및 로그인 테스트")
     void joinAndAddAddressTest() {
         MemberVO member = new MemberVO();
-        member.setUserId("test01");
-        member.setUserPw("test01");
+        member.setLoginId("test01");
+        member.setLoginPw("test01");
         member.setEmail("test@test.com");
         member.setPhoneNumber("010-0000-0000");
         member.setStatus("Y");
@@ -41,8 +41,8 @@ class MemberVOTest {
 
         log.info("\nID: {} \nUser: {}\nPw: {}\nEmail: {}\nPhone: {}\nCreatedAt: {}\nStatus: {}\nMemberGrade:{}\n",
                 member.getMemberId(),
-                member.getUserId(),
-                member.getUserPw(),
+                member.getLoginId(),
+                member.getLoginPw(),
                 member.getEmail(),
                 member.getPhoneNumber(),
                 member.getCreatedAt(),
@@ -72,11 +72,11 @@ class MemberVOTest {
         );
 
         MemberVO login = new MemberVO();
-            login.setUserId("test01");
-            login.setUserPw("test02");
+            login.setLoginId("test01");
+            login.setLoginPw("test02");
         MemberVO loginResult = memberMapper.loginMember(login);
         if(loginResult !=null){
-            log.info("로그인성공: {}",loginResult.getUserId());
+            log.info("로그인성공: {}",loginResult.getLoginId());
         }else {
             log.info("로그인실패");
         }

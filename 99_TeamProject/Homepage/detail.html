@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>제품 상세 정보 - LALA BOUTIQUE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&family=Noto+Sans+KR:wght@100;300;400&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-bg: #fff; --text-color: #111; --sub-text: #999; --border: #eee; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--main-bg); font-family: 'Noto Sans KR', sans-serif; color: var(--text-color); }
+
+        /* 상단 유틸리티 */
+        .top-utils { position: absolute; top: 30px; right: 50px; font-size: 11px; display: flex; gap: 30px; letter-spacing: 1px; color: var(--sub-text); z-index: 1001; }
+        .top-utils span { cursor: pointer; }
+
+        header { height: 150px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .logo { font-family: 'Cormorant Garamond', serif; font-size: 38px; letter-spacing: 20px; text-transform: lowercase; font-weight: 300; margin-right: -20px; }
+
+        .detail-container { max-width: 1200px; margin: 50px auto 150px; display: flex; gap: 80px; padding: 0 50px; }
+        
+        /* 이미지 영역 (행님 이미지 폴더 구조 반영) */
+        .image-section { flex: 1.2; position: relative; }
+        .main-img { width: 100%; aspect-ratio: 10/14; background: #f9f9f9; overflow: hidden; position: relative; }
+        .main-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; display: block; }
+        
+        /* 마우스 오버 액션 */
+        .hover-actions { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(255,255,255,0.1); display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; gap: 15px; 
+            opacity: 0; transition: opacity 0.4s; z-index: 10;
+        }
+        .main-img:hover .hover-actions { opacity: 1; }
+        .main-img:hover img { filter: brightness(0.9); }
+
+        .hover-btn { 
+            width: 200px; height: 55px; background: rgba(17,17,17,0.85); color: #fff; 
+            border: none; font-size: 12px; letter-spacing: 2px; cursor: pointer; 
+            backdrop-filter: blur(5px); transition: 0.3s;
+        }
+        .hover-btn:hover { background: #111; }
+
+        /* 정보 영역 */
+        .info-section { flex: 0.8; position: sticky; top: 50px; height: fit-content; }
+        .brand-name { font-family: 'Cormorant Garamond', serif; font-size: 14px; letter-spacing: 5px; color: var(--sub-text); margin-bottom: 20px; }
+        .product-name { font-size: 24px; font-weight: 300; letter-spacing: 1px; margin-bottom: 15px; }
+        .price { font-size: 20px; font-weight: 400; margin-bottom: 50px; border-bottom: 1px solid var(--border); padding-bottom: 30px; }
+
+        #option-area { margin-bottom: 35px; }
+        .option-label { font-size: 11px; color: var(--sub-text); letter-spacing: 1px; margin-bottom: 12px; display: block; }
+        select { width: 100%; height: 48px; border: 1px solid var(--border); padding: 0 15px; font-size: 13px; outline: none; appearance: none; background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNhYmFiYWIiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cG9seWxpbmUgcG9pbnRzPSI2IDkgMTIgMTUgMTggOSI+PC9wb2x5bGluZT48L3N2Zz4=') no-repeat right 15px center; }
+
+        .description { margin-top: 60px; font-size: 14px; line-height: 2; color: #666; font-weight: 300; border-top: 1px solid #f9f9f9; padding-top: 40px; }
+        footer { padding: 100px 50px; border-top: 1px solid #f2f2f2; font-size: 10px; color: #ccc; text-align: center; letter-spacing: 3px; }
+    </style>
+</head>
+<body>
+    <div class="top-utils" id="top-utils"></div>
+    <header onclick="location.href='homepage.html'"><div class="logo">lala boutique</div></header>
+
+    <main class="detail-container">
+        <div class="image-section">
+            <div class="main-img">
+                <img id="p-img" src="" alt="제품 이미지" onerror="this.src='https://via.placeholder.com/800x1120?text=LALA+BOUTIQUE'">
+                <div class="hover-actions">
+                    <button class="hover-btn" onclick="addToStorage('c_l')">쇼핑백 담기</button>
+                    <button class="hover-btn" style="background:rgba(255,255,255,0.9); color:#111;" onclick="addToStorage('w_l')">위시리스트 추가</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <p class="brand-name">LALA BOUTIQUE COLLECTION</p>
+            <h1 id="p-name" class="product-name">...</h1>
+            <p id="p-price" class="price">₩ 425,000</p>
+            <div id="option-area"></div>
+            <div class="description">
+                라라 부티크의 시그니처 에센셜 아이템입니다. <br>
+                정교한 공정과 엄선된 소재로 제작되었으며, 시간이 흘러도 변하지 않는 가치를 선사합니다.
+            </div>
+        </div>
+    </main>
+
+    <footer><p>PURSUIT OF TIMELESS ELEGANCE. © 2026 LALA BOUTIQUE.</p></footer>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const pId = params.get('id');
+    const pPath = params.get('path'); // 예: 'acc/bag' [cite: 2026-02-04]
+    const pTitle = params.get('title');
+
+    function initDetail() {
+        checkLoginStatus();
+        if(!pId || !pPath) {
+            alert("상품 정보가 없습니다.");
+            location.href = 'homepage.html';
+            return;
+        }
+
+        // 이미지 경로 설정: img/카테고리/상세폴더/1.jpg [cite: 2026-02-04]
+        document.getElementById('p-img').src = `img/${pPath}/${pId}.jpg`;
+        document.getElementById('p-name').innerText = `${pTitle} No. ${pId}`;
+
+        const optArea = document.getElementById('option-area');
+        // 카테고리에 따른 옵션 렌더링 [cite: 2026-02-04]
+        if (pPath.includes('shoes')) {
+            optArea.innerHTML = `<span class="option-label">치수 선택</span><select id="p-option"><option value="">치수 선택</option><option value="230mm">230mm</option><option value="240mm">240mm</option><option value="250mm">250mm</option><option value="260mm">260mm</option></select>`;
+        } else if (pPath.includes('bag')) {
+            optArea.innerHTML = `<span class="option-label">사이즈</span><select id="p-option"><option value="FREE">ONE SIZE (FREE)</option></select>`;
+        } else {
+            optArea.innerHTML = `<span class="option-label">사이즈 선택</span><select id="p-option"><option value="">사이즈 선택</option><option value="S">S</option><option value="M">M</option><option value="L">L</option></select>`;
+        }
+    }
+
+    function checkLoginStatus() {
+        const utils = document.getElementById('top-utils');
+        const loginUser = JSON.parse(localStorage.getItem('login_session'));
+        if(loginUser) {
+            utils.innerHTML = `<span><strong>${loginUser.name}</strong> 님</span> <span onclick="doLogout()">로그아웃</span>`;
+        } else {
+            utils.innerHTML = `<span onclick="location.href='login.html'">로그인</span> <span onclick="location.href='join.html'">회원가입</span>`;
+        }
+    }
+
+    function doLogout() {
+        localStorage.removeItem('login_session');
+        location.reload();
+    }
+
+    function addToStorage(key) {
+        let list = JSON.parse(localStorage.getItem(key)) || [];
+        const optSelect = document.getElementById('p-option');
+        const optVal = optSelect ? optSelect.value : "";
+
+        // 장바구니는 사이즈 필수 / 찜은 바로 담기 [cite: 2026-02-04]
+        if (key === 'c_l' && !pPath.includes('bag') && optVal === "") {
+            alert("사이즈를 선택해 주세요.");
+            optSelect.focus();
+            return;
+        }
+
+        const item = {
+            id: pId,
+            n: `${pTitle} No. ${pId}`,
+            p: 425000,
+            img: `img/${pPath}/${pId}.jpg`,
+            qty: 1,
+            size: optVal || "미선택"
+        };
+
+        list.push(item);
+        localStorage.setItem(key, JSON.stringify(list));
+        
+        const msg = (key === 'c_l') ? "쇼핑백에 담겼습니다." : "위시리스트에 담겼습니다.";
+        if(confirm(msg + "\n이동하시겠습니까?")) {
+            location.href = (key === 'c_l') ? 'cart.html' : 'wish.html';
+        }
+    }
+
+    window.onload = initDetail;
+</script>
+</body>
+</html>

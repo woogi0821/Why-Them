@@ -14,4 +14,5 @@ public interface MemberMapper {
     List<MemberAddressVO> getMemberAddresses(Long memberId);
 //    MemberAddressVO getDefaultAddress(Long memberId);
     MemberVO loginMember (MemberVO memberVO);
+    int checkId (String loginId);
 }

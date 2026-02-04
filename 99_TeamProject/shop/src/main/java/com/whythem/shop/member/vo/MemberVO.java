@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MemberVO {
     private Long memberId; //PK
-    private String userId;
-    private String userPw;
+    private String loginId;
+    private String loginPw;
     private String memberName;
     private String email;
     private String phoneNumber;
