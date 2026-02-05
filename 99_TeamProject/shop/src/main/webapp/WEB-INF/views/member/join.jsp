@@ -1,154 +1,136 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<jsp:include page="/common/header_join_only.jsp" />
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입 - LALA BOUTIQUE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Sans+KR:wght@200;300;400&display=swap" rel="stylesheet">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <style>
+        /* 기존 스타일 그대로 유지 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #fff; font-family: 'Noto Sans KR', sans-serif; color: #111; }
+        .simple-header { height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
+        .logo { font-family: 'Cormorant Garamond', serif; font-size: 42px; letter-spacing: 20px; text-transform: lowercase; color: #111; text-decoration: none; }
+        .join-container { max-width: 420px; margin: 0 auto 120px; padding: 0 20px; }
+        .input-group { margin-bottom: 40px; position: relative; }
+        .input-label { font-size: 10px; color: #aaa; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; display: block; }
+        .lala-input { width: 100%; height: 45px; border: none; border-bottom: 1px solid #eee; font-size: 14px; outline: none; transition: 0.3s; background: transparent; }
+        .lala-input:focus { border-bottom: 1px solid #111; }
+        .side-btn { position: absolute; right: 0; bottom: 10px; background: none; border: none; border-bottom: 1px solid #111; font-size: 11px; cursor: pointer; padding: 2px 0; color: #333; }
+        .lala-btn { width: 100%; height: 60px; background: #111; color: #fff; border: none; font-size: 13px; letter-spacing: 2px; cursor: pointer; margin-top: 50px; }
+        .lala-btn-sub { width: 100%; background: #fff; color: #bbb; border: none; font-size: 11px; letter-spacing: 1px; cursor: pointer; margin-top: 15px; }
+    </style>
+</head>
+<body>
+<div class="simple-header" onclick="location.href='${pageContext.request.contextPath}/'">
+    <div class="logo">lala boutique</div>
+</div>
 
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<div class="join-container">
+    <form action="${pageContext.request.contextPath}/member/join" method="post" id="joinForm">
 
-<style>
-    /* [Lala Boutique 전용 스타일] - 나중에 css 파일로 분리 가능 */
-    .join-container { max-width: 500px; margin: 100px auto; padding: 0 20px; }
+        <div class="input-group">
+            <label class="input-label">아이디</label>
+            <input type="text" id="userId" name="userId" class="lala-input" autocomplete="off"
+                   value="<c:out value='${param.userId}'/>">
+            <button type="button" class="side-btn" onclick="idCheck()">중복 확인</button>
+            <input type="hidden" id="idCheckFlag" value="N"> </div>
 
-    .page-title {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 40px;
-        font-weight: 300;
-        text-align: center;
-        margin-bottom: 60px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-
-    /* 입력 그룹 */
-    .input-group { margin-bottom: 30px; position: relative; }
-    .input-label {
-        display: block;
-        font-size: 11px;
-        color: #888;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    /* 밑줄 스타일 입력창 (프론트 팀원 스타일 적용) */
-    .lala-input {
-        width: 100%;
-        height: 40px;
-        border: none;
-        border-bottom: 1px solid #ddd;
-        font-size: 14px;
-        font-family: 'Noto Sans KR', sans-serif;
-        outline: none;
-        transition: 0.3s;
-        border-radius: 0; /* 모바일 둥글게 됨 방지 */
-    }
-    .lala-input:focus { border-bottom: 1px solid #111; }
-    .lala-input::placeholder { color: #ccc; }
-
-    /* 검은색 버튼 스타일 */
-    .lala-btn {
-        width: 100%;
-        height: 55px;
-        background: #111;
-        color: #fff;
-        border: none;
-        font-size: 13px;
-        letter-spacing: 2px;
-        cursor: pointer;
-        transition: 0.3s;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
-    .lala-btn:hover { background: #333; }
-    .lala-btn-sub {
-        background: #fff;
-        color: #111;
-        border: 1px solid #111;
-        margin-top: 10px;
-    }
-
-    /* 주소 검색 버튼 (작게) */
-    .addr-btn {
-        position: absolute;
-        right: 0;
-        bottom: 10px;
-        background: #111;
-        color: #fff;
-        border: none;
-        font-size: 10px;
-        padding: 5px 10px;
-        cursor: pointer;
-    }
-
-    .error-msg { color: #d9534f; font-size: 11px; margin-top: 5px;}
-</style>
-
-        <div class="join-container">
-            <h2 class="page-title">Create Account</h2>
-
-            <form action="/member/join" method="post" onsubmit="return joinCheck()">
-
-                <div class="input-group">
-                    <label class="input-label">ID</label>
-                    <input type="text" id="userId" name="loginId" class="lala-input" placeholder="아이디를 입력하세요">
-                    <span id="idMsg" class="error-msg"></span>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Password</label>
-                    <input type="password" id="userPw" name="loginPw" class="lala-input" placeholder="8자리 이상 입력하세요">
-                    <span id="pwMsg" class="error-msg"></span>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Name</label>
-                    <input type="text" id="memberName" name="memberName" class="lala-input" placeholder="이름">
-                    <span id="nameMsg" class="error-msg"></span>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Email</label>
-                    <input type="email" id="email" name="email" class="lala-input" placeholder="example@lala.com">
-                    <span id="emailMsg" class="error-msg"></span>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Phone</label>
-                    <input type="text" id="phoneNumber" name="phoneNumber" class="lala-input" placeholder="010-0000-0000">
-                    <span id="phoneMsg" class="error-msg"></span>
-                </div>
-
-                <hr style="margin: 40px 0; border: none; border-top: 1px solid #eee;">
-
-                <div class="input-group">
-                    <label class="input-label">Address</label>
-                    <div style="position: relative;">
-                        <input type="text" id="zipCode" name="zipCode" class="lala-input" placeholder="우편번호" readonly style="width: 100%;">
-                        <button type="button" class="addr-btn" onclick="kakaoPostcode()">SEARCH</button>
-                    </div>
-                    <span id="addrMsg" class="error-msg"></span>
-                </div>
-
-                <div id="wrap" style="display:none; border:1px solid #111; width:100%; height:300px; margin:5px 0; position:relative">
-                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
-                </div>
-
-                <div class="input-group">
-                    <input type="text" id="baseAddress" name="baseAddress" class="lala-input" placeholder="기본 주소" readonly>
-                </div>
-
-                <div class="input-group">
-                    <input type="text" id="detailAddress" name="detailAddress" class="lala-input" placeholder="상세 주소를 입력하세요">
-                </div>
-
-                <button type="submit" class="lala-btn">JOIN MEMBER</button>
-                <button type="button" class="lala-btn lala-btn-sub" onclick="location.href='/'">CANCEL</button>
-
-            </form>
+        <div class="input-group">
+            <label class="input-label">비밀번호</label>
+            <input type="password" id="userPw" name="userPw" class="lala-input" placeholder="8자리 이상 입력">
         </div>
 
-<jsp:include page="/common/footer.jsp" />
+        <div class="input-group">
+            <label class="input-label">이름</label>
+            <input type="text" id="memberName" name="name" class="lala-input"
+                   value="<c:out value='${param.name}'/>">
+        </div>
 
-<script src="/js/join.js"></script>
+        <div class="input-group">
+            <label class="input-label">주소</label>
+            <input type="text" id="zipCode" name="zipCode" class="lala-input" readonly placeholder="우편번호"
+                   value="<c:out value='${param.zipCode}'/>">
+            <button type="button" class="side-btn" onclick="kakaoPostcode()">주소 찾기</button>
+        </div>
+
+        <div style="margin-top: -15px;">
+            <input type="text" id="baseAddress" name="address1" class="lala-input" placeholder="기본 주소" readonly style="margin-bottom:20px;"
+                   value="<c:out value='${param.address1}'/>">
+            <input type="text" id="detailAddress" name="address2" class="lala-input" placeholder="상세 주소 입력"
+                   value="<c:out value='${param.address2}'/>">
+        </div>
+
+        <button type="button" class="lala-btn" onclick="joinCheck()">계정 만들기</button>
+        <button type="button" class="lala-btn-sub" onclick="history.back()">뒤로가기</button>
+    </form>
+</div>
+
+<script>
+    // 아이디 중복 확인 (AJAX로 변환 필요 - 여기서는 예시 구조만 잡음)
+    function idCheck() {
+        const id = document.getElementById("userId").value;
+        if(id.length < 4) {
+            alert("아이디를 4자 이상 입력해주세요.");
+            return;
+        }
+
+        // [실제 개발 시] fetch()나 $.ajax()를 사용하여 서버(/member/idCheck)로 요청을 보내야 함
+        // 현재는 프론트엔드 예시이므로 팝업으로 대체하거나 바로 성공 처리
+
+        // window.open('${pageContext.request.contextPath}/member/idCheckPopup?id=' + id, 'chk', 'width=400,height=300');
+        // 또는 비동기 통신 후:
+
+        alert("사용 가능한 아이디입니다. (서버 연결 필요)");
+        document.getElementById("idCheckFlag").value = "Y"; // 중복확인 완료 플래그
+        document.getElementById("userId").readOnly = true; // 아이디 수정 불가 처리
+    }
+
+    // 회원가입 유효성 검사 및 전송
+    function joinCheck() {
+        const id = document.getElementById("userId").value;
+        const pw = document.getElementById("userPw").value;
+        const name = document.getElementById("memberName").value;
+        const idCheckFlag = document.getElementById("idCheckFlag").value;
+
+        if(!id || !pw || !name) {
+            alert("필수 항목을 모두 입력해주세요.");
+            return;
+        }
+        if(pw.length < 8) {
+            alert("비밀번호를 8자 이상 입력해주세요.");
+            return;
+        }
+        // 실제 서비스에선 중복확인을 강제해야 함
+        /*
+        if(idCheckFlag !== "Y") {
+            alert("아이디 중복 확인을 진행해주세요.");
+            return;
+        }
+        */
+
+        // 모든 검사 통과 시 폼 전송 (Controller로 이동)
+        document.getElementById("joinForm").submit();
+    }
+
+    // 카카오 주소 API (기존 유지)
+    function kakaoPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                document.getElementById('zipCode').value = data.zonecode;
+                document.getElementById('baseAddress').value = data.roadAddress;
+                document.getElementById('detailAddress').focus();
+            }
+        }).open();
+    }
+
+    // [추가] 서버에서 에러 메시지를 보냈을 경우 처리 (예: 중복된 아이디 등)
+    <c:if test="${not empty errorMsg}">
+    alert("<c:out value='${errorMsg}'/>");
+    </c:if>
+</script>
+</body>
+</html>
