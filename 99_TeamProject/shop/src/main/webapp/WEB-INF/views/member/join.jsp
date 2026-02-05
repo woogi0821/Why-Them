@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -8,8 +9,8 @@
     <title>회원가입 - LALA BOUTIQUE</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Sans+KR:wght@200;300;400&display=swap" rel="stylesheet">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
     <style>
-        /* 기존 스타일 그대로 유지 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #fff; font-family: 'Noto Sans KR', sans-serif; color: #111; }
         .simple-header { height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
@@ -22,6 +23,26 @@
         .side-btn { position: absolute; right: 0; bottom: 10px; background: none; border: none; border-bottom: 1px solid #111; font-size: 11px; cursor: pointer; padding: 2px 0; color: #333; }
         .lala-btn { width: 100%; height: 60px; background: #111; color: #fff; border: none; font-size: 13px; letter-spacing: 2px; cursor: pointer; margin-top: 50px; }
         .lala-btn-sub { width: 100%; background: #fff; color: #bbb; border: none; font-size: 11px; letter-spacing: 1px; cursor: pointer; margin-top: 15px; }
+
+        /* [추가] 주소찾기 레이어 스타일 */
+        #postcode-layer {
+            display: none;
+            border: 1px solid #111;
+            width: 100%;
+            height: 300px;
+            margin: 10px 0 30px;
+            position: relative;
+        }
+        #btn-close-layer {
+            position: absolute;
+            right: 0;
+            top: -25px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #111;
+            background: none;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -34,14 +55,15 @@
 
         <div class="input-group">
             <label class="input-label">아이디</label>
-            <input type="text" id="userId" name="userId" class="lala-input" autocomplete="off"
+            <input type="text" id="loginId" name="loginId" class="lala-input" autocomplete="off"
                    value="<c:out value='${param.userId}'/>">
             <button type="button" class="side-btn" onclick="idCheck()">중복 확인</button>
-            <input type="hidden" id="idCheckFlag" value="N"> </div>
+            <input type="hidden" id="idCheckFlag" value="N">
+        </div>
 
         <div class="input-group">
             <label class="input-label">비밀번호</label>
-            <input type="password" id="userPw" name="userPw" class="lala-input" placeholder="8자리 이상 입력">
+            <input type="password" id="loginPw" name="loginPw" class="lala-input" placeholder="8자리 이상 입력">
         </div>
 
         <div class="input-group">
@@ -51,10 +73,49 @@
         </div>
 
         <div class="input-group">
+            <label class="input-label">휴대폰 번호</label>
+            <input type="text" id="memberPhone" name="phoneNumber" class="lala-input"
+                   placeholder="010-0000-0000" maxlength="13"
+                   oninput="autoHyphen(this)"
+                   value="<c:out value='${param.phoneNumber}'/>">
+        </div>
+
+        <c:set var="emailParts" value="${fn:split(param.email, '@')}" />
+
+        <div class="input-group">
+            <label class="input-label">이메일</label>
+
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <input type="text" id="emailId" class="lala-input" style="width: 35%;"
+                       placeholder="이메일"
+                       value="<c:out value='${emailParts[0]}'/>">
+
+                <span>@</span>
+
+                <input type="text" id="emailDomain" class="lala-input" style="width: 30%;"
+                       placeholder="직접 입력"
+                       value="<c:out value='${emailParts[1]}'/>">
+
+                <select id="domainSelect" class="lala-input" style="width: 30%; border: none; border-bottom: 1px solid #eee; height: 45px; color:#555;" onchange="handleEmailSelect()">
+                    <option value="">직접 입력</option>
+                    <option value="naver.com">naver.com</option>
+                    <option value="gmail.com">gmail.com</option>
+                    <option value="daum.net">daum.net</option>
+                </select>
+            </div>
+
+            <input type="hidden" id="fullEmail" name="email" value="<c:out value='${param.email}'/>">
+        </div>
+
+        <div class="input-group">
             <label class="input-label">주소</label>
             <input type="text" id="zipCode" name="zipCode" class="lala-input" readonly placeholder="우편번호"
                    value="<c:out value='${param.zipCode}'/>">
-            <button type="button" class="side-btn" onclick="kakaoPostcode()">주소 찾기</button>
+            <button type="button" class="side-btn" onclick="togglePostcode()">주소 찾기</button>
+        </div>
+
+        <div id="postcode-layer">
+            <button type="button" id="btn-close-layer" onclick="closePostcode()">[닫기 X]</button>
         </div>
 
         <div style="margin-top: -15px;">
@@ -70,33 +131,96 @@
 </div>
 
 <script>
-    // 아이디 중복 확인 (AJAX로 변환 필요 - 여기서는 예시 구조만 잡음)
+    const autoHyphen = (target) => {
+        target.value = target.value
+            .replace(/[^0-9]/g, '')
+            .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
+    }
+
+    var element_layer = document.getElementById('postcode-layer');
+
+    function closePostcode() {
+        element_layer.style.display = 'none';
+    }
+    function handleEmailSelect() {
+        const select = document.getElementById("domainSelect");
+        const domainInput = document.getElementById("emailDomain");
+
+        if (select.value !== ""){
+            domainInput.value = select.value;
+            domainInput.readOnly = true;
+            domainInput.style.backgroundColor = "#f9f9f9";
+        }else {
+            domainInput.value = "";
+            domainInput.readOnly = false;
+            domainInput.style.backgroundColor = "transparent";
+            domainInput.focus();
+        }
+
+    }
+
+    function togglePostcode() {
+
+        if(element_layer.style.display === 'block') {
+            closePostcode();
+            return;
+        }
+
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var addr = '';
+                var extraAddr = '';
+
+                if (data.userSelectedType === 'R') {
+                    addr = data.roadAddress;
+                } else {
+                    addr = data.jibunAddress;
+                }
+
+                document.getElementById('zipCode').value = data.zonecode;
+                document.getElementById("baseAddress").value = addr;
+                document.getElementById("detailAddress").focus();
+
+
+                element_layer.style.display = 'none';
+            },
+            width : '100%',
+            height : '100%',
+            maxSuggestItems : 5
+        }).embed(element_layer);
+
+        // 레이어 보여주기
+        element_layer.style.display = 'block';
+    }
+
+    // 3. 아이디 중복체크 (기존 로직 유지 + AJAX 필요 주석)
     function idCheck() {
-        const id = document.getElementById("userId").value;
+        const id = document.getElementById("loginId").value;
         if(id.length < 4) {
             alert("아이디를 4자 이상 입력해주세요.");
             return;
         }
-
-        // [실제 개발 시] fetch()나 $.ajax()를 사용하여 서버(/member/idCheck)로 요청을 보내야 함
-        // 현재는 프론트엔드 예시이므로 팝업으로 대체하거나 바로 성공 처리
-
-        // window.open('${pageContext.request.contextPath}/member/idCheckPopup?id=' + id, 'chk', 'width=400,height=300');
-        // 또는 비동기 통신 후:
-
-        alert("사용 가능한 아이디입니다. (서버 연결 필요)");
-        document.getElementById("idCheckFlag").value = "Y"; // 중복확인 완료 플래그
-        document.getElementById("userId").readOnly = true; // 아이디 수정 불가 처리
+        alert("사용 가능한 아이디입니다.");
+        document.getElementById("idCheckFlag").value = "Y";
     }
 
-    // 회원가입 유효성 검사 및 전송
+    // 4. 유효성 검사
     function joinCheck() {
-        const id = document.getElementById("userId").value;
-        const pw = document.getElementById("userPw").value;
+        const id = document.getElementById("loginId").value;
+        const pw = document.getElementById("loginPw").value;
         const name = document.getElementById("memberName").value;
-        const idCheckFlag = document.getElementById("idCheckFlag").value;
+        const phone = document.getElementById("memberPhone").value; // 폰번호 체크 추가
+        const emailId = document.getElementById("emailId").value;
+        const emailDomain = document.getElementById("emailDomain").value;
 
-        if(!id || !pw || !name) {
+        if (emailId && emailDomain) {
+            document.getElementById("fullEmail").value = emailId + "@" + emailDomain
+        } else {
+            alert("이메일을 정확히 입력해주세요.")
+            return;
+        }
+
+        if(!id || !pw || !name || !phone) {
             alert("필수 항목을 모두 입력해주세요.");
             return;
         }
@@ -104,30 +228,10 @@
             alert("비밀번호를 8자 이상 입력해주세요.");
             return;
         }
-        // 실제 서비스에선 중복확인을 강제해야 함
-        /*
-        if(idCheckFlag !== "Y") {
-            alert("아이디 중복 확인을 진행해주세요.");
-            return;
-        }
-        */
-
-        // 모든 검사 통과 시 폼 전송 (Controller로 이동)
         document.getElementById("joinForm").submit();
     }
 
-    // 카카오 주소 API (기존 유지)
-    function kakaoPostcode() {
-        new daum.Postcode({
-            oncomplete: function(data) {
-                document.getElementById('zipCode').value = data.zonecode;
-                document.getElementById('baseAddress').value = data.roadAddress;
-                document.getElementById('detailAddress').focus();
-            }
-        }).open();
-    }
-
-    // [추가] 서버에서 에러 메시지를 보냈을 경우 처리 (예: 중복된 아이디 등)
+    // 서버 에러 메시지 처리
     <c:if test="${not empty errorMsg}">
     alert("<c:out value='${errorMsg}'/>");
     </c:if>
