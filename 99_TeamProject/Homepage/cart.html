@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>라라 부티크 | SHOPPING BAG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/cart.css">
+</head>
+<body>
+    <div id="cart-wrapper">
+        <header onclick="location.href='homepage.html'"><div class="logo">lala boutique</div></header>
+
+        <section class="cart-container">
+            <h2 class="cart-title">SHOPPING BAG</h2>
+            
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th class="th-item">ITEM</th>
+                        <th>PRICE</th>
+                        <th>QTY</th>
+                        <th>TOTAL</th>
+                        <th>REMOVE</th>
+                    </tr>
+                </thead>
+                <tbody id="cart-list">
+                    </tbody>
+            </table>
+
+            <div class="cart-footer">
+                <div class="total-summary">
+                    <div class="summary-row"><span>Subtotal</span><span id="sub-total">₩ 0</span></div>
+                    <div class="summary-row"><span>Shipping</span><span>FREE</span></div>
+                    <div class="summary-row total"><span>Order Total</span><span id="final-price">₩ 0</span></div>
+                </div>
+                <button class="btn-checkout" onclick="processCheckout()">CHECKOUT</button>
+            </div>
+        </section>
+    </div>
+    <script src="./js/cart.js"></script>
+</body>
+</html>
