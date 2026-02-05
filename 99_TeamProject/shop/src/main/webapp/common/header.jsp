@@ -24,6 +24,12 @@
             <c:out value="${empty sessionScope.cartCount ? 0 : sessionScope.cartCount}" />
         </span>
     </span>
+    <c:if test="${sessionScope.loginMember.memberGrade == 'Y'}">
+        <a href="${pageContext.request.contextPath}/admin/main"
+           style="display:inline-block; background: #555555; color:white; padding: 5px 10px; border-radius: 4px; font-size: 12px; margin-right:10px; text-decoration: none; ">
+            관리자페이지
+        </a>
+    </c:if>
 </div>
 
 <header onclick="location.href='${pageContext.request.contextPath}/'">

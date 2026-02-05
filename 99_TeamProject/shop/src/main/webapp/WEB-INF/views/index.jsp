@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <title>라라 부티크 | LALA BOUTIQUE</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Sans+KR:wght@100;300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/homepage.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/homepage.css">
 </head>
 <body>
 
