@@ -11,7 +11,7 @@
         </c:when>
         <c:otherwise>
             <span style="color:#000; font-weight:bold;">
-                <c:out value="${sessionScope.loginMember.name}" />님
+                <c:out value="${sessionScope.loginMember.memberName}" />님
             </span>
             <span onclick="location.href='${pageContext.request.contextPath}/member/logout'">로그아웃</span>
         </c:otherwise>

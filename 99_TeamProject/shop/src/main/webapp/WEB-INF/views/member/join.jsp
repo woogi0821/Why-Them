@@ -56,7 +56,7 @@
         <div class="input-group">
             <label class="input-label">아이디</label>
             <input type="text" id="loginId" name="loginId" class="lala-input" autocomplete="off"
-                   value="<c:out value='${param.userId}'/>">
+                   value="<c:out value='${param.loginId}'/>">
             <button type="button" class="side-btn" onclick="idCheck()">중복 확인</button>
             <input type="hidden" id="idCheckFlag" value="N">
         </div>
@@ -68,8 +68,8 @@
 
         <div class="input-group">
             <label class="input-label">이름</label>
-            <input type="text" id="memberName" name="name" class="lala-input"
-                   value="<c:out value='${param.name}'/>">
+            <input type="text" id="memberName" name="memberName" class="lala-input"
+                   value="<c:out value='${param.memberName}'/>">
         </div>
 
         <div class="input-group">
@@ -206,28 +206,57 @@
 
     // 4. 유효성 검사
     function joinCheck() {
-        const id = document.getElementById("loginId").value;
-        const pw = document.getElementById("loginPw").value;
-        const name = document.getElementById("memberName").value;
-        const phone = document.getElementById("memberPhone").value; // 폰번호 체크 추가
+
+        const id = document.getElementById("loginId"); // .value 아님 (포커스 주려고 객체 가져옴)
+        const pw = document.getElementById("loginPw");
+        const name = document.getElementById("memberName");
+        const phone = document.getElementById("memberPhone");
+
         const emailId = document.getElementById("emailId").value;
         const emailDomain = document.getElementById("emailDomain").value;
 
-        if (emailId && emailDomain) {
-            document.getElementById("fullEmail").value = emailId + "@" + emailDomain
-        } else {
-            alert("이메일을 정확히 입력해주세요.")
+        if (!id.value.trim()) {
+            alert("아이디는 필수입니다.");
+            id.focus();
+            return;
+        }
+        if (!pw.value.trim()) {
+            alert("비밀번호를 입력해주세요.");
+            pw.focus();
+            return;
+        }
+        if (pw.value.length < 8) {
+            alert("비밀번호는 8자 이상이어야 합니다.");
+            pw.focus();
+            return;
+        }
+        if (!name.value.trim()) {
+            alert("이름을 입력해주세요.");
+            name.focus();
+            return;
+        }
+        if (!phone.value.trim()) {
+            alert("연락처를 입력해주세요.");
+            phone.focus();
             return;
         }
 
-        if(!id || !pw || !name || !phone) {
-            alert("필수 항목을 모두 입력해주세요.");
+        if (!emailId || !emailDomain) {
+            alert("이메일을 완성해주세요.");
+            document.getElementById("emailId").focus();
             return;
         }
-        if(pw.length < 8) {
-            alert("비밀번호를 8자 이상 입력해주세요.");
-            return;
+
+
+        // 이메일 값 합쳐서 히든 태그에 넣기
+        if (emailId && emailDomain) {
+            document.getElementById("fullEmail").value = emailId + "@" + emailDomain;
+        } else {
+            // 이메일이 선택사항이라 비워뒀다면, 빈 값("")을 넣어서 보냄 -> 이러면 null 에러 안 남!
+            document.getElementById("fullEmail").value = "";
         }
+
+        // 4. 모든 검문 통과 시 전송!
         document.getElementById("joinForm").submit();
     }
 
