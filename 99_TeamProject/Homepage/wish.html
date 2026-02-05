@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>WISH LIST - LALA BOUTIQUE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&family=Noto+Sans+KR:wght@100;300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/wish.css">
+</head>
+<body>
+    <header onclick="location.href='homepage.html'">
+        <div class="logo">lala boutique</div>
+    </header>
+
+    <div class="wish-wrapper">
+        <h2 class="page-title">WISH LIST</h2>
+        <div id="wish-grid" class="grid-4">
+            </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const wish = JSON.parse(localStorage.getItem('wish') || '[]');
+            const gridDiv = document.getElementById('wish-grid');
+
+            if(wish.length === 0) {
+                gridDiv.innerHTML = "<p style='grid-column:1/5; text-align:center; padding:100px 0; color:#ccc;'>비어있습니다.</p>";
+                return;
+            }
+
+            gridDiv.innerHTML = wish.map((item, idx) => `
+                <div class="wish-item">
+                    <img src="./img/${item.path}/${item.id}.jpg" onclick="location.href='detail.html?path=${item.path}&id=${item.id}'">
+                    <p>${item.path.split('/')[1].toUpperCase()} NO.${item.id}</p>
+                    <span class="remove-wish" onclick="removeWish(${idx})">REMOVE</span>
+                </div>
+            `).join('');
+        };
+
+        function removeWish(idx) {
+            const wish = JSON.parse(localStorage.getItem('wish'));
+            wish.splice(idx, 1);
+            localStorage.setItem('wish', JSON.stringify(wish));
+            location.reload();
+        }
+    </script>
+</body>
+</html>
