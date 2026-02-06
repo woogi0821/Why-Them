@@ -25,8 +25,8 @@
 
 <div class="login-box">
     <form action="${pageContext.request.contextPath}/member/login" method="post">
-        <input type="text" name="userId" placeholder="아이디" required>
-        <input type="password" name="userPw" placeholder="비밀번호" required>
+        <input type="text" name="loginId" placeholder="아이디" required>
+        <input type="password" name="loginPw" placeholder="비밀번호" required>
 
         <c:if test="${param.error == 'true'}">
             <p style="color:red; font-size:12px; margin-bottom:15px; letter-spacing: -0.5px;">
