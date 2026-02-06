@@ -2,47 +2,31 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>DETAIL | LALA BOUTIQUE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Sans+KR:wght@100;300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./css/detail.css">
+    <title>라라 부티크 | DETAIL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/detail.css">
 </head>
 <body>
-    <header onclick="location.href='homepage.html'"><div class="logo">lala boutique</div></header>
+    <div id="main-wrapper">
+        <header onclick="location.href='homepage.html'"><div class="logo">lala boutique</div></header>
 
-    <main class="detail-container" id="detail-view">
-        <div class="img-area"><img id="main-img" src="" alt="Product Image"></div>
-        <div class="info-area">
-            <p id="cate-text" style="font-size:11px; color:#999; letter-spacing:2px;"></p>
-            <h1 id="title-text"></h1>
-            <p class="price">₩ 285,000</p>
-            <div class="action-btns">
-                <button class="btn-cart" onclick="addToCart()">장바구니 담기</button>
-                <button class="btn-buy" onclick="location.href='order.html'">바로 구매하기</button>
+        <main class="detail-container">
+            <div class="product-visual">
+                <img id="detail-img" src="" alt="상품 이미지">
             </div>
-        </div>
-    </main>
 
-<script>
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
-    const path = params.get('path');
-    const title = params.get('title');
-
-    window.onload = function() {
-        if(!id || !path) { location.href = 'homepage.html'; return; }
-        document.getElementById('cate-text').innerText = path.toUpperCase();
-        document.getElementById('title-text').innerText = `${title} PREMIUM NO.${id}`;
-        const imgElement = document.getElementById('main-img');
-        imgElement.src = `img/${path}/${id}.jpg`;
-        imgElement.onload = () => document.getElementById('detail-view').classList.add('show');
-    }
-
-    function addToCart() {
-        let cart = JSON.parse(localStorage.getItem('c_l')) || [];
-        cart.push({ id: id, n: `${title} NO.${id}`, p: 285000, img: `img/${path}/${id}.jpg`, qty: 1 });
-        localStorage.setItem('c_l', JSON.stringify(cart));
-        alert("장바구니에 담겼습니다.");
-    }
-</script>
+            <div class="product-spec">
+                <h2 id="detail-name">PRODUCT NAME</h2>
+                <p id="detail-price" class="price">KRW 0</p>
+                
+                <div class="purchase-box">
+                    <div class="info-row"><span>배송지</span><p id="user-addr">로그인 후 확인 가능합니다.</p></div>
+                    <button class="btn-cart" onclick="addToCart()">ADD TO CART</button>
+                    <button class="btn-buy">BUY NOW</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="./js/detail.js"></script>
 </body>
 </html>
