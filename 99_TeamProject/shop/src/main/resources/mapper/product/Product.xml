@@ -4,17 +4,18 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.whythem.shop.product.mapper.ProductMapper">
+
     <select id="getProductList" resultType="ProductVO">
         SELECT
-        PRODUCT_ID as productId,
-        CATEGORY_ID as categoryId,
-        NAME,
-        PRICE,
-        STOCK_QUANTITY as stockQuantity,
-        DESCRIPTION,
-        BRAND_NAME as brandName,
-        IMAGE_URL as imageUrl
-        FROM CBI_PRODUCT
+        PRODUCT_ID        AS productId,
+        CATEGORY_ID       AS categoryId,
+        PRODUCT_NAME      AS name,
+        BRAND_NAME        AS brandName,
+        PRICE             AS price,
+        STOCK_QUANTITY    AS stockQuantity,
+        DESCRIPTION       AS description,
+        STATUS            AS status,
+        IMAGE_URL         AS imageUrl       FROM PRODUCT
         <where>
             <if test="categoryId != null">
                 AND CATEGORY_ID = #{categoryId}
@@ -25,55 +26,66 @@
 
     <insert id="insertProduct" parameterType="ProductVO">
         <selectKey keyProperty="productId" resultType="long" order="BEFORE">
-            SELECT "SCOTT"."ISEQ$$_78145".nextval FROM DUAL
+            SELECT PRODUCT_SEQ.NEXTVAL FROM DUAL
         </selectKey>
 
-        INSERT INTO CBI_PRODUCT (
-        PRODUCT_ID, CATEGORY_ID, NAME, PRICE, STOCK_QUANTITY,
-        DESCRIPTION, BRAND_NAME, IMAGE_URL, STATUS
+        INSERT INTO PRODUCT (
+        PRODUCT_ID,
+        CATEGORY_ID,
+        PRODUCT_NAME,
+        BRAND_NAME,      PRICE,
+        STOCK_QUANTITY,
+        DESCRIPTION,
+        STATUS,
+        IMAGE_URL,       -- DB에 직접 저장
+        CREATED_AT,
+        UPDATED_AT
         ) VALUES (
-        #{productId}, #{categoryId}, #{name}, #{price}, #{stockQuantity},
-        #{description, jdbcType=CLOB}, #{brandName, jdbcType=VARCHAR},
-        #{imageUrl, jdbcType=VARCHAR}, 'FOR_SALE'
+        #{productId},
+        #{categoryId},
+        #{name},
+        #{brandName, jdbcType=VARCHAR},
+        #{price},
+        #{stockQuantity},
+        #{description, jdbcType=CLOB},
+        'SALE',
+        #{imageUrl, jdbcType=VARCHAR}, -- VO의 경로 문자열 저장
+        SYSDATE,
+        SYSDATE
         )
     </insert>
 
-    <insert id="insertProductImage">
-        INSERT INTO CBI_PRODUCT_IMAGE (
-        IMAGE_ID,
-        PRODUCT_ID,
-        IMAGE_URL,
-        IS_MAIN
-        ) VALUES (
-        "SCOTT"."ISEQ$$_78150".nextval, -- 직접 적어주신 이미지 시퀀스
-        #{productId},
-        #{imageUrl},
-        #{isMain, jdbcType=CHAR}
-        )
-    </insert>
     <select id="findById" resultType="ProductVO">
-        SELECT * FROM CBI_PRODUCT WHERE PRODUCT_ID = #{productId}
+        SELECT
+        PRODUCT_ID        AS productId,
+        CATEGORY_ID       AS categoryId,
+        PRODUCT_NAME      AS name,
+        BRAND_NAME        AS brandName,
+        PRICE             AS price,
+        STOCK_QUANTITY    AS stockQuantity,
+        DESCRIPTION       AS description,
+        STATUS            AS status,
+        IMAGE_URL         AS imageUrl
+        FROM PRODUCT
+        WHERE PRODUCT_ID = #{productId}
     </select>
 
     <update id="updateProduct" parameterType="ProductVO">
-        UPDATE CBI_PRODUCT
-        SET CATEGORY_ID = #{categoryId},
-        NAME = #{name},
-        PRICE = #{price},
+        UPDATE PRODUCT
+        SET
+        CATEGORY_ID    = #{categoryId},
+        PRODUCT_NAME   = #{name},
+        BRAND_NAME     = #{brandName, jdbcType=VARCHAR},
+        PRICE          = #{price},
         STOCK_QUANTITY = #{stockQuantity},
-        DESCRIPTION = #{description, jdbcType=CLOB},
-        BRAND_NAME = #{brandName, jdbcType=VARCHAR},
-        IMAGE_URL = #{imageUrl, jdbcType=VARCHAR},
-        UPDATED_AT = CURRENT_TIMESTAMP
+        DESCRIPTION    = #{description, jdbcType=CLOB},
+        IMAGE_URL      = #{imageUrl, jdbcType=VARCHAR},
+        UPDATED_AT     = SYSDATE
         WHERE PRODUCT_ID = #{productId}
     </update>
 
-    <delete id="deleteProductImages">
-        DELETE FROM CBI_PRODUCT_IMAGE WHERE PRODUCT_ID = #{productId}
-    </delete>
-
     <delete id="deleteProduct">
-        DELETE FROM CBI_PRODUCT WHERE PRODUCT_ID = #{productId}
+        DELETE FROM PRODUCT WHERE PRODUCT_ID = #{productId}
     </delete>
 
 </mapper>

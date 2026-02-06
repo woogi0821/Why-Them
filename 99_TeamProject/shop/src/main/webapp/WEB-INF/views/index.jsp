@@ -15,12 +15,6 @@
 <jsp:include page="/common/header.jsp" />
 
 <div class="search-filter-section">
-<%--  검색기능은 개발 대기  --%>
-<%--    <form action="${pageContext.request.contextPath}/product/search" method="get" class="search-box">--%>
-<%--        <input type="text" name="keyword" placeholder="SEARCH" value="<c:out value='${param.keyword}'/>">--%>
-<%--        <button type="submit" style="background:none; border:none; cursor:pointer;">🔍</button>--%>
-<%--    </form>--%>
-
     <div class="filter-btns">
         <button onclick="location.href='?sort=new'" class="${param.sort == 'new' or empty param.sort ? 'active' : ''}">신상품순</button>
         <button onclick="location.href='?sort=low'" class="${param.sort == 'low' ? 'active' : ''}">가격 낮은 순</button>
@@ -29,11 +23,6 @@
 </div>
 
 <main id="main-content">
-<%--  검색기능은 개발 대기  --%>
-<%--    <c:if test="${not empty param.keyword}">--%>
-<%--        <h2 class="section-title">RESULTS: <c:out value="${param.keyword}" /></h2>--%>
-<%--    </c:if>--%>
-
     <c:if test="${empty param.keyword}">
         <h2 class="section-title">NEW ARRIVALS</h2>
     </c:if>

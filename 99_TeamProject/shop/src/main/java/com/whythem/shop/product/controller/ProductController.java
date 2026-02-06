@@ -32,7 +32,7 @@ public class ProductController {
         // 현재 선택된 카테고리가 무엇인지 JSP로 다시 알려줌 (메뉴 강조용)
         model.addAttribute("selectedCategory", categoryId);
 
-        return "product/shop";
+        return "admin_main";
     }
 
     @GetMapping("/product/add")
