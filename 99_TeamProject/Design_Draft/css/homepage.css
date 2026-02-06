@@ -1,0 +1,73 @@
+/* 공통 리셋 */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+    font-family: 'Noto Sans KR', sans-serif; 
+    color: #1a1a1a; 
+    background-color: #fff; 
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* 상단바 레이아웃 (로고 왼쪽 끝) */
+.top-bar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 30px 60px; 
+}
+.logo { 
+    font-family: 'Cormorant Garamond', serif; 
+    font-size: 1.8rem; 
+    letter-spacing: 8px; 
+    font-weight: 400; 
+    cursor: pointer;
+    line-height: 1;
+}
+.top-utils { display: flex; gap: 30px; font-size: 0.65rem; font-weight: 300; letter-spacing: 1.5px; }
+.util-link { cursor: pointer; color: #999; text-transform: uppercase; transition: color 0.3s; }
+.util-link:hover { color: #111; }
+.user-txt { font-weight: 400; color: #111; margin-right: -10px; }
+
+/* 네비게이션 & 가변형 드롭다운 (밀어내기 방식) */
+.nav-wrapper { border-top: 1px solid #f2f2f2; border-bottom: 1px solid #f2f2f2; transition: all 0.4s ease; }
+.menu-bar { display: flex; justify-content: center; max-width: 1100px; margin: 0 auto; padding: 20px 0; }
+.menu-item { flex: 1; text-align: center; font-weight: 400; font-size: 0.8rem; letter-spacing: 5px; color: #222; }
+
+.full-dropdown { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.4s ease; background: #fff; }
+.nav-wrapper:hover .full-dropdown { max-height: 150px; opacity: 1; padding-bottom: 25px; }
+
+.drop-container { display: flex; justify-content: center; max-width: 1100px; margin: 0 auto; }
+.drop-column { flex: 1; text-align: center; }
+.sub-menu { list-style: none; }
+.sub-menu li { 
+    padding: 6px 0; font-size: 0.75rem; color: #aaa; cursor: pointer; transition: 0.3s;
+    font-weight: 300; letter-spacing: 1px;
+}
+.sub-menu li:hover { color: #111; }
+
+/* 상품 섹션 및 그리드 (4x3 정렬) */
+.stitle { 
+    text-align: center; font-family: 'Cormorant Garamond', serif; 
+    letter-spacing: 10px; margin: 70px 0 60px; font-size: 1.5rem; font-weight: 300; 
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 80px 35px; /* 시원한 여백 구성 */
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 60px 120px;
+}
+
+/* 상품 카드 디자인 */
+.product-card { cursor: pointer; text-align: center; transition: opacity 0.4s ease; }
+.product-card:hover { opacity: 0.8; }
+.product-card img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; margin-bottom: 25px; }
+
+.p-name { font-weight: 500; font-size: 0.88rem; margin-bottom: 8px; color: #111; letter-spacing: -0.02em; }
+.p-desc { font-size: 0.78rem; color: #888; margin-bottom: 12px; font-weight: 300; line-height: 1.5; }
+.p-price { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 1.05rem; color: #111; }
+
+/* 푸터 */
+.footer-section { border-top: 1px solid #f2f2f2; padding: 60px 0; text-align: center; font-size: 0.65rem; color: #ccc; letter-spacing: 2px; }
+.btn-withdraw { border: none; background: none; color: #ddd; cursor: pointer; margin-bottom: 15px; font-size: 0.6rem; text-decoration: underline; }

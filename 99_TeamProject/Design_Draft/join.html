@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>라라 부티크 | JOIN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/join.css">
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</head>
+<body>
+    <div id="join-wrapper">
+        <header onclick="location.href='homepage.html'">
+            <div class="logo">lala boutique</div>
+        </header>
+
+        <section class="join-container">
+            <h2>CREATE ACCOUNT</h2>
+            <form id="join-form">
+                <div class="form-group">
+                    <label>ID</label>
+                    <div class="input-row">
+                        <input type="text" id="join-id" placeholder="아이디 입력">
+                        <button type="button" class="btn-sub" onclick="checkDuplicate()">중복확인</button>
+                    </div>
+                </div>
+
+                <div class="form-group"><label>PASSWORD</label><input type="password" id="join-pw"></div>
+                <div class="form-group"><label>NAME</label><input type="text" id="join-name"></div>
+                <div class="form-group"><label>PHONE</label><input type="text" id="join-phone" placeholder="010-0000-0000"></div>
+
+                <div class="form-group">
+                    <label>ADDRESS</label>
+                    <div class="input-row">
+                        <input type="text" id="postcode" placeholder="우편번호" readonly>
+                        <button type="button" class="btn-sub" onclick="execDaumPostcode()">검색</button>
+                    </div>
+                    <input type="text" id="address" placeholder="기본주소" readonly style="margin-top:5px;">
+                    <input type="text" id="detailAddress" placeholder="상세주소 입력" style="margin-top:5px;">
+                </div>
+
+                <button type="button" class="btn-submit" onclick="processJoin()">JOIN NOW</button>
+            </form>
+        </section>
+    </div>
+    <script src="./js/join.js"></script>
+</body>
+</html>
