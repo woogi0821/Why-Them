@@ -25,10 +25,7 @@
         </span>
     </span>
     <c:if test="${sessionScope.loginMember.memberGrade == 'Y'}">
-        <a href="${pageContext.request.contextPath}/admin/main"
-           style="display:inline-block; background: #555555; color:white; padding: 5px 10px; border-radius: 4px; font-size: 12px; margin-right:10px; text-decoration: none; ">
-            관리자페이지
-        </a>
+        <span onclick="location.href='${pageContext.request.contextPath}/admin/admin_main'">관리자 페이지</span>
     </c:if>
 </div>
 
