@@ -11,6 +11,9 @@
         <span style="color: #333; cursor: default;">
             <b>${sessionScope.loginMember.memberName}</b>님
         </span>
+        <c:if test="${sessionScope.loginMember.memberGrade == 'Y'}">
+            <span onclick="location.href = '/admin/admin_main'" style="color: black">관리자 페이지</span>
+        </c:if>
         <span onclick="location.href='/member/logout'">LOGOUT</span>
         <span onclick="location.href='/cart/list'">CART</span>
         <span onclick="location.href='/member/mypage'">MY PAGE</span>
