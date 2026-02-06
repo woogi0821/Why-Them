@@ -5,78 +5,61 @@ window.onload = function (){
     }
 };
 
+// join.jsp 하단 스크립트 수정
+
 function joinCheck() {
-    // 1. [입력 요소] 가져오기
-    var id = document.getElementById("userId");
-    var pw = document.getElementById("userPw");
-    var name = document.getElementById("memberName");
-    var email = document.getElementById("email");
-    var phone = document.getElementById("phoneNumber");
-    var zip = document.getElementById("zipCode"); // 주소 검사용 (우편번호)
 
-    // 2. [에러 메시지 표시 공간] 가져오기 (HTML에 만들어둔 span 태그들)
-    var idMsg = document.getElementById("idMsg");
-    var pwMsg = document.getElementById("pwMsg");
-    var nameMsg = document.getElementById("nameMsg");
-    var emailMsg = document.getElementById("emailMsg");
-    var phoneMsg = document.getElementById("phoneMsg");
-    var addrMsg = document.getElementById("addrMsg");
+    const id = document.getElementById("loginId"); // .value 아님 (포커스 주려고 객체 가져옴)
+    const pw = document.getElementById("loginPw");
+    const name = document.getElementById("memberName");
+    const phone = document.getElementById("memberPhone");
 
-    // 3. [초기화] 검사 시작 전에 기존 에러 메시지 싹 지우기 (깨끗하게 리셋)
-    idMsg.innerText = "";
-    pwMsg.innerText = "";
-    nameMsg.innerText = "";
-    emailMsg.innerText = "";
-    phoneMsg.innerText = "";
-    addrMsg.innerText = "";
+    const emailId = document.getElementById("emailId").value;
+    const emailDomain = document.getElementById("emailDomain").value;
 
-    // 4. 유효성 검사 시작
-
-    // [ID 검사]
-    if (id.value.trim().length === 0) {
-        idMsg.innerText = "아이디는 필수 입력 사항입니다."; // ★ 여기에 빨간 글씨 넣음
-        id.focus(); // 스크롤 이동
-        return false;
+    if (!id.value.trim()) {
+        alert("아이디는 필수입니다.");
+        id.focus();
+        return;
     }
-
-    // [비밀번호 검사]
-    if (pw.value.length < 8) {
-        pwMsg.innerText = "비밀번호는 8글자 이상이어야 합니다.";
+    if (!pw.value.trim()) {
+        alert("비밀번호를 입력해주세요.");
         pw.focus();
-        return false;
+        return;
     }
-
-    // [이름 검사]
-    if (name.value.trim().length === 0) {
-        nameMsg.innerText = "이름을 입력해주세요.";
+    if (pw.value.length < 8) {
+        alert("비밀번호는 8자 이상이어야 합니다.");
+        pw.focus();
+        return;
+    }
+    if (!name.value.trim()) {
+        alert("이름을 입력해주세요.");
         name.focus();
-        return false;
+        return;
     }
-
-    // [이메일 검사]
-    if (email.value.trim().length === 0) {
-        emailMsg.innerText = "이메일을 입력해주세요.";
-        email.focus();
-        return false;
-    }
-
-    // [전화번호 검사]
-    if (phone.value.trim().length === 0) {
-        phoneMsg.innerText = "전화번호를 입력해주세요.";
+    if (!phone.value.trim()) {
+        alert("연락처를 입력해주세요.");
         phone.focus();
-        return false;
+        return;
     }
 
-    // [주소 검사] - 우편번호가 비어있으면 검색 안 한 것
-    if (zip.value.trim().length === 0) {
-        addrMsg.innerText = "주소 검색(SEARCH)을 진행해주세요.";
-        // 주소 검색 버튼이나 우편번호 칸으로 이동
-        zip.focus();
-        return false;
+    if (!emailId || !emailDomain) {
+        alert("이메일을 완성해주세요.");
+        document.getElementById("emailId").focus();
+        return;
     }
 
-    // 모든 검사 통과!
-    return true;
+
+    // 이메일 값 합쳐서 히든 태그에 넣기
+    if (emailId && emailDomain) {
+        document.getElementById("fullEmail").value = emailId + "@" + emailDomain;
+    } else {
+        // 이메일이 선택사항이라 비워뒀다면, 빈 값("")을 넣어서 보냄 -> 이러면 null 에러 안 남!
+        document.getElementById("fullEmail").value = "";
+    }
+
+    // 4. 모든 검문 통과 시 전송!
+    document.getElementById("joinForm").submit();
 }
 
 
