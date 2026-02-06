@@ -2,31 +2,55 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>라라 부티크 | DETAIL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>LALA BOUTIQUE | DETAIL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Sans+KR:wght@100;300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/detail.css">
 </head>
 <body>
     <div id="main-wrapper">
-        <header onclick="location.href='homepage.html'"><div class="logo">lala boutique</div></header>
+        <header class="top-bar">
+            <h1 class="logo" onclick="location.href='homepage.html'">LALA BOUTIQUE</h1>
+            <aside class="top-utils">
+                <span class="util-link" onclick="location.href='homepage.html'">BACK</span>
+                <span class="util-link" onclick="location.href='cart.html'">CART</span>
+            </aside>
+        </header>
 
-        <main class="detail-container">
-            <div class="product-visual">
-                <img id="detail-img" src="" alt="상품 이미지">
-            </div>
+        <main id="detail-container">
+            <section class="image-area">
+                <img id="main-img" src="" alt="Product Image">
+            </section>
 
-            <div class="product-spec">
-                <h2 id="detail-name">PRODUCT NAME</h2>
-                <p id="detail-price" class="price">KRW 0</p>
-                
-                <div class="purchase-box">
-                    <div class="info-row"><span>배송지</span><p id="user-addr">로그인 후 확인 가능합니다.</p></div>
+            <section class="info-area">
+                <header class="product-header">
+                    <p id="p-category" class="category-txt">COLLECTION</p>
+                    <h2 id="p-name" class="name-txt">상품명</h2>
+                    <p id="p-price" class="price-txt">₩ 0</p>
+                </header>
+
+                <div class="product-description">
+                    <p id="p-desc">라라 부티크의 감각적인 실루엣이 돋보이는 익스클루시브 피스입니다. 최상의 소재와 정교한 테일러링으로 완성되었습니다.</p>
+                </div>
+
+                <div class="purchase-options">
+                    <div class="opt-row">
+                        <label>SIZE</label>
+                        <select id="size-select">
+                            <option value="S">SMALL</option>
+                            <option value="M">MEDIUM</option>
+                            <option value="L">LARGE</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
                     <button class="btn-cart" onclick="addToCart()">ADD TO CART</button>
                     <button class="btn-buy">BUY NOW</button>
                 </div>
-            </div>
+            </section>
         </main>
     </div>
+    <script src="./js/data.js"></script>
     <script src="./js/detail.js"></script>
 </body>
 </html>

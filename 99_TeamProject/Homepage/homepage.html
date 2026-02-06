@@ -2,21 +2,20 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>라라 부티크 | LALA BOUTIQUE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>LALA BOUTIQUE | OFFICIAL STORE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Sans+KR:wght@100;300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/homepage.css">
 </head>
 <body>
     <div id="main-wrapper">
-        <aside class="top-utils">
-            <span id="user-display" style="display:none;"></span>
-            <span id="auth-btn" onclick="handleAuth()">LOGIN</span>
-            <span onclick="location.href='join.html'">JOIN</span>
-            <span onclick="location.href='cart.html'">CART</span>
-        </aside>
-
-        <header onclick="location.href='homepage.html'">
-            <h1 class="logo">lala boutique</h1>
+        <header class="top-bar">
+            <h1 class="logo" onclick="location.href='homepage.html'">LALA BOUTIQUE</h1>
+            <aside class="top-utils">
+                <span id="user-display" class="user-txt"></span>
+                <span id="auth-btn" class="util-link" onclick="handleAuth()">LOGIN</span>
+                <span class="util-link" onclick="location.href='join.html'">JOIN</span>
+                <span class="util-link" onclick="location.href='cart.html'">CART</span>
+            </aside>
         </header>
 
         <nav class="nav-wrapper">
@@ -27,29 +26,39 @@
                 <div class="menu-item">SHOES</div>
                 <div class="menu-item">ACC</div>
             </div>
-            
+
             <div class="full-dropdown">
                 <div class="drop-container">
                     <div class="drop-column">
-                        <span onclick="loadCategory('top/coat')">COAT</span>
-                        <span onclick="loadCategory('top/shirts')">SHIRTS</span>
-                        <span onclick="loadCategory('top/sweater')">SWEATER</span>
+                        <ul class="sub-menu">
+                            <li onclick="loadCategory('top/coat')">코트</li>
+                            <li onclick="loadCategory('top/shirts')">셔츠</li>
+                            <li onclick="loadCategory('top/sweater')">스웨터</li>
+                        </ul>
                     </div>
                     <div class="drop-column">
-                        <span onclick="loadCategory('bottom/pants')">PANTS</span>
-                        <span onclick="loadCategory('bottom/skirts')">SKIRTS</span>
+                        <ul class="sub-menu">
+                            <li onclick="loadCategory('bottom/pants')">팬츠</li>
+                            <li onclick="loadCategory('bottom/skirts')">스커트</li>
+                        </ul>
                     </div>
                     <div class="drop-column">
-                        <span onclick="loadCategory('set/onepiece')">DRESS</span>
-                        <span onclick="loadCategory('set/suit')">SUIT</span>
+                        <ul class="sub-menu">
+                            <li onclick="loadCategory('set/onepiece')">원피스</li>
+                            <li onclick="loadCategory('set/suit')">수트</li>
+                        </ul>
                     </div>
                     <div class="drop-column">
-                        <span onclick="loadCategory('shoes/dressshoe')">SHOES</span>
-                        <span onclick="loadCategory('shoes/sandals')">SANDALS</span>
+                        <ul class="sub-menu">
+                            <li onclick="loadCategory('shoes/dressshoe')">드레스슈즈</li>
+                            <li onclick="loadCategory('shoes/sandals')">샌들</li>
+                        </ul>
                     </div>
                     <div class="drop-column">
-                        <span onclick="loadCategory('acc/bag')">BAG</span>
-                        <span onclick="loadCategory('acc/hat')">HAT</span>
+                        <ul class="sub-menu">
+                            <li onclick="loadCategory('acc/bag')">백</li>
+                            <li onclick="loadCategory('acc/hat')">모자</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -57,20 +66,19 @@
 
         <main id="content-body">
             <section class="special-section">
-                <h2 id="main-title" class="stitle">Editor's Pick</h2>
-                <div id="grid-root" class="grid-container">
-                    </div>
+                <h2 id="main-title" class="stitle">COLLECTION</h2>
+                <div id="grid-root" class="grid-container"></div>
             </section>
         </main>
 
         <footer class="footer-section">
-            <button class="btn-withdraw" onclick="executeWithdraw()">회원탈퇴</button>
+            <button class="btn-withdraw" onclick="executeWithdraw()">Membership Withdrawal</button>
             <div class="footer-info">
-                <p>COMPANY: LALA BOUTIQUE | OWNER: 000 | CALL: 1544-0000</p>
-                <p>© 2026 LALA BOUTIQUE. ALL RIGHTS RESERVED.</p>
+                <p>© 2026 LALA BOUTIQUE. SEOUL</p>
             </div>
         </footer>
     </div>
-    <script src="./js/Homepage.js"></script>
+    <script src="./js/data.js"></script>
+    <script src="./js/homepage.js"></script>
 </body>
 </html>

@@ -1,62 +1,73 @@
-/* 기본 초기화 */
+/* 공통 리셋 */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Noto Sans KR', sans-serif; color: #1a1a1a; line-height: 1.6; background-color: #fff; }
-
-/* 헤더 & 네비게이션 */
-.top-utils { display: flex; justify-content: flex-end; padding: 15px 40px; font-size: 11px; letter-spacing: 1px; color: #888; gap: 20px; }
-.top-utils span { cursor: pointer; }
-
-header { text-align: center; padding: 50px 0; cursor: pointer; }
-.logo { font-family: 'Cormorant Garamond', serif; font-size: 42px; letter-spacing: 8px; font-weight: 300; text-transform: lowercase; }
-
-.nav-wrapper { position: relative; border-top: 1px solid #eee; border-bottom: 1px solid #eee; z-index: 1000; }
-.menu-bar { display: flex; justify-content: center; gap: 60px; padding: 18px 0; font-size: 13px; letter-spacing: 2px; }
-.full-dropdown { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border-bottom: 1px solid #eee; padding: 40px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.03); }
-.nav-wrapper:hover .full-dropdown { display: block; }
-.drop-container { display: flex; justify-content: center; gap: 80px; }
-.drop-column { display: flex; flex-direction: column; gap: 12px; }
-.drop-column span { font-size: 11px; color: #888; cursor: pointer; transition: 0.2s; }
-.drop-column span:hover { color: #000; text-decoration: underline; }
-
-/* [핵심] 4열 3줄 그리드 */
-.special-section { max-width: 1080px; margin: 80px auto; padding: 0 25px; }
-.stitle { font-family: 'Cormorant Garamond', serif; font-size: 28px; text-align: center; margin-bottom: 60px; letter-spacing: 4px; text-transform: uppercase; }
-
-.grid-container { 
-    display: grid; 
-    grid-template-columns: repeat(4, 1fr); /* 가로 4열 */
-    gap: 60px 25px; 
+body { 
+    font-family: 'Noto Sans KR', sans-serif; 
+    color: #1a1a1a; 
+    background-color: #fff; 
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* 상품 카드 */
-.product-card { cursor: pointer; text-align: center; }
-.product-card img { 
-    width: 100%; 
-    max-width: 240px; /* 사진 크기 정갈하게 제한 */
-    aspect-ratio: 3 / 4; 
-    object-fit: cover; 
-    background: #f9f9f9; 
-    border: 1px solid #f2f2f2;
-    margin: 0 auto 15px;
-    display: block;
-    transition: transform 0.4s ease;
+/* 상단바 레이아웃 (로고 왼쪽 끝) */
+.top-bar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 30px 60px; 
 }
-.product-card:hover img { transform: scale(1.02); }
-.p-name { font-size: 11px; color: #777; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-.p-price { font-size: 13px; font-weight: 600; }
+.logo { 
+    font-family: 'Cormorant Garamond', serif; 
+    font-size: 1.8rem; 
+    letter-spacing: 8px; 
+    font-weight: 400; 
+    cursor: pointer;
+    line-height: 1;
+}
+.top-utils { display: flex; gap: 30px; font-size: 0.65rem; font-weight: 300; letter-spacing: 1.5px; }
+.util-link { cursor: pointer; color: #999; text-transform: uppercase; transition: color 0.3s; }
+.util-link:hover { color: #111; }
+.user-txt { font-weight: 400; color: #111; margin-right: -10px; }
+
+/* 네비게이션 & 가변형 드롭다운 (밀어내기 방식) */
+.nav-wrapper { border-top: 1px solid #f2f2f2; border-bottom: 1px solid #f2f2f2; transition: all 0.4s ease; }
+.menu-bar { display: flex; justify-content: center; max-width: 1100px; margin: 0 auto; padding: 20px 0; }
+.menu-item { flex: 1; text-align: center; font-weight: 400; font-size: 0.8rem; letter-spacing: 5px; color: #222; }
+
+.full-dropdown { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.4s ease; background: #fff; }
+.nav-wrapper:hover .full-dropdown { max-height: 150px; opacity: 1; padding-bottom: 25px; }
+
+.drop-container { display: flex; justify-content: center; max-width: 1100px; margin: 0 auto; }
+.drop-column { flex: 1; text-align: center; }
+.sub-menu { list-style: none; }
+.sub-menu li { 
+    padding: 6px 0; font-size: 0.75rem; color: #aaa; cursor: pointer; transition: 0.3s;
+    font-weight: 300; letter-spacing: 1px;
+}
+.sub-menu li:hover { color: #111; }
+
+/* 상품 섹션 및 그리드 (4x3 정렬) */
+.stitle { 
+    text-align: center; font-family: 'Cormorant Garamond', serif; 
+    letter-spacing: 10px; margin: 70px 0 60px; font-size: 1.5rem; font-weight: 300; 
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 80px 35px; /* 시원한 여백 구성 */
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 60px 120px;
+}
+
+/* 상품 카드 디자인 */
+.product-card { cursor: pointer; text-align: center; transition: opacity 0.4s ease; }
+.product-card:hover { opacity: 0.8; }
+.product-card img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; margin-bottom: 25px; }
+
+.p-name { font-weight: 500; font-size: 0.88rem; margin-bottom: 8px; color: #111; letter-spacing: -0.02em; }
+.p-desc { font-size: 0.78rem; color: #888; margin-bottom: 12px; font-weight: 300; line-height: 1.5; }
+.p-price { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 1.05rem; color: #111; }
 
 /* 푸터 */
-.footer-section { padding: 80px 0; border-top: 1px solid #eee; background-color: #fafafa; margin-top: 120px; text-align: center; }
-.btn-withdraw { background: none; border: none; color: #bbb; text-decoration: underline; cursor: pointer; font-size: 11px; }
-/* 상품 정보 영역 */
-.product-info { padding: 15px 5px; }
-.p-name { font-size: 11px; color: #1a1a1a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-.p-desc { 
-    font-size: 10px; 
-    color: #999; 
-    margin: 5px 0; 
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; /* 설명이 너무 길면 ... 처리 */
-}
-.p-price { font-size: 12px; font-weight: 400; color: #333; }
+.footer-section { border-top: 1px solid #f2f2f2; padding: 60px 0; text-align: center; font-size: 0.65rem; color: #ccc; letter-spacing: 2px; }
+.btn-withdraw { border: none; background: none; color: #ddd; cursor: pointer; margin-bottom: 15px; font-size: 0.6rem; text-decoration: underline; }

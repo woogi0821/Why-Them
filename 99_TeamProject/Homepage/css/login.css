@@ -1,10 +1,87 @@
-body { margin: 0; padding: 0; height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #fcfcfc; font-family: 'Noto Sans KR', sans-serif; }
-.center-container { text-align: center; width: 320px; }
-.logo { font-family: 'Cormorant Garamond', serif; font-size: 35px; letter-spacing: 15px; text-transform: uppercase; cursor: pointer; margin-bottom: 60px; font-weight: 300; margin-right: -15px; }
-.login-box { display: flex; flex-direction: column; }
-.login-box input { width: 100%; padding: 15px 0; border: none; border-bottom: 1px solid #eee; background: transparent; font-size: 14px; outline: none; margin-bottom: 10px; transition: 0.3s; }
-.login-box input:focus { border-bottom: 1px solid #000; }
-.btn-login { width: 100%; padding: 18px; background-color: #000; color: #fff; border: none; cursor: pointer; font-size: 13px; letter-spacing: 2px; margin-top: 30px; transition: 0.3s; }
-.btn-login:hover { background-color: #333; }
-.links { margin-top: 25px; display: flex; justify-content: center; gap: 30px; font-size: 11px; color: #999; }
-.links span { cursor: pointer; }
+/* 글로벌 리셋 */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+    font-family: 'Noto Sans KR', sans-serif; 
+    background-color: #fff; 
+    color: #1a1a1a;
+    letter-spacing: -0.02em;
+}
+
+#login-viewport {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box { 
+    width: 100%; 
+    max-width: 320px; /* 더 콤팩트하게 조정 */
+    text-align: center; 
+}
+
+/* 로고: 여백의 미 강조 */
+.logo-area { margin-bottom: 80px; }
+.logo { 
+    font-family: 'Cormorant Gramond', serif; 
+    font-size: 2.4rem; 
+    letter-spacing: 14px; 
+    font-weight: 300; 
+    cursor: pointer;
+    margin-right: -14px; /* 자간 균형 조정 */
+}
+
+/* 입력 필드: 아주 얇은 선 디자인 */
+.form-area { margin-bottom: 40px; }
+.input-field { margin-bottom: 25px; position: relative; }
+.input-field input {
+    width: 100%;
+    border: none;
+    padding: 12px 0;
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    outline: none;
+    background: transparent;
+    text-align: center; /* 텍스트 중앙 정렬로 미학적 완성도 향상 */
+}
+
+/* 플레이스홀더 스타일 */
+.input-field input::placeholder {
+    color: #ccc;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+}
+
+.line { 
+    width: 100%; 
+    height: 1px; 
+    background: #f2f2f2; 
+    transition: 0.5s ease; 
+}
+.input-field input:focus + .line { background: #111; }
+
+/* 버튼: 묵직한 존재감 */
+.btn-submit {
+    width: 100%;
+    padding: 18px 0;
+    background: #111;
+    color: #fff;
+    border: none;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.4s;
+}
+.btn-submit:hover { background: #444; }
+
+/* 하단 링크: 절제된 폰트 */
+.form-links { margin-top: 30px; }
+.form-links a { 
+    font-size: 0.65rem; 
+    color: #aaa; 
+    text-decoration: none; 
+    letter-spacing: 2px; 
+}
+.sep { font-size: 0.6rem; color: #eee; margin: 0 10px; }
