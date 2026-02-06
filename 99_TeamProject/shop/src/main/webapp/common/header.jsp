@@ -1,50 +1,57 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/homepage.css">
+<aside class="top-utils">
+    <c:if test="${empty sessionScope.loginMember}">
+        <span onclick="location.href='/member/login'">LOGIN</span>
+        <span onclick="location.href='/member/join'">JOIN</span>
+    </c:if>
 
-<div class="top-utils">
-    <c:choose>
-        <c:when test="${empty sessionScope.loginMember}">
-            <span onclick="location.href='${pageContext.request.contextPath}/member/login'">로그인</span>
-            <span onclick="location.href='${pageContext.request.contextPath}/member/join'">회원가입</span>
-        </c:when>
-        <c:otherwise>
-            <span style="color:#000; font-weight:bold;">
-                <c:out value="${sessionScope.loginMember.name}" />님
-            </span>
-            <span onclick="location.href='${pageContext.request.contextPath}/member/logout'">로그아웃</span>
-        </c:otherwise>
-    </c:choose>
-
-    <span onclick="location.href='${pageContext.request.contextPath}/wish/list'">위시리스트</span>
-    <span onclick="location.href='${pageContext.request.contextPath}/cart/list'">
-        장바구니
-        <span id="cart-count" class="cart-count">
-            <c:out value="${empty sessionScope.cartCount ? 0 : sessionScope.cartCount}" />
+    <c:if test="${not empty sessionScope.loginMember}">
+        <span style="color: #333; cursor: default;">
+            <b>${sessionScope.loginMember.memberName}</b>님
         </span>
-    </span>
-</div>
+        <span onclick="location.href='/member/logout'">LOGOUT</span>
+        <span onclick="location.href='/cart/list'">CART</span>
+        <span onclick="location.href='/member/mypage'">MY PAGE</span>
+    </c:if>
+</aside>
 
-<header onclick="location.href='${pageContext.request.contextPath}/'">
-    <div class="logo">lala boutique</div>
+<header onclick="location.href='/main'">
+    <h1 class="logo">lala boutique</h1>
 </header>
 
 <nav class="nav-wrapper">
     <div class="menu-bar">
-        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=top'">Tops</span>
-        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=bottom'">Bottoms</span>
-        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=shirts'">Shirts</span>
-        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=shoes'">Shoes</span>
-        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=acc'">Acc</span>
+        <div class="menu-item">TOPS</div>
+        <div class="menu-item">BOTTOMS</div>
+        <div class="menu-item">SETS</div>
+        <div class="menu-item">SHOES</div>
+        <div class="menu-item">ACC</div>
     </div>
 
     <div class="full-dropdown">
         <div class="drop-container">
             <div class="drop-column">
-                <span class="drop-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=coat'">COAT</span>
-                <span class="drop-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=shirts'">SHIRTS</span>
-                <span class="drop-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=sweater'">SWEATER</span>
+                <span onclick="location.href='/main?categoryId=7'">COAT</span>
+                <span onclick="location.href='/main?categoryId=8'">SHIRTS</span>
+                <span onclick="location.href='/main?categoryId=9'">SWEATER</span>
+            </div>
+            <div class="drop-column">
+                <span onclick="location.href='/main?categoryId=10'">PANTS</span>
+                <span onclick="location.href='/main?categoryId=11'">SKIRTS</span>
+            </div>
+            <div class="drop-column">
+                <span onclick="location.href='/main?categoryId=12'">ONEPIECE</span>
+                <span onclick="location.href='/main?categoryId=13'">SUIT</span>
+            </div>
+            <div class="drop-column">
+                <span onclick="location.href='/main?categoryId=14'">DRESS SHOE</span>
+                <span onclick="location.href='/main?categoryId=15'">SANDALS</span>
+            </div>
+            <div class="drop-column">
+                <span onclick="location.href='/main?categoryId=16'">BAG</span>
+                <span onclick="location.href='/main?categoryId=17'">HAT</span>
             </div>
         </div>
     </div>

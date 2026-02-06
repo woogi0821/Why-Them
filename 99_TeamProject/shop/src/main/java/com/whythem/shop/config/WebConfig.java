@@ -18,7 +18,12 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/css/**").addResourceLocations("/css/");
         registry.addResourceHandler("/js/**").addResourceLocations("/js/");
         registry.addResourceHandler("/images/**").addResourceLocations("/images/");
+        String desktopPath = "C:/Users/khuser/Desktop/images/";
+
+        registry.addResourceHandler("/upload/**")
+                .addResourceLocations("file:///C:/Users/khuser/Desktop/images/");
     }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(devLoginInterceptor)
@@ -30,8 +35,10 @@ public class WebConfig implements WebMvcConfigurer {
                         "/css/**",
                         "/js/**",
                         "/images/**",
+                        "/upload/**",   // [중요] 이미지 경로를 인터셉터 제외 대상에 추가
                         "/favicon.ico",
                         "/error"
+
                 );
     }
 }

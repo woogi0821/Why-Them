@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>라라 부티크 | LALA BOUTIQUE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/homepage.css">
+</head>
+<body>
+    <div id="main-wrapper">
+        <aside class="top-utils">
+            <span id="user-display" style="display:none;"></span>
+            <span id="auth-btn" onclick="handleAuth()">LOGIN</span>
+            <span onclick="location.href='join.html'">JOIN</span>
+            <span onclick="location.href='cart.html'">CART</span>
+        </aside>
+
+        <header onclick="location.href='homepage.html'">
+            <h1 class="logo">lala boutique</h1>
+        </header>
+
+        <nav class="nav-wrapper">
+            <div class="menu-bar">
+                <div class="menu-item">TOPS</div>
+                <div class="menu-item">BOTTOMS</div>
+                <div class="menu-item">SETS</div>
+                <div class="menu-item">SHOES</div>
+                <div class="menu-item">ACC</div>
+            </div>
+            
+            <div class="full-dropdown">
+                <div class="drop-container">
+                    <div class="drop-column">
+                        <span onclick="loadCategory('top/coat')">COAT</span>
+                        <span onclick="loadCategory('top/shirts')">SHIRTS</span>
+                        <span onclick="loadCategory('top/sweater')">SWEATER</span>
+                    </div>
+                    <div class="drop-column">
+                        <span onclick="loadCategory('bottom/pants')">PANTS</span>
+                        <span onclick="loadCategory('bottom/skirts')">SKIRTS</span>
+                    </div>
+                    <div class="drop-column">
+                        <span onclick="loadCategory('set/onepiece')">DRESS</span>
+                        <span onclick="loadCategory('set/suit')">SUIT</span>
+                    </div>
+                    <div class="drop-column">
+                        <span onclick="loadCategory('shoes/dressshoe')">SHOES</span>
+                        <span onclick="loadCategory('shoes/sandals')">SANDALS</span>
+                    </div>
+                    <div class="drop-column">
+                        <span onclick="loadCategory('acc/bag')">BAG</span>
+                        <span onclick="loadCategory('acc/hat')">HAT</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main id="content-body">
+            <section class="special-section">
+                <h2 id="main-title" class="stitle">Editor's Pick</h2>
+                <div id="grid-root" class="grid-container">
+                    </div>
+            </section>
+        </main>
+
+        <footer class="footer-section">
+            <button class="btn-withdraw" onclick="executeWithdraw()">회원탈퇴</button>
+            <div class="footer-info">
+                <p>COMPANY: LALA BOUTIQUE | OWNER: 000 | CALL: 1544-0000</p>
+                <p>© 2026 LALA BOUTIQUE. ALL RIGHTS RESERVED.</p>
+            </div>
+        </footer>
+    </div>
+    <script src="./js/Homepage.js"></script>
+</body>
+</html>

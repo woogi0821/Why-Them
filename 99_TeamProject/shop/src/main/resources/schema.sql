@@ -1,7 +1,7 @@
 /* ==============================================
-   [초기화] 기존 객체 삭제
+   [초기화] 기존 객체 삭제 (Clean Up)
    ============================================== */
--- 테이블 삭제
+-- 테이블 삭제 (순서 중요: 자식 -> 부모)
 DROP TABLE PAYMENTS CASCADE CONSTRAINTS;
 DROP TABLE ORDER_ITEMS CASCADE CONSTRAINTS;
 DROP TABLE ORDERS CASCADE CONSTRAINTS;
@@ -9,7 +9,7 @@ DROP TABLE CART_ITEM CASCADE CONSTRAINTS;
 DROP TABLE CART CASCADE CONSTRAINTS;
 DROP TABLE PROMOTION_PRODUCT CASCADE CONSTRAINTS;
 DROP TABLE PROMOTION CASCADE CONSTRAINTS;
-DROP TABLE PRODUCT_IMAGE CASCADE CONSTRAINTS;
+DROP TABLE PRODUCT_IMAGE CASCADE CONSTRAINTS; -- 기존에 있던 거 지워야 하니 남겨둠
 DROP TABLE PRODUCT CASCADE CONSTRAINTS;
 DROP TABLE CATEGORY CASCADE CONSTRAINTS;
 DROP TABLE MEMBER_ADDRESS CASCADE CONSTRAINTS;
@@ -24,7 +24,7 @@ DROP SEQUENCE ADMIN_LOG_SEQ;
 DROP SEQUENCE MEMBER_ADDRESS_SEQ;
 DROP SEQUENCE CATEGORY_SEQ;
 DROP SEQUENCE PRODUCT_SEQ;
-DROP SEQUENCE PRODUCT_IMAGE_SEQ;
+DROP SEQUENCE PRODUCT_IMAGE_SEQ; -- 이제 필요 없지만 기존 거 삭제용으로 실행
 DROP SEQUENCE CART_SEQ;
 DROP SEQUENCE CART_ITEM_SEQ;
 DROP SEQUENCE ORDERS_SEQ;
@@ -33,15 +33,15 @@ DROP SEQUENCE PAYMENTS_SEQ;
 DROP SEQUENCE PROMOTION_SEQ;
 
 /* ==============================================
-   [생성] 테이블 및 시퀀스 (컬럼명 일원화 적용)
+   [생성] 테이블 및 시퀀스 (이미지 통합 버전)
    ============================================== */
 
 -- 1. 회원 (MEMBER)
 CREATE TABLE MEMBER (
                         MEMBER_ID       NUMBER(19)          NOT NULL,
-                        LOGIN_ID        VARCHAR2(50)        NOT NULL, -- USER_ID -> LOGIN_ID (관리자와 통일)
-                        LOGIN_PW        VARCHAR2(255)       NOT NULL, -- USER_PW -> LOGIN_PW
-                        MEMBER_NAME     VARCHAR2(50)        NOT NULL, -- NAME -> MEMBER_NAME (조인 시 충돌 방지)
+                        LOGIN_ID        VARCHAR2(50)        NOT NULL,
+                        LOGIN_PW        VARCHAR2(255)       NOT NULL,
+                        MEMBER_NAME     VARCHAR2(50)        NOT NULL,
                         EMAIL           VARCHAR2(100)       NOT NULL,
                         PHONE_NUMBER    VARCHAR2(20)        NOT NULL,
                         MEMBER_GRADE    VARCHAR2(1)         DEFAULT 'N' NOT NULL,
@@ -56,8 +56,8 @@ CREATE SEQUENCE MEMBER_SEQ NOCACHE;
 CREATE TABLE ADMIN (
                        ADMIN_ID        NUMBER(19)          NOT NULL,
                        LOGIN_ID        VARCHAR2(50)        NOT NULL,
-                       LOGIN_PW        VARCHAR2(255)       NOT NULL, -- PASSWORD -> LOGIN_PW
-                       ADMIN_NAME      VARCHAR2(50)        NOT NULL, -- NAME -> ADMIN_NAME
+                       LOGIN_PW        VARCHAR2(255)       NOT NULL,
+                       ADMIN_NAME      VARCHAR2(50)        NOT NULL,
                        ROLE            VARCHAR2(20)        DEFAULT 'ADMIN',
                        STATUS          VARCHAR2(20)        DEFAULT 'ACTIVE',
                        LAST_LOGIN_AT   DATE,
@@ -70,7 +70,7 @@ CREATE SEQUENCE ADMIN_SEQ NOCACHE;
 CREATE TABLE ADMIN_LOG (
                            LOG_ID          NUMBER(19)          NOT NULL,
                            ADMIN_ID        NUMBER(19)          NOT NULL,
-                           MEMBER_ID       NUMBER(19),         -- TARGET_MEMBER_ID -> MEMBER_ID (조인 편의성)
+                           MEMBER_ID       NUMBER(19),
                            ACTION_TYPE     VARCHAR2(50)        NOT NULL,
                            REASON          VARCHAR2(1000),
                            CREATED_AT      DATE                DEFAULT SYSDATE,
@@ -84,7 +84,7 @@ CREATE SEQUENCE ADMIN_LOG_SEQ NOCACHE;
 CREATE TABLE MEMBER_ADDRESS (
                                 ADDRESS_ID      NUMBER(19)          NOT NULL,
                                 MEMBER_ID       NUMBER(19)          NOT NULL,
-                                ADDRESS_NAME    VARCHAR2(50),       -- '우리집' 같은 별칭
+                                ADDRESS_NAME    VARCHAR2(50),
                                 RECIPIENT_NAME  VARCHAR2(50)        NOT NULL,
                                 RECIPIENT_PHONE VARCHAR2(20)        NOT NULL,
                                 ZIP_CODE        VARCHAR2(10)        NOT NULL,
@@ -99,7 +99,7 @@ CREATE SEQUENCE MEMBER_ADDRESS_SEQ NOCACHE;
 -- 5. 카테고리 (CATEGORY)
 CREATE TABLE CATEGORY (
                           CATEGORY_ID     NUMBER              NOT NULL,
-                          CATEGORY_NAME   VARCHAR2(100)       NOT NULL, -- NAME -> CATEGORY_NAME
+                          CATEGORY_NAME   VARCHAR2(100)       NOT NULL,
                           PARENT_ID       NUMBER,
                           C_LEVEL         NUMBER              DEFAULT 1,
                           CONSTRAINT PK_CATEGORY PRIMARY KEY (CATEGORY_ID),
@@ -107,16 +107,18 @@ CREATE TABLE CATEGORY (
 );
 CREATE SEQUENCE CATEGORY_SEQ NOCACHE;
 
--- 6. 상품 (PRODUCT)
+-- 6. 상품 (PRODUCT) - ★ 여기가 핵심 수정 포인트 ★
 CREATE TABLE PRODUCT (
                          PRODUCT_ID      NUMBER              NOT NULL,
                          CATEGORY_ID     NUMBER              NOT NULL,
-                         PRODUCT_NAME    VARCHAR2(255)       NOT NULL, -- NAME -> PRODUCT_NAME
+                         PRODUCT_NAME    VARCHAR2(255)       NOT NULL,
+                         BRAND_NAME      VARCHAR2(100),      -- ★ [복구 완료] 브랜드명 추가
                          PRICE           NUMBER              NOT NULL,
                          STOCK_QUANTITY  NUMBER              DEFAULT 0 NOT NULL,
                          DESCRIPTION     CLOB,
                          STATUS          VARCHAR2(20)        DEFAULT 'SALE',
                          VIEW_COUNT      NUMBER              DEFAULT 0,
+                         IMAGE_URL       VARCHAR2(500),      -- 이미지 통합 (1:1)
                          CREATED_AT      DATE                DEFAULT SYSDATE,
                          UPDATED_AT      DATE                DEFAULT SYSDATE,
                          CONSTRAINT PK_PRODUCT PRIMARY KEY (PRODUCT_ID),
@@ -124,16 +126,7 @@ CREATE TABLE PRODUCT (
 );
 CREATE SEQUENCE PRODUCT_SEQ NOCACHE;
 
--- 7. 상품 이미지 (PRODUCT_IMAGE)
-CREATE TABLE PRODUCT_IMAGE (
-                               IMAGE_ID        NUMBER              NOT NULL,
-                               PRODUCT_ID      NUMBER              NOT NULL,
-                               IMAGE_URL       VARCHAR2(500)       NOT NULL,
-                               IS_MAIN         CHAR(1)             DEFAULT 'N',
-                               CONSTRAINT PK_PROD_IMG PRIMARY KEY (IMAGE_ID),
-                               CONSTRAINT FK_IMG_PRODUCT FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCT(PRODUCT_ID) ON DELETE CASCADE
-);
-CREATE SEQUENCE PRODUCT_IMAGE_SEQ NOCACHE;
+-- 7. (삭제됨) 상품 이미지 테이블은 이제 없습니다. Bye Bye! 👋
 
 -- 8. 장바구니 (CART)
 CREATE TABLE CART (
@@ -152,7 +145,7 @@ CREATE TABLE CART_ITEM (
                            CART_ID         NUMBER              NOT NULL,
                            PRODUCT_ID      NUMBER              NOT NULL,
                            QUANTITY        NUMBER              DEFAULT 1 NOT NULL,
-                           CREATED_AT      DATE                DEFAULT SYSDATE, -- ADDED_AT -> CREATED_AT (통일)
+                           CREATED_AT      DATE                DEFAULT SYSDATE,
                            CONSTRAINT PK_CART_ITEM PRIMARY KEY (CART_ITEM_ID),
                            CONSTRAINT FK_CI_CART FOREIGN KEY (CART_ID) REFERENCES CART(CART_ID) ON DELETE CASCADE,
                            CONSTRAINT FK_CI_PRODUCT FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCT(PRODUCT_ID)
@@ -202,7 +195,7 @@ CREATE SEQUENCE PAYMENTS_SEQ NOCACHE;
 -- 13. 프로모션 (PROMOTION)
 CREATE TABLE PROMOTION (
                            PROMOTION_ID    NUMBER              NOT NULL,
-                           PROMOTION_TITLE VARCHAR2(100)       NOT NULL, -- TITLE -> PROMOTION_TITLE
+                           PROMOTION_TITLE VARCHAR2(100)       NOT NULL,
                            DISCOUNT_TYPE   VARCHAR2(20)        NOT NULL,
                            DISCOUNT_VALUE  NUMBER(10, 2)       NOT NULL,
                            START_DATE      DATE,
