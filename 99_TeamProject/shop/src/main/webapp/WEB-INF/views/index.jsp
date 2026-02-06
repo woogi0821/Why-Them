@@ -20,8 +20,7 @@
         </section>
     </main>
 
-    <footer class="footer-section">
-    </footer>
+    <jsp:include page="/common/footer.jsp"/>
 </div>
 </body>
 </html>
