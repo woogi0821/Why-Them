@@ -118,36 +118,36 @@
 
 <div class="form-container">
     <h2>새 상품 등록</h2>
-    <form action="/product/add" method="post" enctype="multipart/form-data">
+    <form action="/admin/product/add" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label>카테고리</label>
             <select name="categoryId" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
                 <option value="">카테고리 선택</option>
 
                 <optgroup label="TOP (상의)">
-                    <option value="7">COAT</option>
-                    <option value="8">SHIRT</option>
-                    <option value="9">SWEATER</option>
+                    <option value="1">COAT</option>
+                    <option value="2">SHIRT</option>
+                    <option value="3">SWEATER</option>
                 </optgroup>
 
                 <optgroup label="BOTTOM (하의)">
-                    <option value="10">PANTS</option>
-                    <option value="11">SKIRTS</option>
+                    <option value="4">PANTS</option>
+                    <option value="5">SKIRTS</option>
                 </optgroup>
 
                 <optgroup label="SET (세트)">
-                    <option value="12">ONEPIECE</option>
-                    <option value="13">SUIT</option>
+                    <option value="6">ONEPIECE</option>
+                    <option value="7">SUIT</option>
                 </optgroup>
 
                 <optgroup label="SHOES (신발)">
-                    <option value="14">DRESSSHOE</option>
-                    <option value="15">SANDALS</option>
+                    <option value="8">DRESSSHOE</option>
+                    <option value="9">SANDALS</option>
                 </optgroup>
 
                 <optgroup label="ACC (액세서리)">
-                    <option value="16">BAG</option>
-                    <option value="17">HAT</option>
+                    <option value="10">BAG</option>
+                    <option value="11">HAT</option>
                 </optgroup>
             </select>
         </div>

@@ -79,23 +79,23 @@ public class ProductController {
 
         // categoryId가 null이 아닐 때만 이름 변경 로직 실행
         if (categoryId != null) {
-            if (categoryId == 7) categoryName = "COAT";
-            else if (categoryId == 8) categoryName = "SHIRTS";
-            else if (categoryId == 9) categoryName = "SWEATER";
-            else if (categoryId == 10) categoryName = "PANTS";
-            else if (categoryId == 11) categoryName = "SKIRTS";
-            else if (categoryId == 12) categoryName = "ONEPIECE";
-            else if (categoryId == 13) categoryName = "SUIT";
-            else if (categoryId == 14) categoryName = "DRESSSHOE";
-            else if (categoryId == 15) categoryName = "SANDALS";
-            else if (categoryId == 16) categoryName = "BAG";
-            else if (categoryId == 17) categoryName = "HAT";
+            if (categoryId == 1) categoryName = "COAT";
+            else if (categoryId == 2) categoryName = "SHIRTS";
+            else if (categoryId == 3) categoryName = "SWEATER";
+            else if (categoryId == 4) categoryName = "PANTS";
+            else if (categoryId == 5) categoryName = "SKIRTS";
+            else if (categoryId == 6) categoryName = "ONEPIECE";
+            else if (categoryId == 7) categoryName = "SUIT";
+            else if (categoryId == 8) categoryName = "SSHOES";
+            else if (categoryId == 9) categoryName = "SANDALS";
+            else if (categoryId == 10) categoryName = "BAG";
+            else if (categoryId == 11) categoryName = "HAT";
         }
 
         // 3. JSP로 전달
         model.addAttribute("categoryName", categoryName);
 
-        return "product/customer_main";
+        return "product/index";
     }
     @GetMapping("/product/edit")
     public String editPage(@RequestParam("productId") Long productId, Model model) {

@@ -33,22 +33,22 @@
     <div class="logo">lala boutique</div>
 </header>
 
-<nav class="nav-wrapper">
-    <div class="menu-bar">
-        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=top'">Tops</span>
-        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=bottom'">Bottoms</span>
-        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=shirts'">Shirts</span>
-        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=shoes'">Shoes</span>
-        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=acc'">Acc</span>
-    </div>
+<%--<nav class="nav-wrapper">--%>
+<%--    <div class="menu-bar">--%>
+<%--        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=top'">Tops</span>--%>
+<%--        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=bottom'">Bottoms</span>--%>
+<%--        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=shirts'">Shirts</span>--%>
+<%--        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=shoes'">Shoes</span>--%>
+<%--        <span class="menu-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=acc'">Acc</span>--%>
+<%--    </div>--%>
 
-    <div class="full-dropdown">
-        <div class="drop-container">
-            <div class="drop-column">
-                <span class="drop-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=coat'">COAT</span>
-                <span class="drop-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=shirts'">SHIRTS</span>
-                <span class="drop-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=sweater'">SWEATER</span>
-            </div>
-        </div>
-    </div>
-</nav>
+<%--    <div class="full-dropdown">--%>
+<%--        <div class="drop-container">--%>
+<%--            <div class="drop-column">--%>
+<%--                <span class="drop-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=coat'">COAT</span>--%>
+<%--                <span class="drop-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=shirts'">SHIRTS</span>--%>
+<%--                <span class="drop-link" onclick="location.href='${pageContext.request.contextPath}/product/list?category=sweater'">SWEATER</span>--%>
+<%--            </div>--%>
+<%--        </div>--%>
+<%--    </div>--%>
+<%--</nav>--%>

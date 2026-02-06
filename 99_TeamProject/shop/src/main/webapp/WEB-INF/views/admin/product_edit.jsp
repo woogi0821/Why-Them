@@ -16,7 +16,7 @@
 <body>
 <div class="form-container">
     <h2>상품 수정</h2>
-    <form action="/product/edit" method="post" enctype="multipart/form-data">
+    <form action="/admin/product/edit" method="post" enctype="multipart/form-data">
         <input type="hidden" name="productId" value="${product.productId}">
         <input type="hidden" name="imageUrl" value="${product.imageUrl}">
 
@@ -63,7 +63,7 @@
         </div>
 
         <button type="submit" class="btn-submit">수정 완료</button>
-        <button type="button" onclick="location.href='/shop'" style="width: 100%; margin-top: 5px;">취소</button>
+        <button type="button" onclick="location.href='/admin/admin_main'" style="width: 100%; margin-top: 5px;">취소</button>
     </form>
 </div>
 </body>
