@@ -6,261 +6,99 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>회원가입 - LALA BOUTIQUE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Sans+KR:wght@200;300;400&display=swap" rel="stylesheet">
+    <title>라라 부티크 | JOIN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/join.css">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #fff; font-family: 'Noto Sans KR', sans-serif; color: #111; }
-        .simple-header { height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
-        .logo { font-family: 'Cormorant Garamond', serif; font-size: 42px; letter-spacing: 20px; text-transform: lowercase; color: #111; text-decoration: none; }
-        .join-container { max-width: 420px; margin: 0 auto 120px; padding: 0 20px; }
-        .input-group { margin-bottom: 40px; position: relative; }
-        .input-label { font-size: 10px; color: #aaa; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; display: block; }
-        .lala-input { width: 100%; height: 45px; border: none; border-bottom: 1px solid #eee; font-size: 14px; outline: none; transition: 0.3s; background: transparent; }
-        .lala-input:focus { border-bottom: 1px solid #111; }
-        .side-btn { position: absolute; right: 0; bottom: 10px; background: none; border: none; border-bottom: 1px solid #111; font-size: 11px; cursor: pointer; padding: 2px 0; color: #333; }
-        .lala-btn { width: 100%; height: 60px; background: #111; color: #fff; border: none; font-size: 13px; letter-spacing: 2px; cursor: pointer; margin-top: 50px; }
-        .lala-btn-sub { width: 100%; background: #fff; color: #bbb; border: none; font-size: 11px; letter-spacing: 1px; cursor: pointer; margin-top: 15px; }
-
-        /* [추가] 주소찾기 레이어 스타일 */
-        #postcode-layer {
-            display: none;
-            border: 1px solid #111;
-            width: 100%;
-            height: 300px;
-            margin: 10px 0 30px;
-            position: relative;
-        }
-        #btn-close-layer {
-            position: absolute;
-            right: 0;
-            top: -25px;
-            cursor: pointer;
-            font-size: 12px;
-            color: #111;
-            background: none;
-            border: none;
-        }
+        .email-row { display: flex; gap: 5px; align-items: center; }
+        .email-row input { width: 35%; }
+        .email-row select { width: 30%; height: 42px; border: 1px solid #eee; padding: 0 10px; color: #333; outline: none; }
+        #postcode-layer { display:none; position:fixed; overflow:hidden; z-index:9999; -webkit-overflow-scrolling:touch; border:1px solid #000; background:#fff; }
+        #btn-close-layer { position:absolute; right:0px; top:0px; z-index:1; cursor:pointer; background:#333; color:#fff; border:none; padding:5px 10px; }
     </style>
 </head>
 <body>
-<div class="simple-header" onclick="location.href='${pageContext.request.contextPath}/'">
-    <div class="logo">lala boutique</div>
-</div>
+<div id="join-wrapper">
+    <header onclick="location.href='${pageContext.request.contextPath}/main'">
+        <div class="logo">lala boutique</div>
+    </header>
 
-<div class="join-container">
-    <form action="${pageContext.request.contextPath}/member/join" method="post" id="joinForm">
+    <section class="join-container">
+        <h2>CREATE ACCOUNT</h2>
 
-        <div class="input-group">
-            <label class="input-label">아이디</label>
-            <input type="text" id="loginId" name="loginId" class="lala-input" autocomplete="off"
-                   value="<c:out value='${param.loginId}'/>">
-            <button type="button" class="side-btn" onclick="idCheck()">중복 확인</button>
-            <input type="hidden" id="idCheckFlag" value="N">
-        </div>
+        <form action="${pageContext.request.contextPath}/member/join" method="post" id="joinForm">
 
-        <div class="input-group">
-            <label class="input-label">비밀번호</label>
-            <input type="password" id="loginPw" name="loginPw" class="lala-input" placeholder="8자리 이상 입력">
-        </div>
-
-        <div class="input-group">
-            <label class="input-label">이름</label>
-            <input type="text" id="memberName" name="memberName" class="lala-input"
-                   value="<c:out value='${param.memberName}'/>">
-        </div>
-
-        <div class="input-group">
-            <label class="input-label">휴대폰 번호</label>
-            <input type="text" id="memberPhone" name="phoneNumber" class="lala-input"
-                   placeholder="010-0000-0000" maxlength="13"
-                   oninput="autoHyphen(this)"
-                   value="<c:out value='${param.phoneNumber}'/>">
-        </div>
-
-        <c:set var="emailParts" value="${fn:split(param.email, '@')}" />
-
-        <div class="input-group">
-            <label class="input-label">이메일</label>
-
-            <div style="display: flex; align-items: center; gap: 5px;">
-                <input type="text" id="emailId" class="lala-input" style="width: 35%;"
-                       placeholder="이메일"
-                       value="<c:out value='${emailParts[0]}'/>">
-
-                <span>@</span>
-
-                <input type="text" id="emailDomain" class="lala-input" style="width: 30%;"
-                       placeholder="직접 입력"
-                       value="<c:out value='${emailParts[1]}'/>">
-
-                <select id="domainSelect" class="lala-input" style="width: 30%; border: none; border-bottom: 1px solid #eee; height: 45px; color:#555;" onchange="handleEmailSelect()">
-                    <option value="">직접 입력</option>
-                    <option value="naver.com">naver.com</option>
-                    <option value="gmail.com">gmail.com</option>
-                    <option value="daum.net">daum.net</option>
-                </select>
+            <div class="form-group">
+                <label>ID</label>
+                <div class="input-row">
+                    <input type="text" id="loginId" name="loginId" placeholder="아이디 입력" autocomplete="off"
+                           value="<c:out value='${param.loginId}'/>">
+                    <button type="button" class="btn-sub" onclick="idCheck()">중복확인</button>
+                    <input type="hidden" id="idCheckFlag" value="N">
+                </div>
             </div>
 
-            <input type="hidden" id="fullEmail" name="email" value="<c:out value='${param.email}'/>">
-        </div>
+            <div class="form-group">
+                <label>PASSWORD</label>
+                <input type="password" id="loginPw" name="loginPw" placeholder="8자리 이상 입력">
+            </div>
 
-        <div class="input-group">
-            <label class="input-label">주소</label>
-            <input type="text" id="zipCode" name="zipCode" class="lala-input" readonly placeholder="우편번호"
-                   value="<c:out value='${param.zipCode}'/>">
-            <button type="button" class="side-btn" onclick="togglePostcode()">주소 찾기</button>
-        </div>
+            <div class="form-group">
+                <label>NAME</label>
+                <input type="text" id="memberName" name="memberName"
+                       value="<c:out value='${param.memberName}'/>">
+            </div>
 
-        <div id="postcode-layer">
-            <button type="button" id="btn-close-layer" onclick="closePostcode()">[닫기 X]</button>
-        </div>
+            <div class="form-group">
+                <label>PHONE</label>
+                <input type="text" id="memberPhone" name="phoneNumber" placeholder="010-0000-0000" maxlength="13" oninput="autoHyphen(this)"
+                       value="<c:out value='${param.phoneNumber}'/>">
+            </div>
 
-        <div style="margin-top: -15px;">
-            <input type="text" id="baseAddress" name="address1" class="lala-input" placeholder="기본 주소" readonly style="margin-bottom:20px;"
-                   value="<c:out value='${param.address1}'/>">
-            <input type="text" id="detailAddress" name="address2" class="lala-input" placeholder="상세 주소 입력"
-                   value="<c:out value='${param.address2}'/>">
-        </div>
+            <c:set var="emailParts" value="${fn:split(param.email, '@')}" />
+            <div class="form-group">
+                <label>EMAIL</label>
+                <div class="email-row">
+                    <input type="text" id="emailId" placeholder="이메일" value="<c:out value='${emailParts[0]}'/>">
+                    <span>@</span>
+                    <input type="text" id="emailDomain" placeholder="직접 입력" value="<c:out value='${emailParts[1]}'/>">
+                    <select id="domainSelect" onchange="handleEmailSelect()">
+                        <option value="">직접 입력</option>
+                        <option value="naver.com">naver.com</option>
+                        <option value="gmail.com">gmail.com</option>
+                        <option value="daum.net">daum.net</option>
+                    </select>
+                </div>
+                <input type="hidden" id="fullEmail" name="email" value="<c:out value='${param.email}'/>">
+            </div>
 
-        <button type="button" class="lala-btn" onclick="joinCheck()">계정 만들기</button>
-        <button type="button" class="lala-btn-sub" onclick="history.back()">뒤로가기</button>
-    </form>
+            <div class="form-group">
+                <label>ADDRESS</label>
+                <div class="input-row">
+                    <input type="text" id="zipCode" name="zipCode" placeholder="우편번호" readonly
+                           value="<c:out value='${param.zipCode}'/>">
+                    <button type="button" class="btn-sub" onclick="togglePostcode()">검색</button>
+                </div>
+
+                <div id="postcode-layer" style="width:100%; height:300px; margin-top:10px; position:relative; display:none;">
+                    <button type="button" id="btn-close-layer" onclick="closePostcode()">닫기 X</button>
+                </div>
+
+                <input type="text" id="baseAddress" name="address1" placeholder="기본주소" readonly style="margin-top:5px;"
+                       value="<c:out value='${param.address1}'/>">
+                <input type="text" id="detailAddress" name="address2" placeholder="상세주소 입력" style="margin-top:5px;"
+                       value="<c:out value='${param.address2}'/>">
+            </div>
+
+            <button type="button" class="btn-submit" onclick="joinCheck()">JOIN NOW</button>
+            <button type="button" class="btn-submit" style="background:#fff; color:#000; border:1px solid #ddd; margin-top:10px;" onclick="history.back()">CANCEL</button>
+        </form>
+    </section>
 </div>
-
+<script src="${pageContext.request.contextPath}/js/join.js"></script>
 <script>
-    const autoHyphen = (target) => {
-        target.value = target.value
-            .replace(/[^0-9]/g, '')
-            .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
-    }
-
-    var element_layer = document.getElementById('postcode-layer');
-
-    function closePostcode() {
-        element_layer.style.display = 'none';
-    }
-    function handleEmailSelect() {
-        const select = document.getElementById("domainSelect");
-        const domainInput = document.getElementById("emailDomain");
-
-        if (select.value !== ""){
-            domainInput.value = select.value;
-            domainInput.readOnly = true;
-            domainInput.style.backgroundColor = "#f9f9f9";
-        }else {
-            domainInput.value = "";
-            domainInput.readOnly = false;
-            domainInput.style.backgroundColor = "transparent";
-            domainInput.focus();
-        }
-
-    }
-
-    function togglePostcode() {
-
-        if(element_layer.style.display === 'block') {
-            closePostcode();
-            return;
-        }
-
-        new daum.Postcode({
-            oncomplete: function(data) {
-                var addr = '';
-                var extraAddr = '';
-
-                if (data.userSelectedType === 'R') {
-                    addr = data.roadAddress;
-                } else {
-                    addr = data.jibunAddress;
-                }
-
-                document.getElementById('zipCode').value = data.zonecode;
-                document.getElementById("baseAddress").value = addr;
-                document.getElementById("detailAddress").focus();
-
-
-                element_layer.style.display = 'none';
-            },
-            width : '100%',
-            height : '100%',
-            maxSuggestItems : 5
-        }).embed(element_layer);
-
-        // 레이어 보여주기
-        element_layer.style.display = 'block';
-    }
-
-    // 3. 아이디 중복체크 (기존 로직 유지 + AJAX 필요 주석)
-    function idCheck() {
-        const id = document.getElementById("loginId").value;
-        if(id.length < 4) {
-            alert("아이디를 4자 이상 입력해주세요.");
-            return;
-        }
-        alert("사용 가능한 아이디입니다.");
-        document.getElementById("idCheckFlag").value = "Y";
-    }
-
-    // 4. 유효성 검사
-    function joinCheck() {
-
-        const id = document.getElementById("loginId"); // .value 아님 (포커스 주려고 객체 가져옴)
-        const pw = document.getElementById("loginPw");
-        const name = document.getElementById("memberName");
-        const phone = document.getElementById("memberPhone");
-
-        const emailId = document.getElementById("emailId").value;
-        const emailDomain = document.getElementById("emailDomain").value;
-
-        if (!id.value.trim()) {
-            alert("아이디는 필수입니다.");
-            id.focus();
-            return;
-        }
-        if (!pw.value.trim()) {
-            alert("비밀번호를 입력해주세요.");
-            pw.focus();
-            return;
-        }
-        if (pw.value.length < 8) {
-            alert("비밀번호는 8자 이상이어야 합니다.");
-            pw.focus();
-            return;
-        }
-        if (!name.value.trim()) {
-            alert("이름을 입력해주세요.");
-            name.focus();
-            return;
-        }
-        if (!phone.value.trim()) {
-            alert("연락처를 입력해주세요.");
-            phone.focus();
-            return;
-        }
-
-        if (!emailId || !emailDomain) {
-            alert("이메일을 완성해주세요.");
-            document.getElementById("emailId").focus();
-            return;
-        }
-
-
-        // 이메일 값 합쳐서 히든 태그에 넣기
-        if (emailId && emailDomain) {
-            document.getElementById("fullEmail").value = emailId + "@" + emailDomain;
-        } else {
-            // 이메일이 선택사항이라 비워뒀다면, 빈 값("")을 넣어서 보냄 -> 이러면 null 에러 안 남!
-            document.getElementById("fullEmail").value = "";
-        }
-
-        // 4. 모든 검문 통과 시 전송!
-        document.getElementById("joinForm").submit();
-    }
-
-    // 서버 에러 메시지 처리
     <c:if test="${not empty errorMsg}">
     alert("<c:out value='${errorMsg}'/>");
     </c:if>
