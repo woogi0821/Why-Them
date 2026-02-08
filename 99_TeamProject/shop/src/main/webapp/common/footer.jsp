@@ -1,9 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<footer>
+<footer class="footer-section">
+    <c:if test="${not empty sessionScope.loginMember}">
+        <button class="btn-withdraw" onclick="executeWithdraw()">회원탈퇴</button>
+    </c:if>
+
     <div class="footer-info">
-        <p>회사명: 라라 부티크 | 대표자: 행님 | 사업자등록번호: 123-45-67890</p>
-        <p>통신판매업신고: 제 2026-부산-0000호 | 주소: 부산광역시 라라구 부티크로 88</p>
+        <p>COMPANY: LALA BOUTIQUE | OWNER: TEAM LEADER | CALL: 1544-0000</p>
+        <p>© 2026 LALA BOUTIQUE. ALL RIGHTS RESERVED.</p>
     </div>
-    <p>© 2026 LALA BOUTIQUE. ALL RIGHTS RESERVED.</p>
 </footer>
+
+<script>
+    function executeWithdraw() {
+        if(confirm("정말로 탈퇴하시겠습니까?\n탈퇴 시 모든 정보가 삭제되며 복구할 수 없습니다.")) {
+            // 실제 탈퇴 처리 URL로 이동 (컨트롤러 필요)
+            location.href = '${pageContext.request.contextPath}/member/withdraw';
+        }
+    }
+</script>

@@ -60,3 +60,18 @@ header { text-align: center; padding: 50px 0; cursor: pointer; }
     text-overflow: ellipsis; /* 설명이 너무 길면 ... 처리 */
 }
 .p-price { font-size: 12px; font-weight: 400; color: #333; }
+
+/* 푸터 정보 텍스트 스타일링 */
+.footer-info p {
+    color: #999;          /* 1. 글자색: 연한 회색 (보편적인 톤) */
+    font-size: 11px;      /* 2. 크기: 본문보다 작게 (보통 11~12px) */
+    font-weight: 300;     /* 3. 굵기: 얇게 처리해서 가볍게 */
+    margin: 5px 0;        /* 4. 줄 간격: 너무 붙지 않게 */
+    letter-spacing: 0.5px; /* 5. 자간: 살짝 벌려주면 고급스러움 */
+}
+
+/* (선택사항) 회사명이나 중요한 부분만 살짝 진하게 하고 싶다면? */
+.footer-info p span {
+    font-weight: 500;
+    color: #555;
+}
