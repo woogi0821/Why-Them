@@ -1,14 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>라라 부티크 | LALA BOUTIQUE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/homepage.css">
+    <title>LALA BOUTIQUE | OFFICIAL STORE</title>
 </head>
 <body>
 <div id="main-wrapper">
@@ -17,11 +14,16 @@
 
     <main id="content-body">
         <section class="special-section">
+            <h2 id="main-title" class="stitle">COLLECTION</h2>
+            <div id="grid-root" class="grid-container"></div>
         </section>
     </main>
 
-    <footer class="footer-section">
-    </footer>
+    <jsp:include page="/common/footer.jsp" />
+
 </div>
+
+<script src="/js/data.js"></script>
+<script src="/js/homepage.js"></script>
 </body>
 </html>
