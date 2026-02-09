@@ -50,6 +50,7 @@ body {
     text-align: center; font-family: 'Cormorant Garamond', serif;
     letter-spacing: 10px; margin: 70px 0 60px; font-size: 1.5rem; font-weight: 300;
 }
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -71,3 +72,4 @@ body {
 /* 푸터 */
 .footer-section { border-top: 1px solid #f2f2f2; padding: 60px 0; text-align: center; font-size: 0.65rem; color: #ccc; letter-spacing: 2px; }
 .btn-withdraw { border: none; background: none; color: #ddd; cursor: pointer; margin-bottom: 15px; font-size: 0.6rem; text-decoration: underline; }
+
