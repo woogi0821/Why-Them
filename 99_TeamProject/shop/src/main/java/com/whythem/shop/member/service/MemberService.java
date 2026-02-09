@@ -21,4 +21,10 @@ public class MemberService {
     public int checkId(String loginId){
         return memberMapper.checkId(loginId);
     }
+    public MemberVO getMemberById(String loginId){
+        return memberMapper.selectMemberById(loginId);
+    }
+    public void updateMember(MemberVO member){
+        memberMapper.updateMember(member);
+    }
 }

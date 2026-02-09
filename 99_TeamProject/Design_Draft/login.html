@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>라라 부티크 | LOGIN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/login.css">
+</head>
+<body>
+    <div id="login-wrapper">
+        <header onclick="location.href='homepage.html'"><div class="logo">lala boutique</div></header>
+        
+        <section class="login-container">
+            <h2>LOGIN</h2>
+            <form id="login-form">
+                <input type="text" id="login-id" placeholder="ID" required>
+                <input type="password" id="login-pw" placeholder="PASSWORD" required>
+                <button type="button" class="btn-login" onclick="processLogin()">LOGIN</button>
+                
+                <div class="login-utils">
+                    <span onclick="location.href='join.html'">JOIN US</span>
+                    <span>FORGOT ID/PW</span>
+                </div>
+            </form>
+        </section>
+    </div>
+    <script src="./js/login.js"></script>
+</body>
+</html>

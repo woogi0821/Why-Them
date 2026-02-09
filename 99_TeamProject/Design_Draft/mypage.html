@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>라라 부티크 | MY PAGE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/join.css"> </head>
+<body>
+    <div id="join-wrapper">
+        <header onclick="location.href='homepage.html'"><div class="logo">lala boutique</div></header>
+        <section class="join-container">
+            <h2 style="font-family:'Cormorant Garamond'; letter-spacing:3px;">MY PROFILE</h2>
+            <form id="edit-form">
+                <div class="form-group"><label>ID</label><input type="text" id="user-id" readonly style="background:#f9f9f9;"></div>
+                <div class="form-group"><label>NAME</label><input type="text" id="user-name"></div>
+                <div class="form-group"><label>PHONE</label><input type="text" id="user-phone"></div>
+                <div class="form-group"><label>ADDRESS</label><input type="text" id="user-addr" readonly></div>
+                <button type="button" class="btn-submit" onclick="updateProfile()">UPDATE PROFILE</button>
+            </form>
+        </section>
+    </div>
+    <script src="./js/mypage.js"></script>
+</body>
+</html>

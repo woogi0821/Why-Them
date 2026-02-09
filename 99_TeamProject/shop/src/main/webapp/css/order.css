@@ -1,0 +1,9 @@
+body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; background: #fcfcfc; font-family: 'Noto Sans KR'; }
+.order-container { text-align: center; width: 400px; }
+.logo { font-family: 'Cormorant Garamond'; font-size: 24px; letter-spacing: 10px; cursor: pointer; margin-bottom: 50px; text-transform: uppercase; }
+.receipt-box { background: #fff; padding: 40px; border: 1px solid #f2f2f2; }
+.thank-you { font-family: 'Cormorant Garamond'; font-size: 20px; letter-spacing: 2px; margin-bottom: 10px; }
+.order-num { font-size: 11px; color: #aaa; margin-bottom: 30px; }
+hr { border: 0; border-top: 1px solid #eee; margin-bottom: 30px; }
+.receipt-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 15px; color: #555; }
+.btn-home { width: 100%; padding: 18px; background: #000; color: #fff; border: none; cursor: pointer; margin-top: 40px; font-size: 12px; letter-spacing: 2px; }
