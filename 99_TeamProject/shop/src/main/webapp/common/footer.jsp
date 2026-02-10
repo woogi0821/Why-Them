@@ -1,12 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<footer class="footer-section">
-    <c:if test="${not empty sessionScope.loginMember}">
-        <button class="btn-withdraw" onclick="executeWithdraw()">회원탈퇴</button>
-    </c:if>
-
-
 <style>
     /* ★ 라라 부티크 푸터 전용 스타일 */
     footer {
@@ -76,4 +68,3 @@
         &copy; 2026 LALA BOUTIQUE. ALL RIGHTS RESERVED.
     </p>
 </footer>
-
