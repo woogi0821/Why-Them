@@ -1,10 +1,14 @@
 package com.whythem.shop.admin.vo;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@RequiredArgsConstructor
 public class AdminVO {
     // 1. DB 매칭 필드 (상품 등록, 수정, 관리자용 상세 페이지 출력용)
     private Long productId;

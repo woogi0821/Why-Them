@@ -44,17 +44,16 @@ public class AdminController {
     // 3. 상품 등록 처리
     @PostMapping("/product/add")
     public String addProcess(AdminVO product) {
-        List<String> savedPaths = new ArrayList<>();
         MultipartFile file = product.getProductImage();
 
         if (file != null && !file.isEmpty()) {
             String path = saveFile(file);
             product.setImageUrl(path);
-            savedPaths.add(path);
+            // savedPaths.add(path); <- 이 부분도 이제 필요 없으니 삭제
         }
 
-        // AdminService의 등록 메서드 호출
-        adminService.registerAdminProduct(product, savedPaths);
+        // AdminService의 등록 메서드 호출 (인수 1개로 맞춤)
+        adminService.registerAdminProduct(product);
 
         return "redirect:/admin/admin_main";
     }
@@ -96,12 +95,14 @@ public class AdminController {
         if (file == null || file.isEmpty()) return null;
         try {
             String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            // 이미지 저장 절대 경로 (환경에 맞게 수정 필요)
             String uploadPath = "C:/Users/khuser/Desktop/images/";
+
             File folder = new File(uploadPath);
             if (!folder.exists()) folder.mkdirs();
 
             file.transferTo(new File(uploadPath, fileName));
+
+            // DB에 "/upload/이름.jpg"로 저장해야 JSP에서 이미지가 잘 나옵니다.
             return "/upload/" + fileName;
         } catch (IOException e) {
             e.printStackTrace();

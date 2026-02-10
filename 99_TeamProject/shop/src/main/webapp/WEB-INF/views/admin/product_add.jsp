@@ -56,6 +56,22 @@
             margin-bottom: 8px;
             text-transform: uppercase;
         }
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: vertical; /* 사용자가 높이 조절 가능 */
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #000;
+        }
 
         .form-group input {
             width: 100%;
@@ -166,6 +182,10 @@
         <div class="form-group">
             <label>초기 재고량</label>
             <input type="number" name="stockQuantity" value="0">
+        </div>
+        <div class="form-group">
+            <label>상품 설명</label>
+            <textarea name="description" placeholder="상품의 상세한 특징이나 정보를 입력해주세요."></textarea>
         </div>
         <div class="form-group">
             <label>상품 이미지 (여러 장 선택 가능)</label>
