@@ -86,6 +86,18 @@
       border-radius: 8px;
       font-weight: bold;
     }
+    .product-desc {
+        font-size: 0.8125rem;    /* text-sm (13px) */
+        color: #4b5563;         /* text-gray-600 */
+        margin-top: 0.25rem;    /* mt-1 */
+
+        /* 테일윈드의 line-clamp-2 구현 */
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2; /* 두 줄까지만 보여줌 */
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
      .menu-item, .parent-link { font-weight: bold; text-decoration: none; color: #333; font-size: 1.1rem; }
     .child-links a { text-decoration: none; color: #999; margin: 0 10px; transition: 0.3s; }
     .child-links a:hover, .active { color: #000 !important; font-weight: bold; }
@@ -159,6 +171,9 @@
         <div class="info-box">
           <p class="brand">${item.brandName}</p>
           <p class="name">${item.name}</p>
+            <c:if test="${not empty item.description}">
+                <p class="product-desc">${item.description}</p>
+            </c:if>
           <p class="price">
             <fmt:formatNumber value="${item.price}" pattern="#,###"/>원
           </p>

@@ -47,33 +47,33 @@
         <div class="drop-container">
             <div class="drop-column">
                 <ul class="sub-menu">
-                    <li onclick="loadCategory('top/coat')">코트</li>
-                    <li onclick="loadCategory('top/shirts')">셔츠</li>
-                    <li onclick="loadCategory('top/sweater')">스웨터</li>
+                    <li onclick="loadCategory(1)" class="${selectedCategory == 1 ? 'active' : ''}">코트</li>
+                    <li onclick="loadCategory(2)" class="${selectedCategory == 2 ? 'active' : ''}">셔츠</li>
+                    <li onclick="loadCategory(3)" class="${selectedCategory == 3 ? 'active' : ''}">스웨터</li>
                 </ul>
             </div>
             <div class="drop-column">
                 <ul class="sub-menu">
-                    <li onclick="loadCategory('bottom/pants')">팬츠</li>
-                    <li onclick="loadCategory('bottom/skirts')">스커트</li>
+                    <li onclick="loadCategory(4)" class="${selectedCategory == 4 ? 'active' : ''}">팬츠</li>
+                    <li onclick="loadCategory(5)" class="${selectedCategory == 5 ? 'active' : ''}">스커트</li>
                 </ul>
             </div>
             <div class="drop-column">
                 <ul class="sub-menu">
-                    <li onclick="loadCategory('set/onepiece')">원피스</li>
-                    <li onclick="loadCategory('set/suit')">수트</li>
+                    <li onclick="loadCategory(6)" class="${selectedCategory == 6 ? 'active' : ''}">원피스</li>
+                    <li onclick="loadCategory(7)" class="${selectedCategory == 7 ? 'active' : ''}">수트</li>
                 </ul>
             </div>
             <div class="drop-column">
                 <ul class="sub-menu">
-                    <li onclick="loadCategory('shoes/dressshoe')">드레스슈즈</li>
-                    <li onclick="loadCategory('shoes/sandals')">샌들</li>
+                    <li onclick="loadCategory(8)" class="${selectedCategory == 8 ? 'active' : ''}">드레스슈즈</li>
+                    <li onclick="loadCategory(9)" class="${selectedCategory == 9 ? 'active' : ''}">샌들</li>
                 </ul>
             </div>
             <div class="drop-column">
                 <ul class="sub-menu">
-                    <li onclick="loadCategory('acc/bag')">백</li>
-                    <li onclick="loadCategory('acc/hat')">모자</li>
+                    <li onclick="loadCategory(10)" class="${selectedCategory == 10 ? 'active' : ''}">백</li>
+                    <li onclick="loadCategory(11)" class="${selectedCategory == 11 ? 'active' : ''}">모자</li>
                 </ul>
             </div>
         </div>
@@ -96,6 +96,9 @@
     // 간단한 모달 제어 스크립트 (homepage.js에 있다면 이거 지워도 됨)
     function openLoginModal() { document.getElementById('login-modal').style.display = 'flex'; }
     function closeLoginModal() { document.getElementById('login-modal').style.display = 'none'; }
+    // URL을 변경하여 서버에 데이터를 요청함
+    function loadCategory(categoryId) {location.href = "/?categoryId=" + categoryId;
+    }
 </script>
 
 <style>

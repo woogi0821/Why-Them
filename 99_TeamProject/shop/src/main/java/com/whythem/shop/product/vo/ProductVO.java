@@ -1,10 +1,14 @@
 package com.whythem.shop.product.vo;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@RequiredArgsConstructor
 public class ProductVO {
     // 1. DB 매칭 필드
     private Long productId;
@@ -20,7 +24,4 @@ public class ProductVO {
 
     private Date createdAt;
     private Date updatedAt;
-
-    // 2. 파일 업로드용
-    private MultipartFile productImage;
 }
