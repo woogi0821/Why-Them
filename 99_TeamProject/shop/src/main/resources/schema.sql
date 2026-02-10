@@ -86,7 +86,7 @@ CREATE TABLE MEMBER_ADDRESS (
                                 MEMBER_ID       NUMBER(19)          NOT NULL,
                                 ADDRESS_NAME    VARCHAR2(50),
                                 RECIPIENT_NAME  VARCHAR2(50)        NOT NULL,
-                                RECIPIENT_PHONE VARCHAR2(100)        NOT NULL,
+                                RECIPIENT_PHONE VARCHAR2(20)        NOT NULL,
                                 ZIP_CODE        VARCHAR2(10)        NOT NULL,
                                 BASE_ADDRESS    VARCHAR2(255)       NOT NULL,
                                 DETAIL_ADDRESS  VARCHAR2(255)       NOT NULL,
