@@ -275,25 +275,25 @@
     <div class="full-dropdown">
         <div class="drop-container">
             <div class="drop-column">
-                <a href="/main?categoryId=7" class="drop-link ${selectedCategory == 7 ? 'active' : ''}">COAT</a>
-                <a href="/main?categoryId=8" class="drop-link ${selectedCategory == 8 ? 'active' : ''}">SHIRTS</a>
-                <a href="/main?categoryId=9" class="drop-link ${selectedCategory == 9 ? 'active' : ''}">SWEATER</a>
+                <a href="/main?categoryId=7" class="drop-link ${selectedCategory == 1 ? 'active' : ''}">COAT</a>
+                <a href="/main?categoryId=8" class="drop-link ${selectedCategory == 2 ? 'active' : ''}">SHIRTS</a>
+                <a href="/main?categoryId=9" class="drop-link ${selectedCategory == 3 ? 'active' : ''}">SWEATER</a>
             </div>
             <div class="drop-column">
-                <a href="/main?categoryId=10" class="drop-link ${selectedCategory == 10 ? 'active' : ''}">PANTS</a>
-                <a href="/main?categoryId=11" class="drop-link ${selectedCategory == 11 ? 'active' : ''}">SKIRTS</a>
+                <a href="/main?categoryId=10" class="drop-link ${selectedCategory == 4 ? 'active' : ''}">PANTS</a>
+                <a href="/main?categoryId=11" class="drop-link ${selectedCategory == 5 ? 'active' : ''}">SKIRTS</a>
             </div>
             <div class="drop-column">
-                <a href="/main?categoryId=12" class="drop-link ${selectedCategory == 12 ? 'active' : ''}">ONEPIECE</a>
-                <a href="/main?categoryId=13" class="drop-link ${selectedCategory == 13 ? 'active' : ''}">SUIT</a>
+                <a href="/main?categoryId=12" class="drop-link ${selectedCategory == 6 ? 'active' : ''}">ONEPIECE</a>
+                <a href="/main?categoryId=13" class="drop-link ${selectedCategory == 7 ? 'active' : ''}">SUIT</a>
             </div>
             <div class="drop-column">
-                <a href="/main?categoryId=14" class="drop-link ${selectedCategory == 14 ? 'active' : ''}">DRESSSHOE</a>
-                <a href="/main?categoryId=15" class="drop-link ${selectedCategory == 15 ? 'active' : ''}">SANDALS</a>
+                <a href="/main?categoryId=14" class="drop-link ${selectedCategory == 8 ? 'active' : ''}">DRESSSHOE</a>
+                <a href="/main?categoryId=15" class="drop-link ${selectedCategory == 9 ? 'active' : ''}">SANDALS</a>
             </div>
             <div class="drop-column">
-                <a href="/main?categoryId=16" class="drop-link ${selectedCategory == 16 ? 'active' : ''}">BAG</a>
-                <a href="/main?categoryId=17" class="drop-link ${selectedCategory == 17 ? 'active' : ''}">HAT</a>
+                <a href="/main?categoryId=16" class="drop-link ${selectedCategory == 10 ? 'active' : ''}">BAG</a>
+                <a href="/main?categoryId=17" class="drop-link ${selectedCategory == 11 ? 'active' : ''}">HAT</a>
             </div>
         </div>
     </div>
