@@ -15,7 +15,7 @@ public class Promotion {
 
     private String status;          // READY, ACTIVE, END
 
-    // 기본 생성자
+    // 기본 생성자+
     public Promotion() {
     }
 
