@@ -1,6 +1,6 @@
-package com.whythem.shop.cart.mapper.CartMapper;
+package com.whythem.shop.cart.mapper;
 
-import com.shop.model.CartVO;
+import com.whythem.shop.cart.vo.CartVO;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.annotations.Mapper;

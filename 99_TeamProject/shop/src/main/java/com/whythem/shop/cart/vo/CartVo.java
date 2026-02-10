@@ -1,4 +1,4 @@
-package com.whythem.shop.cart.vo.CartVO;
+package com.whythem.shop.cart.vo;
 
 import lombok.*;
 
