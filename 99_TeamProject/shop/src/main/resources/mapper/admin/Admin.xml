@@ -3,6 +3,87 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="temp">
+<mapper namespace="com.whythem.shop.admin.mapper.AdminMapper">
+
+    <select id="getAdminProductList" resultType="com.whythem.shop.admin.vo.AdminVO">
+        SELECT
+        PRODUCT_ID        AS productId,
+        CATEGORY_ID       AS categoryId,
+        PRODUCT_NAME      AS name,
+        BRAND_NAME        AS brandName,
+        PRICE             AS price,
+        STOCK_QUANTITY    AS stockQuantity,
+        DESCRIPTION       AS description,
+        STATUS            AS status,
+        IMAGE_URL         AS imageUrl
+        FROM PRODUCT
+        <where>
+            <if test="categoryId != null">
+                AND CATEGORY_ID = #{categoryId}
+            </if>
+        </where>
+        ORDER BY PRODUCT_ID DESC
+    </select>
+
+    <select id="findAdminProductById" resultType="com.whythem.shop.admin.vo.AdminVO">
+        SELECT
+        PRODUCT_ID        AS productId,
+        CATEGORY_ID       AS categoryId,
+        PRODUCT_NAME      AS name,
+        BRAND_NAME        AS brandName,
+        PRICE             AS price,
+        STOCK_QUANTITY    AS stockQuantity,
+        DESCRIPTION       AS description,
+        STATUS            AS status,
+        IMAGE_URL         AS imageUrl
+        FROM PRODUCT
+        WHERE PRODUCT_ID = #{productId}
+    </select>
+
+    <insert id="insertAdminProduct" parameterType="com.whythem.shop.admin.vo.AdminVO">
+        <selectKey keyProperty="productId" resultType="long" order="BEFORE">
+            SELECT PRODUCT_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO PRODUCT (
+        PRODUCT_ID, CATEGORY_ID, PRODUCT_NAME, BRAND_NAME,
+        PRICE, STOCK_QUANTITY, DESCRIPTION, STATUS,
+        IMAGE_URL, CREATED_AT, UPDATED_AT
+        ) VALUES (
+        #{productId}, #{categoryId}, #{name}, #{brandName, jdbcType=VARCHAR},
+        #{price}, #{stockQuantity}, #{description, jdbcType=CLOB}, 'SALE',
+        #{imageUrl, jdbcType=VARCHAR}, SYSDATE, SYSDATE
+        )
+    </insert>
+    <insert id="insertAdminProductImage">
+        INSERT INTO PRODUCT_IMAGE (
+        IMAGE_ID,
+        PRODUCT_ID,
+        IMAGE_URL,
+        IS_MAIN
+        ) VALUES (
+        PRODUCT_IMAGE_SEQ.NEXTVAL,
+        #{productId},
+        #{imageUrl},
+        #{isMain}
+        )
+    </insert>
+
+    <update id="updateAdminProduct" parameterType="com.whythem.shop.admin.vo.AdminVO">
+        UPDATE PRODUCT
+        SET
+        CATEGORY_ID    = #{categoryId},
+        PRODUCT_NAME   = #{name},
+        BRAND_NAME     = #{brandName, jdbcType=VARCHAR},
+        PRICE          = #{price},
+        STOCK_QUANTITY = #{stockQuantity},
+        DESCRIPTION    = #{description, jdbcType=CLOB},
+        IMAGE_URL      = #{imageUrl, jdbcType=VARCHAR},
+        UPDATED_AT     = SYSDATE
+        WHERE PRODUCT_ID = #{productId}
+    </update>
+
+    <delete id="deleteAdminProduct">
+        DELETE FROM PRODUCT WHERE PRODUCT_ID = #{productId}
+    </delete>
 
 </mapper>
