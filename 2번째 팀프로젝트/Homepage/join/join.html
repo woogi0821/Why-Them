@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join - Lala Boutique</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Sans+KR:wght@200;300;400&display=swap" rel="stylesheet">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <style>
+        /* 회원가입 전용 스타일 */
+        body { margin: 0; background: #fff; font-family: 'Noto Sans KR', sans-serif; color: #111; }
+        .simple-header { height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
+        .logo { font-family: 'Cormorant Garamond', serif; font-size: 45px; letter-spacing: 15px; text-transform: lowercase; text-decoration: none; color: #111; }
+        
+        .join-container { max-width: 450px; margin: 40px auto; padding: 0 20px; }
+        .page-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; text-align: center; margin-bottom: 50px; letter-spacing: 5px; text-transform: uppercase; }
+        
+        .input-group { margin-bottom: 25px; position: relative; }
+        .input-label { font-size: 10px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+        .lala-input { width: 100%; height: 45px; border: none; border-bottom: 1px solid #ddd; font-size: 14px; outline: none; transition: 0.3s; }
+        .lala-input:focus { border-bottom: 1px solid #111; }
+        
+        .lala-btn { width: 100%; height: 55px; background: #111; color: #fff; border: none; font-size: 12px; letter-spacing: 2px; cursor: pointer; margin-top: 20px; }
+        .lala-btn-sub { background: #fff; color: #111; border: 1px solid #111; margin-top: 10px; }
+        .addr-btn { position: absolute; right: 0; bottom: 10px; background: #111; color: #fff; border: none; font-size: 9px; padding: 5px 12px; cursor: pointer; }
+        .error-msg { color: #d9534f; font-size: 11px; margin-top: 5px; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="simple-header" onclick="location.href='homepage.html'">
+        <div class="logo">lala boutique</div>
+        <div style="font-size:9px; letter-spacing:3px; color:#999; margin-top:5px;">MEMBERSHIP</div>
+    </div>
+
+    <div class="join-container">
+        <h2 class="page-title">Create Account</h2>
+        <form onsubmit="return joinCheck()">
+            <div class="input-group">
+                <label class="input-label">ID</label>
+                <input type="text" id="userId" class="lala-input">
+                <span id="idMsg" class="error-msg"></span>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Password</label>
+                <input type="password" id="userPw" class="lala-input" placeholder="8자리 이상">
+                <span id="pwMsg" class="error-msg"></span>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Name</label>
+                <input type="text" id="memberName" class="lala-input">
+            </div>
+            <div class="input-group">
+                <label class="input-label">Address</label>
+                <input type="text" id="zipCode" class="lala-input" placeholder="우편번호" readonly>
+                <button type="button" class="addr-btn" onclick="kakaoPostcode()">SEARCH</button>
+            </div>
+            <input type="text" id="baseAddress" class="lala-input" placeholder="기본 주소" readonly style="margin-bottom:10px;">
+            <input type="text" id="detailAddress" class="lala-input" placeholder="상세 주소">
+
+            <button type="submit" class="lala-btn">JOIN MEMBER</button>
+            <button type="button" class="lala-btn lala-btn-sub" onclick="history.back()">CANCEL</button>
+        </form>
+    </div>
+
+    <script>
+        // 회원가입 유효성 검사 및 로컬스토리지 저장
+        function joinCheck() {
+            const id = document.getElementById("userId").value;
+            const pw = document.getElementById("userPw").value;
+            
+            if(id.length < 4) { alert("아이디를 4자 이상 입력해주세요."); return false; }
+            if(pw.length < 8) { alert("비밀번호를 8자 이상 입력해주세요."); return false; }
+            
+            // 회원정보 로컬스토리지 저장 (메인과 연동)
+            localStorage.setItem('u_' + id, pw);
+            alert("회원가입이 완료되었습니다. 로그인 해주세요.");
+            location.href = 'homepage.html';
+            return false; 
+        }
+
+        // 카카오 주소 API
+        function kakaoPostcode() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    document.getElementById('zipCode').value = data.zonecode;
+                    document.getElementById('baseAddress').value = data.roadAddress;
+                    document.getElementById('detailAddress').focus();
+                }
+            }).open();
+        }
+    </script>
+</body>
+</html>
