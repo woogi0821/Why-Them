@@ -3,6 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="temp">
+<mapper namespace="com.whythem.shop.promotion.mapper.PromotionMapper">
+    <!--    namespace="패키지명 + 인터페이스명" -->
+    <select id="selectPromotionList" parameterType="long"
+            resultType="com.whythem.shop.promotion.vo.Promotion">
+        SELECT promotion_id, promotion_title,
+        discount_type, discount_value,
+        start_date, end_date, status
+        FROM promotion
+        WHERE promotion_id = #{promotionId}
+    </select>
+
+    <update id="updatePromotionStatus">
+        UPDATE promotion
+        WHERE status = #{status}
+        WHERE promotion_id = #{promotionId}
+    </update>
 
 </mapper>
