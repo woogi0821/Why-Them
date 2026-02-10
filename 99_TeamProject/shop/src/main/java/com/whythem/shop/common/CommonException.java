@@ -1,4 +1,4 @@
-package com.simplecoding.simplemapper.common;
+package com.whythem.shop.common;
 
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
