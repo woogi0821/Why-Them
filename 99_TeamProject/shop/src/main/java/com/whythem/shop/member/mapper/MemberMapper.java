@@ -15,4 +15,7 @@ public interface MemberMapper {
 //    MemberAddressVO getDefaultAddress(Long memberId);
     MemberVO loginMember (MemberVO memberVO);
     int checkId (String loginId);
+    MemberVO selectMemberById(String loginId);
+    int updateMember(MemberVO member);
+    void updatePassword(MemberVO memberVO);
 }

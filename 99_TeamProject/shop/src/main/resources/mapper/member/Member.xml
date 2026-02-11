@@ -19,26 +19,30 @@
         FROM MEMBER WHERE MEMBER_ID = #{memberId}
     </select>
 
-    <select id="getMemberAddresses" resultType="MemberVO">
+    <select id="getMemberAddresses" resultType="MemberAddressVO">
         SELECT ADDRESS_ID,MEMBER_ID,ADDRESS_NAME,RECIPIENT_NAME,RECIPIENT_PHONE,
                ZIP_CODE,BASE_ADDRESS,DETAIL_ADDRESS,IS_DEFAULT
         FROM MEMBER_ADDRESS
         WHERE MEMBER_ID = #{memberId} ORDER BY IS_DEFAULT DESC,ADDRESS_ID DESC
     </select>
 
-    <select id="getDefaultAddress" resultType="MemberVO">
+    <select id="getDefaultAddress" resultType="MemberAddressVO">
         SELECT * FROM MEMBER_ADDRESS
         WHERE MEMBER_ID = #{memberId} AND IS_DEFAULT = 'Y'
-    </select>
-
-    <select id="loginMember" resultType="com.whythem.shop.member.vo.MemberVO">
-        SELECT * FROM MEMBER
-        WHERE LOGIN_ID = #{loginId}
-          AND LOGIN_PW = #{loginPw}
     </select>
 
     <select id="checkId" parameterType="string" resultType="int">
         SELECT COUNT(*) FROM MEMBER
         WHERE LOGIN_ID = #{loginId}
     </select>
+
+    <select id="selectMemberById" parameterType="String" resultType="MemberVO">
+        SELECT * FROM MEMBER
+        WHERE LOGIN_ID = #{loginId}
+    </select>
+    <update id="updatePassword">
+        UPDATE MEMBER
+        SET LOGIN_PW = #{loginPw}
+        WHERE LOGIN_ID = #{loginId}
+    </update>
 </mapper>

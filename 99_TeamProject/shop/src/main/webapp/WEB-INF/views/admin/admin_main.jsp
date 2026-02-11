@@ -86,13 +86,23 @@
       border-radius: 8px;
       font-weight: bold;
     }
-    <style>
+    .product-desc {
+        font-size: 0.8125rem;    /* text-sm (13px) */
+        color: #4b5563;         /* text-gray-600 */
+        margin-top: 0.25rem;    /* mt-1 */
+
+        /* 테일윈드의 line-clamp-2 구현 */
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2; /* 두 줄까지만 보여줌 */
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
      .menu-item, .parent-link { font-weight: bold; text-decoration: none; color: #333; font-size: 1.1rem; }
     .child-links a { text-decoration: none; color: #999; margin: 0 10px; transition: 0.3s; }
     .child-links a:hover, .active { color: #000 !important; font-weight: bold; }
     .divider { margin: 0 20px; color: #ddd; }
     .category-group { vertical-align: top; }
-  </style>
   </style>
 </head>
 <body>
@@ -105,43 +115,43 @@
     <div class="category-group" style="display: inline-block; margin-right: 20px; vertical-align: top;">
       <span class="parent-link">TOP</span>
       <div class="child-links" style="font-size: 0.9rem; color: #888; margin-top: 5px;">
-        <a href="/shop?categoryId=7" class="${param.categoryId == 7 ? 'active' : ''}">COAT</a><br>
-        <a href="/shop?categoryId=8" class="${param.categoryId == 8 ? 'active' : ''}">SHIRT</a><br>
-        <a href="/shop?categoryId=9" class="${param.categoryId == 9 ? 'active' : ''}">SWEATER</a>
+        <a href="/admin/admin_main?categoryId=1" class="${param.categoryId == 1 ? 'active' : ''}">COAT</a><br>
+        <a href="/admin/admin_main?categoryId=2" class="${param.categoryId == 2 ? 'active' : ''}">SHIRT</a><br>
+        <a href="/admin/admin_main?categoryId=3" class="${param.categoryId == 3 ? 'active' : ''}">SWEATER</a>
       </div>
     </div>
 
     <div class="category-group" style="display: inline-block; margin-right: 20px; vertical-align: top;">
       <span class="parent-link">BOTTOM</span>
       <div class="child-links" style="font-size: 0.9rem; color: #888; margin-top: 5px;">
-        <a href="/shop?categoryId=10" class="${param.categoryId == 10 ? 'active' : ''}">PANTS</a><br>
-        <a href="/shop?categoryId=11" class="${param.categoryId == 11 ? 'active' : ''}">SKIRTS</a>
+        <a href="/admin/admin_main?categoryId=4" class="${param.categoryId == 4 ? 'active' : ''}">PANTS</a><br>
+        <a href="/admin/admin_main?categoryId=5" class="${param.categoryId == 5 ? 'active' : ''}">SKIRTS</a>
       </div>
     </div>
 
     <div class="category-group" style="display: inline-block; margin-right: 20px; vertical-align: top;">
       <span class="parent-link">SET</span> <div class="child-links" style="font-size: 0.9rem; color: #888; margin-top: 5px;">
-      <a href="/shop?categoryId=12" class="${param.categoryId == 12 ? 'active' : ''}">ONEPIECE</a><br>
-      <a href="/shop?categoryId=13" class="${param.categoryId == 13 ? 'active' : ''}">SUIT</a>
+      <a href="/admin/admin_main?categoryId=6" class="${param.categoryId == 6 ? 'active' : ''}">DRESS</a><br>
+      <a href="/admin/admin_main?categoryId=7" class="${param.categoryId == 7 ? 'active' : ''}">SUIT</a>
     </div>
     </div>
 
     <div class="category-group" style="display: inline-block; margin-right: 20px; vertical-align: top;">
       <span class="parent-link">SHOES</span> <div class="child-links" style="font-size: 0.9rem; color: #888; margin-top: 5px;">
-      <a href="/shop?categoryId=14" class="${param.categoryId == 14 ? 'active' : ''}">DRESSSHOE</a><br>
-      <a href="/shop?categoryId=15" class="${param.categoryId == 15 ? 'active' : ''}">SANDALS</a>
+      <a href="/admin/admin_main?categoryId=8" class="${param.categoryId == 8 ? 'active' : ''}">SHOES</a><br>
+      <a href="/admin/admin_main?categoryId=9" class="${param.categoryId == 9 ? 'active' : ''}">SANDALS</a>
     </div>
     </div>
     <div class="category-group" style="display: inline-block; vertical-align: top;">
       <span class="parent-link">ACC</span>
       <div class="child-links" style="font-size: 0.9rem; color: #888; margin-top: 5px;">
-        <a href="/shop?categoryId=16" class="${param.categoryId == 16 ? 'active' : ''}">BAG</a><br>
-        <a href="/shop?categoryId=17" class="${param.categoryId == 17 ? 'active' : ''}">HAT</a>
+        <a href="/admin/admin_main?categoryId=10" class="${param.categoryId == 10 ? 'active' : ''}">BAG</a><br>
+        <a href="/admin/admin_main?categoryId=11" class="${param.categoryId == 11 ? 'active' : ''}">HAT</a>
       </div>
     </div>
   </div>
 
-  <a href="/product/add" class="btn-add-product">+ 새 상품 등록</a>
+  <a href="/admin/product/add" class="btn-add-product">+ 새 상품 등록</a>
 </div>
 <div class="product-grid">
   <c:forEach var="item" items="${productList}">
@@ -161,6 +171,9 @@
         <div class="info-box">
           <p class="brand">${item.brandName}</p>
           <p class="name">${item.name}</p>
+            <c:if test="${not empty item.description}">
+                <p class="product-desc">${item.description}</p>
+            </c:if>
           <p class="price">
             <fmt:formatNumber value="${item.price}" pattern="#,###"/>원
           </p>
@@ -168,8 +181,8 @@
       </a>
 
       <div class="admin-btns">
-        <a href="/product/edit?productId=${item.productId}" class="edit-btn">수정</a>
-        <a href="/product/delete?productId=${item.productId}"
+        <a href="/admin/product/edit?productId=${item.productId}" class="edit-btn">수정</a>
+        <a href="/admin/product/delete?productId=${item.productId}"
            class="delete-btn"
            onclick="return confirm('이 상품을 삭제하시겠습니까?');">삭제</a>
       </div>

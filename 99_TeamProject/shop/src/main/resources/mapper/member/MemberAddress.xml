@@ -4,10 +4,40 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.whythem.shop.member.mapper.MemberAddressMapper">
+        <select id="selectAddressList" resultType="MemberAddressVO">
+            SELECT * FROM MEMBER_ADDRESS
+            WHERE MEMBER_ID = #{memberId}
+            ORDER BY IS_DEFAULT DESC, ADDRESS_ID DESC
+        </select>
         <insert id="insertAddress" parameterType="MemberAddressVO">
             INSERT INTO MEMBER_ADDRESS (ADDRESS_ID,MEMBER_ID,ADDRESS_NAME,RECIPIENT_NAME,
             RECIPIENT_PHONE,ZIP_CODE,BASE_ADDRESS,DETAIL_ADDRESS,IS_DEFAULT)
             VALUES(MEMBER_ADDRESS_SEQ.NEXTVAL,#{memberId},#{addressName},
-            #{recipientName},#{recipientPhone},#{zipCode},#{baseAddress},#{detailAddress},'Y')
+            #{recipientName},#{recipientPhone},#{zipCode},#{baseAddress},#{detailAddress},#{isDefault})
         </insert>
+        <update id="updateAddress" parameterType="MemberAddressVO">
+            UPDATE MEMBER_ADDRESS
+            SET ADDRESS_NAME = #{addressName},
+                RECIPIENT_NAME = #{recipientName},
+                RECIPIENT_PHONE = #{recipientPhone},
+                ZIP_CODE = #{zipCode},
+                BASE_ADDRESS = #{baseAddress},
+                DETAIL_ADDRESS = #{detailAddress},
+                IS_DEFAULT = #{isDefault}
+            WHERE ADDRESS_ID = #{addressId}
+        </update>
+        <update id="setDefaultAddress" parameterType="long">
+            UPDATE MEMBER_ADDRESS
+            SET IS_DEFAULT = 'Y'
+            WHERE ADDRESS_ID = #{addressId}
+        </update>
+        <update id="resetDefaultAddress" parameterType="long">
+            UPDATE MEMBER_ADDRESS
+            SET IS_DEFAULT = 'N'
+            WHERE ADDRESS_ID = #{memberId}
+        </update>
+        <delete id="deleteAddress" parameterType="long">
+            DELETE FROM MEMBER_ADDRESS
+            WHERE ADDRESS_ID = #{addressId}
+        </delete>
 </mapper>

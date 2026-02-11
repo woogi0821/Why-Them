@@ -1,17 +1,22 @@
 package com.whythem.shop.member.controller;
 
+import com.whythem.shop.member.service.MemberAddressService;
 import com.whythem.shop.member.service.MemberService;
+import com.whythem.shop.member.vo.MemberAddressVO;
 import com.whythem.shop.member.vo.MemberVO;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/member")
@@ -20,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MemberAddressService memberAddressService;
 
     @GetMapping("/join")
     public String joinpage(){
@@ -67,5 +73,38 @@ public class MemberController {
     @ResponseBody
     public int idCheck(@RequestParam("loginId") String loginId){
         return memberService.checkId(loginId);
+    }
+    @GetMapping("/mypage")
+    public String myPage(HttpSession session, Model model){
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+        if (loginMember == null) {
+            return "redirect:/member/login?msg=session_expired";
+        }
+        MemberVO myInfo = memberService.getMemberById(loginMember.getLoginId());
+        model.addAttribute("myInfo",myInfo);
+        List<MemberAddressVO> addressList = memberAddressService.getAddressList(loginMember.getMemberId());
+        model.addAttribute("addressList",addressList);
+        return "member/mypage";
+    }
+    @PostMapping("/update")
+    public String updateMember(MemberVO member,HttpSession session){
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+        if (loginMember == null) {
+            return "redirect:/member/login";
+        }
+            member.setLoginId(loginMember.getLoginId());
+            memberService.updateMember(member);
+            loginMember.setMemberName(member.getMemberName());
+            loginMember.setPhoneNumber(member.getPhoneNumber());
+            loginMember.setEmail(member.getEmail());
+            session.setAttribute("loginMember",loginMember);
+            return "redirect:/member/mypage";
+        }
+}   @PostMapping("/resetPw")
+    public String resetPassword(String loginId,String memberName,String phoneNumber,
+                          String newPw, String from,RedirectAttributes rttr){
+    try {
+        memberService.restPassword(loginId,memberName,phoneNumber,newPw);
+        rttr.addFlashAttribute("msg","비밀번호가 성공적으로 변경되었습니다.")
     }
 }

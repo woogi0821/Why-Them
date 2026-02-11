@@ -22,6 +22,7 @@ public class DevLoginInterceptor implements HandlerInterceptor {
 
         if (session.getAttribute("loginMember") == null){
             MemberVO dummy = new MemberVO();
+            dummy.setMemberId(1L);
             dummy.setLoginId("devUser");
             dummy.setMemberName("개발자");
             dummy.setMemberGrade("Y");

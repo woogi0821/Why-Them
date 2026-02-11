@@ -1,15 +1,19 @@
 package com.whythem.shop.member.vo;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "loginPw")
 public class MemberVO {
-    private Long memberId; //PK
+    private Long memberId;
     private String loginId;
     private String loginPw;
     private String memberName;
@@ -18,5 +22,4 @@ public class MemberVO {
     private LocalDateTime createdAt;
     private String status;
     private String memberGrade;
-
 }
