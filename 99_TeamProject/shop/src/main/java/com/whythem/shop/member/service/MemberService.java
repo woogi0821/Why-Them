@@ -5,6 +5,7 @@ import com.whythem.shop.member.vo.MemberVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +40,7 @@ public class MemberService {
     public void updateMember(MemberVO member){
         memberMapper.updateMember(member);
     }
+    @Transactional
     public void resetPassword(String loginId,String memberName,String phoneNumber,String newPw){
         MemberVO memberVO = memberMapper.selectMemberById(loginId);
         if (memberVO == null) {
@@ -53,6 +55,6 @@ public class MemberService {
         String encodedPw = passwordEncoder.encode(newPw);
 
         memberVO.setLoginPw(encodedPw);
-        memberMapper.updateMember(memberVO);
+        memberMapper.updatePassword(memberVO);
     }
 }

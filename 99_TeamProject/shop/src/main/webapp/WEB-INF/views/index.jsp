@@ -8,6 +8,12 @@
     <meta charset="UTF-8">
     <title>LALA BOUTIQUE | OFFICIAL STORE</title>
     <link rel="stylesheet" href="/css/index.css">
+    <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="LALA BOUTIQUE" />
+    <link rel="manifest" href="/images/site.webmanifest" />
     <style>
         /* 메인 배너 스타일 */
         .hero-banner {

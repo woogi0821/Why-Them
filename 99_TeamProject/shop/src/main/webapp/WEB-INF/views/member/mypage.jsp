@@ -10,6 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/homepage.css">
     <link rel="stylesheet" href="/css/mypage.css">
+    <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="LALA BOUTIQUE" />
+    <link rel="manifest" href="/images/site.webmanifest" />
 
 </head>
 <body>
@@ -86,7 +92,8 @@
                 <div class="info-value">
                     <input type="text" name="phoneNumber"
                            value="${sessionScope.loginMember.phoneNumber}"
-                           class="clean-input" placeholder="전화번호를 입력하세요">
+                           class="clean-input" placeholder="010-0000-0000"
+                           oninput="autoHyphen(this)" maxlength="13">
                 </div>
             </div>
 
@@ -136,7 +143,8 @@
                 <div class="info-label">Verify Phone</div>
                 <div class="info-value">
                     <input type="text" name="phoneNumber" id="verifyPhone"
-                           class="clean-input" placeholder="가입 시 등록한 전화번호를 입력하세요">
+                           class="clean-input" placeholder="가입 시 등록한 번호를 입력하세요"
+                           oninput="autoHyphen(this)" maxlength="13">
                 </div>
             </div>
 
