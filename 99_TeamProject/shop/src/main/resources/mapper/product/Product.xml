@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whythem.shop.product.mapper.ProductMapper">
+
+    <select id="getProductList" resultType="com.whythem.shop.product.vo.ProductVO">
+        SELECT
+        PRODUCT_ID        AS productId,
+        CATEGORY_ID       AS categoryId,
+        PRODUCT_NAME      AS name,
+        BRAND_NAME        AS brandName,
+        PRICE             AS price,
+        STOCK_QUANTITY    AS stockQuantity,
+        DESCRIPTION       AS description,
+        STATUS            AS status,
+        IMAGE_URL         AS imageUrl
+        FROM PRODUCT
+        <where>
+            <if test="categoryId != null">
+                AND CATEGORY_ID = #{categoryId}
+            </if>
+        </where>
+        ORDER BY PRODUCT_ID DESC
+    </select>
+
+    <select id="findById" resultType="com.whythem.shop.product.vo.ProductVO">
+        SELECT
+        PRODUCT_ID        AS productId,
+        CATEGORY_ID       AS categoryId,
+        PRODUCT_NAME      AS name,
+        BRAND_NAME        AS brandName,
+        PRICE             AS price,
+        STOCK_QUANTITY    AS stockQuantity,
+        DESCRIPTION       AS description,
+        STATUS            AS status,
+        IMAGE_URL         AS imageUrl
+        FROM PRODUCT
+        WHERE PRODUCT_ID = #{productId}
+    </select>
+
+</mapper>
