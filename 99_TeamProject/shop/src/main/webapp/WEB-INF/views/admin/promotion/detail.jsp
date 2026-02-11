@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 
 <h2>프로모션 상세</h2>
@@ -20,3 +20,10 @@
 <c:if test="${promotion.status eq 'END'}">
   <p style="color:red;">이미 종료된 프로모션입니다.</p>
 </c:if>
+<c:forEach var="promo" items="${list}">
+  <tr>
+    <td>${promo.promotionId}</td>
+    <td>${promo.title}</td>
+    <td>${promo.status}</td>
+  </tr>
+</c:forEach>

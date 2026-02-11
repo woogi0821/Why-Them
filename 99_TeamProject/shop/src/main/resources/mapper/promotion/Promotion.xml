@@ -5,19 +5,87 @@
 
 <mapper namespace="com.whythem.shop.promotion.mapper.PromotionMapper">
     <!--    namespace="패키지명 + 인터페이스명" -->
-    <select id="selectPromotionList" parameterType="long"
+    <select id="selectPromotion"
+            parameterType="long"
             resultType="com.whythem.shop.promotion.vo.Promotion">
-        SELECT promotion_id, promotion_title,
-        discount_type, discount_value,
-        start_date, end_date, status
+        SELECT promotion_id,
+        promotion_title,
+        discount_type,
+        discount_value,
+        start_date,
+        end_date,
+        is_active
         FROM promotion
         WHERE promotion_id = #{promotionId}
     </select>
 
     <update id="updatePromotionStatus">
         UPDATE promotion
-        WHERE status = #{status}
+        SET is_active = 'N'
         WHERE promotion_id = #{promotionId}
     </update>
+
+    <select id="selectPromotionList"
+            parameterType="com.example.common.paging.Criteria"
+            resultType="com.example.admin.promotion.vo.PromotionVO">
+
+        SELECT
+        promotion_id,
+        title,
+        start_date,
+        end_date,
+        is_active,
+        created_at
+        FROM promotion
+        WHERE 1 = 1
+
+        <!-- 검색 -->
+        <if test="keyword != null and keyword != ''">
+            AND title LIKE '%' || #{searchKeyword} || '%'
+        </if>
+
+        ORDER BY promotion_id DESC
+
+        OFFSET #{offset} ROWS
+        FETCH NEXT #{amount} ROWS ONLY
+    </select>
+
+    <select id="selectPromotionTotalCount"
+            parameterType="com.example.common.paging.Criteria"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM promotion
+        WHERE 1 = 1
+
+        <if test="keyword != null and keyword != ''">
+            AND title LIKE '%' || #{keyword} || '%'
+        </if>
+    </select>
+    <select id="selectPromotionList"
+            parameterType="Criteria"
+            resultType="Promotion">
+
+        SELECT *
+        FROM (
+        SELECT ROWNUM rn, A.*
+        FROM (
+        SELECT promotion_id, promotion_title,
+        discount_type, discount_value,
+        start_date, end_date, is_active
+        FROM promotion
+        WHERE 1=1
+
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND promotion_title LIKE '%' || #{searchKeyword} || '%'
+        </if>
+
+        ORDER BY promotion_id DESC
+        ) A
+        )
+        WHERE rn <![CDATA[ > ]]> #{offset}
+        AND rn <![CDATA[ <= ]]> #{offset} + #{size}
+
+    </select>
 
 </mapper>
