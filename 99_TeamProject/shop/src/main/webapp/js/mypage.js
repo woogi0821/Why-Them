@@ -50,23 +50,18 @@ function validateForm() {
     }
     return confirm("회원 정보를 수정하시겠습니까?");
 }
-// [NEW] 비밀번호 섹션 보여주기 함수
+
+// 비밀번호 섹션 보여주기 함수
 function showPasswordSection() {
     const section = document.getElementById("password-section");
-
-    // 1. 보이게 설정
     section.style.display = "block";
-
-    // 2. 부드럽게 스크롤 이동
     section.scrollIntoView({ behavior: "smooth", block: "center" });
-
-    // 3. 아이디 입력창에 바로 포커스 (편의성)
     document.getElementById("verifyId").focus();
 }
 
-// [수정] 폼 검사 함수 (아이디 검사 추가)
+// 폼 검사 함수
 function validateResetForm() {
-    const verifyId = document.getElementById("verifyId"); // 아이디 입력창
+    const verifyId = document.getElementById("verifyId");
     const verifyName = document.getElementById("verifyName");
     const verifyPhone = document.getElementById("verifyPhone");
     const newPw = document.getElementById("newPw");
@@ -75,21 +70,23 @@ function validateResetForm() {
 
     pwMsg.textContent = "";
 
-    // 1. 아이디 확인 (추가됨)
     if (!verifyId.value.trim()) {
         alert("본인 확인을 위해 아이디를 입력해주세요.");
         verifyId.focus();
         return false;
     }
 
-    // 2. 이름 확인
     if (!verifyName.value.trim()) {
         alert("본인 확인을 위해 이름을 입력해주세요.");
         verifyName.focus();
         return false;
     }
 
-    // ... (나머지 전화번호, 비번 검사는 기존과 동일) ...
+    if (!verifyPhone.value.trim()) {
+        alert("본인 확인을 위해 전화번호를 입력해주세요.");
+        verifyPhone.focus();
+        return false;
+    }
 
     if (newPw.value !== confirmPw.value) {
         pwMsg.textContent = "비밀번호가 일치하지 않습니다.";
@@ -99,4 +96,12 @@ function validateResetForm() {
     }
 
     return confirm("입력하신 정보로 본인 확인 후 비밀번호를 변경하시겠습니까?");
+}
+
+// [NEW] ★ 오토 하이픈 함수 추가됨 ★
+function autoHyphen(target) {
+    target.value = target.value
+        .replace(/[^0-9]/g, '') // 숫자 빼고 다 지움
+        .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3") // 010-1234-5678 포맷
+        .replace(/(\-{1,2})$/g, ""); // 끝에 남는 하이픈 제거
 }
