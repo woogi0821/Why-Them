@@ -1,7 +1,6 @@
 package com.whythem.shop.order.service;
 
 import com.whythem.shop.order.mapper.OrderMapper;
-import com.whythem.shop.order.vo.CartItemVO;
 import com.whythem.shop.order.vo.OrderItemVO;
 import com.whythem.shop.order.vo.OrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
