@@ -100,4 +100,11 @@ public class MemberController {
             session.setAttribute("loginMember",loginMember);
             return "redirect:/member/mypage";
         }
+}   @PostMapping("/resetPw")
+    public String resetPassword(String loginId,String memberName,String phoneNumber,
+                          String newPw, String from,RedirectAttributes rttr){
+    try {
+        memberService.restPassword(loginId,memberName,phoneNumber,newPw);
+        rttr.addFlashAttribute("msg","비밀번호가 성공적으로 변경되었습니다.")
+    }
 }

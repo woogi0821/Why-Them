@@ -40,4 +40,9 @@
         SELECT * FROM MEMBER
         WHERE LOGIN_ID = #{loginId}
     </select>
+    <update id="updatePassword">
+        UPDATE MEMBER
+        SET LOGIN_PW = #{loginPw}
+        WHERE LOGIN_ID = #{loginId}
+    </update>
 </mapper>

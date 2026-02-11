@@ -39,4 +39,20 @@ public class MemberService {
     public void updateMember(MemberVO member){
         memberMapper.updateMember(member);
     }
+    public void resetPassword(String loginId,String memberName,String phoneNumber,String newPw){
+        MemberVO memberVO = memberMapper.selectMemberById(loginId);
+        if (memberVO == null) {
+            throw new RuntimeException("존재하지 않는 아이디입니다.");
+        }
+        boolean nameMatch = memberVO.getMemberName().equals(memberName);
+        boolean phoneMatch = memberVO.getPhoneNumber().equals(phoneNumber);
+
+        if (!nameMatch || !phoneMatch){
+            throw new RuntimeException("회원정보가 일치하지 않습니다.");
+        }
+        String encodedPw = passwordEncoder.encode(newPw);
+
+        memberVO.setLoginPw(encodedPw);
+        memberMapper.updateMember(memberVO);
+    }
 }
