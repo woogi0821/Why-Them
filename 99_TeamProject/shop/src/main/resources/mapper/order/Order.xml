@@ -3,6 +3,46 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="temp">
+<mapper namespace="com.whythem.shop.order.mapper.OrderMapper">
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="orderId" keyColumn="ORDER_ID">
+        INSERT INTO ORDERS (ORDER_ID, MEMBER_ID, TOTAL_PRICE, STATUS, CREATED_AT)
+        VALUES (ORDERS_SEQ.nextval, #{memberId}, #{totalPrice}, 'ORDERED', SYSDATE)
+    </insert>
 
+    <insert id="insertOrderItem">
+        INSERT INTO ORDER_ITEMS (ORDER_ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE)
+        VALUES (ORDER_ITEMS_SEQ.nextval, #{orderId}, #{productId}, #{quantity}, #{price})
+    </insert>
+
+    <select id="getCartItemsByMember" resultType="CartItemVO">
+        SELECT
+            ci.CART_ID,
+            ci.CART_ITEM_ID,
+            ci.PRODUCT_ID,
+            ci.QUANTITY,
+            ci.SIZE_VAL,
+            ci.CREATED_AT,
+            p.PRICE
+        FROM CART_ITEM ci
+        JOIN CART c ON ci.CART_ID = c.CART_ID
+        JOIN PRODUCT p ON ci.PRODUCT_ID = p.PRODUCT_ID
+        WHERE c.MEMBER_ID = #{memberId}
+        AND ci.CART_ITEM_ID IN
+        <foreach collection="itemIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteSelectedCartItems">
+        DELETE FROM CART_ITEM
+        WHERE CART_ITEM_ID IN
+        <foreach collection="itemIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND CART_ID = (
+            SELECT CART_ID
+            FROM CART
+            WHERE MEMBER_ID = #{memberId}
+        )
+    </delete>
 </mapper>
