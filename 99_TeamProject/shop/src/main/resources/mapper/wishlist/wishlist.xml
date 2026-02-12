@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whythem.shop.wishlist.mapper.wishlistMapper">
+
+    <select id="selectMywishlist" parameterType="long" resultType="com.whythem.shop.wishlist.vo.wishlistVO">
+        SELECT w.wish_id, w.member_id, w.product_id, w.created_at
+        p.product_name, p.price, p.imageurl
+        FROM wishlist w
+        inner join product p
+        ON w.product_id = p.product_id
+        WHERE w.member_id = #[memberId]
+        ORDER BY w.created_at DESC
+    </select>
+
+</mapper>

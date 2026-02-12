@@ -148,8 +148,5 @@ public class MemberController {
             return "redirect:/member/mypage#address-section";
         }
     }
-123
-
-
 }
 
