@@ -39,5 +39,5 @@
         FROM PRODUCT
         WHERE PRODUCT_ID = #{productId}
     </select>
-
+    
 </mapper>

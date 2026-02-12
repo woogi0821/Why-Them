@@ -1,7 +1,6 @@
 package com.whythem.shop.product.vo;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 import java.util.Date;
 
 @Getter

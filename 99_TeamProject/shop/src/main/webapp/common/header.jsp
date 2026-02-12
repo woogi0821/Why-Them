@@ -160,7 +160,7 @@
 </div>
 
 <script>
-    function loadCategory(categoryId) { location.href = "/?categoryId=" + categoryId; }
+    function loadCategory(categoryId) { location.href = "/product/category?categoryId=" + categoryId; }
 
     // 모달 열기/닫기
     function openLoginModal() {
