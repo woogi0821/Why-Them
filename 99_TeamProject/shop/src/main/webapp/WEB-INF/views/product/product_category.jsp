@@ -5,27 +5,10 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>LALA BOUTIQUE | OFFICIAL STORE</title>
     <link rel="stylesheet" href="/css/index.css">
-<%--    <style>--%>
-<%--    .hero-banner {--%>
-<%--    width: 100%;--%>
-<%--    height: 600px; /* 시원하게 큰 높이 */--%>
-<%--    background-image: url('/images/banner_main.png'); /* 고화질 이미지 필수 */--%>
-<%--    background-size: cover;--%>
-<%--    background-position: center;--%>
-<%--    display: flex;--%>
-<%--    align-items: center;--%>
-<%--    justify-content: center;--%>
-<%--    color: white;--%>
-<%--    text-align: center;--%>
-<%--    margin-bottom: 80px; /* 여백의 미 */--%>
-<%--    }--%>
-<%--    .hero-content h1 { font-size: 3rem; letter-spacing: 5px; font-weight: 300; }--%>
-<%--    .hero-content p { font-size: 1.2rem; margin-top: 20px; letter-spacing: 2px; }--%>
-<%--    </style>--%>
-
 </head>
 <body>
 <div id="main-wrapper">
@@ -33,12 +16,6 @@
     <jsp:include page="/common/header.jsp" />
 
     <main id="content-body">
-<%--        <section class="hero-banner">--%>
-<%--            <div class="hero-content">--%>
-<%--                <h1>2026 SPRING COLLECTION</h1>--%>
-<%--                <p>Discover the new elegance.</p>--%>
-<%--            </div>--%>
-<%--        </section>--%>
         <section class="special-section">
             <h2 id="main-title" class="stitle">
                 <c:out value="${not empty categoryName ? categoryName : 'COLLECTION'}" />

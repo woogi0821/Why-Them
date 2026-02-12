@@ -3,7 +3,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Sans+KR:wght@100;300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/homepage.css">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     /* [스타일 유지] 프리미엄 로그인 모달 */
     .modal-overlay {
