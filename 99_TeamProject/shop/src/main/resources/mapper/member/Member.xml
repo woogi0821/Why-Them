@@ -15,7 +15,7 @@
     </insert>
 
     <select id="getMemberById" resultType="MemberVO">
-        SELECT MEMBER_ID,LOGIN_ID,LOGIN_PW,EMAIL,PHONE_NUMBER,CREATED_AT,STATUS,MEMBER_GRADE
+        SELECT MEMBER_ID,LOGIN_ID,LOGIN_PW,MEMBER_NAME,EMAIL,PHONE_NUMBER,CREATED_AT,STATUS,MEMBER_GRADE
         FROM MEMBER WHERE MEMBER_ID = #{memberId}
     </select>
 
@@ -31,19 +31,24 @@
         WHERE MEMBER_ID = #{memberId} AND IS_DEFAULT = 'Y'
     </select>
 
-    <select id="loginMember" resultType="com.whythem.shop.member.vo.MemberVO">
-        SELECT * FROM MEMBER
-        WHERE LOGIN_ID = #{loginId}
-          AND LOGIN_PW = #{loginPw}
-    </select>
-
     <select id="checkId" parameterType="string" resultType="int">
         SELECT COUNT(*) FROM MEMBER
         WHERE LOGIN_ID = #{loginId}
     </select>
 
-    <select id="selectMemberById" parameterType="String" resultType="MemberVo">
+    <select id="selectMemberById" parameterType="String" resultType="MemberVO">
         SELECT * FROM MEMBER
         WHERE LOGIN_ID = #{loginId}
     </select>
+    <update id="updateMember" parameterType="MemberVO">
+        UPDATE MEMBER
+        SET MEMBER_NAME = #{memberName},PHONE_NUMBER = #{phoneNumber},
+            EMAIL = #{email}
+        WHERE LOGIN_ID = #{loginId}
+    </update>
+    <update id="updatePassword" parameterType="MemberVO">
+        UPDATE MEMBER
+        SET LOGIN_PW = #{loginPw}
+        WHERE LOGIN_ID = #{loginId}
+    </update>
 </mapper>

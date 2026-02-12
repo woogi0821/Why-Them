@@ -9,125 +9,14 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/homepage.css">
+    <link rel="stylesheet" href="/css/mypage.css">
+    <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="LALA BOUTIQUE" />
+    <link rel="manifest" href="/images/site.webmanifest" />
 
-    <style>
-        /* 기본 설정 */
-        body { font-family: 'Noto Sans KR', sans-serif; color: #1a1a1a; margin: 0; padding: 0; }
-        a { text-decoration: none; color: inherit; }
-
-        .mypage-container {
-            max-width: 1000px;
-            margin: 80px auto 150px;
-            padding: 0 20px;
-        }
-
-        /* 1. 상단 인사말 (등급 삭제, 심플하게) */
-        .welcome-box {
-            text-align: center; /* 가운데 정렬 */
-            padding-bottom: 40px;
-            margin-bottom: 50px;
-            border-bottom: 1px solid #1a1a1a;
-        }
-        .user-greeting {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 32px;
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
-        .user-greeting strong { font-weight: 600; }
-        .welcome-desc {
-            margin-top: 10px;
-            font-size: 13px;
-            color: #888;
-            font-family: 'Noto Sans KR', sans-serif;
-        }
-
-        /* 2. 퀵 메뉴 (위시리스트, 비번변경 등) - 기존 통계판 대체 */
-        .quick-menu-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3등분 */
-            gap: 15px;
-            margin-bottom: 60px;
-        }
-        .quick-item {
-            background: #fff;
-            border: 1px solid #eee;
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 120px;
-        }
-        .quick-item:hover {
-            border-color: #1a1a1a;
-            background: #fafafa;
-            transform: translateY(-3px); /* 살짝 떠오르는 효과 */
-        }
-        .quick-icon {
-            font-size: 24px;
-            color: #1a1a1a;
-            margin-bottom: 15px;
-        }
-        .quick-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 14px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        /* 3. 주문 진행 상태 (트래커) - 유지 */
-        .order-status-wrap { margin-bottom: 80px; }
-        .status-list {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 40px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee;
-        }
-        .status-step { text-align: center; flex: 1; position: relative; }
-        .status-step:not(:last-child)::after {
-            content: '\f054'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
-            position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-            color: #ddd; font-size: 14px;
-        }
-        .step-icon {
-            display: inline-block; width: 50px; height: 50px; background: #f5f5f5;
-            border-radius: 50%; line-height: 50px; margin-bottom: 15px;
-            font-size: 20px; color: #bbb;
-        }
-        .step-text { font-size: 13px; color: #555; display: block; }
-        .step-count {
-            display: block; font-size: 18px; font-weight: 600; color: #1a1a1a;
-            margin-top: 5px; font-family: 'Cormorant Garamond', serif;
-        }
-        /* 활성화 상태 */
-        .active .step-icon { background: #1a1a1a; color: #fff; }
-        .active .step-text { color: #1a1a1a; font-weight: 600; }
-
-        /* 섹션 헤더 & 폼 스타일 */
-        .section-header {
-            display: flex; justify-content: space-between; align-items: flex-end;
-            border-bottom: 2px solid #1a1a1a; padding-bottom: 15px;
-            margin-bottom: 25px; margin-top: 60px;
-        }
-        .section-title {
-            font-family: 'Cormorant Garamond', serif; font-size: 22px;
-            font-weight: 600; text-transform: uppercase;
-        }
-        .info-table { width: 100%; border-collapse: collapse; }
-        .info-table th { text-align: left; padding: 15px 0; width: 120px; font-size: 12px; color: #888; }
-        .info-table td { padding: 15px 0; border-bottom: 1px solid #eee; }
-        .editable-input { border: none; border-bottom: 1px solid #ddd; width: 100%; padding: 5px; outline: none; font-family: 'Noto Sans KR'; }
-        .btn-update {
-            background: #fff; border: 1px solid #1a1a1a; color: #1a1a1a;
-            padding: 10px 30px; font-size: 11px; cursor: pointer; margin-top: 20px;
-            text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s;
-        }
-        .btn-update:hover { background: #1a1a1a; color: #fff; }
-
-    </style>
 </head>
 <body>
 
@@ -136,12 +25,8 @@
 <div class="mypage-container">
 
     <div class="welcome-box">
-        <div class="user-greeting">
-            HELLO, <strong>${sessionScope.loginMember.memberName}</strong>
-        </div>
-        <div class="welcome-desc">
-            라라 부티크에 오신 것을 환영합니다. 나의 쇼핑 정보를 확인하세요.
-        </div>
+        <div class="user-greeting">HELLO, <strong>${sessionScope.loginMember.memberName}</strong></div>
+        <div class="welcome-desc">라라 부티크에 오신 것을 환영합니다. 나의 쇼핑 정보를 확인하세요.</div>
     </div>
 
     <div class="quick-menu-grid">
@@ -149,13 +34,11 @@
             <span class="quick-icon"><i class="fa-regular fa-heart"></i></span>
             <span class="quick-text">Wishlist</span>
         </a>
-
         <a href="/order/list" class="quick-item">
             <span class="quick-icon"><i class="fa-solid fa-bag-shopping"></i></span>
             <span class="quick-text">Order History</span>
         </a>
-
-        <a href="#" class="quick-item" onclick="alert('준비 중인 기능입니다.'); return false;">
+        <a href="javascript:void(0)" class="quick-item" onclick="showPasswordSection()">
             <span class="quick-icon"><i class="fa-solid fa-lock"></i></span>
             <span class="quick-text">Change Password</span>
         </a>
@@ -166,31 +49,11 @@
             <span class="section-title" style="font-size:18px;">Order Status</span>
         </div>
         <div class="status-list">
-            <div class="status-step">
-                <span class="step-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>
-                <span class="step-text">입금대기</span>
-                <span class="step-count">0</span>
-            </div>
-            <div class="status-step">
-                <span class="step-icon"><i class="fa-solid fa-box-open"></i></span>
-                <span class="step-text">결제완료</span>
-                <span class="step-count">0</span>
-            </div>
-            <div class="status-step">
-                <span class="step-icon"><i class="fa-solid fa-gift"></i></span>
-                <span class="step-text">배송준비</span>
-                <span class="step-count">0</span>
-            </div>
-            <div class="status-step">
-                <span class="step-icon"><i class="fa-solid fa-truck-fast"></i></span>
-                <span class="step-text">배송중</span>
-                <span class="step-count">0</span>
-            </div>
-            <div class="status-step">
-                <span class="step-icon"><i class="fa-solid fa-circle-check"></i></span>
-                <span class="step-text">배송완료</span>
-                <span class="step-count">0</span>
-            </div>
+            <div class="status-step"><span class="step-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span><span class="step-text">입금대기</span><span class="step-count">0</span></div>
+            <div class="status-step"><span class="step-icon"><i class="fa-solid fa-box-open"></i></span><span class="step-text">결제완료</span><span class="step-count">0</span></div>
+            <div class="status-step"><span class="step-icon"><i class="fa-solid fa-gift"></i></span><span class="step-text">배송준비</span><span class="step-count">0</span></div>
+            <div class="status-step"><span class="step-icon"><i class="fa-solid fa-truck-fast"></i></span><span class="step-text">배송중</span><span class="step-count">0</span></div>
+            <div class="status-step"><span class="step-icon"><i class="fa-solid fa-circle-check"></i></span><span class="step-text">배송완료</span><span class="step-count">0</span></div>
         </div>
     </div>
 
@@ -198,15 +61,112 @@
         <div class="section-header">
             <span class="section-title">Account Info</span>
         </div>
-        <form action="/member/update" method="post">
-            <table class="info-table">
-                <tr><th>ID</th><td>${sessionScope.loginMember.loginId}</td></tr>
-                <tr><th>NAME</th><td><input type="text" name="memberName" value="${sessionScope.loginMember.memberName}" class="editable-input"></td></tr>
-                <tr><th>PHONE</th><td><input type="text" name="phoneNumber" value="${sessionScope.loginMember.phoneNumber}" class="editable-input"></td></tr>
-                <tr><th>EMAIL</th><td><input type="text" name="email" value="${sessionScope.loginMember.email}" class="editable-input"></td></tr>
-            </table>
+
+        <form action="/member/update" method="post" onsubmit="return validateForm()">
+            <input type="hidden" id="originalId" value="${sessionScope.loginMember.loginId}">
+            <input type="hidden" id="idCheckStatus" value="1">
+
+            <div class="info-row">
+                <div class="info-label">User ID</div>
+                <div class="info-value">
+                    <input type="text" name="loginId" id="loginId"
+                           value="${sessionScope.loginMember.loginId}"
+                           class="clean-input" placeholder="아이디를 입력하세요"
+                           oninput="resetIdCheck()">
+                    <button type="button" class="btn-check-square" onclick="checkDuplicateId()">Check</button>
+                </div>
+                <span id="checkMsg" class="msg-area"></span>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Name</div>
+                <div class="info-value">
+                    <input type="text" name="memberName"
+                           value="${sessionScope.loginMember.memberName}"
+                           class="clean-input" readonly>
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Phone</div>
+                <div class="info-value">
+                    <input type="text" name="phoneNumber"
+                           value="${sessionScope.loginMember.phoneNumber}"
+                           class="clean-input" placeholder="010-0000-0000"
+                           oninput="autoHyphen(this)" maxlength="13">
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Email</div>
+                <div class="info-value">
+                    <input type="text" name="email"
+                           value="${sessionScope.loginMember.email}"
+                           class="clean-input" placeholder="이메일을 입력하세요">
+                </div>
+            </div>
+
             <div style="text-align: right;">
-                <button type="submit" class="btn-update">Update Info</button>
+                <button type="submit" class="btn-update">Save Changes</button>
+            </div>
+        </form>
+    </section>
+    <section class="info-section" id="password-section" style="display: none;">
+        <div class="section-header">
+            <span class="section-title">Security & Password</span>
+        </div>
+
+        <form action="/member/resetPw" method="post" onsubmit="return validateResetForm()">
+            <div style="margin-bottom: 25px; padding: 15px; background: #f9f9f9; font-size: 12px; color: #666; line-height: 1.5;">
+                <i class="fa-solid fa-shield-halved" style="margin-right: 5px;"></i>
+                안전한 비밀번호 변경을 위해 <strong>아이디와 본인 확인 정보</strong>를 모두 입력해주세요.<br>
+                입력하신 정보가 일치할 경우 새 비밀번호로 즉시 변경됩니다.
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Check ID</div>
+                <div class="info-value">
+                    <input type="text" name="loginId" id="verifyId"
+                           class="clean-input" placeholder="아이디를 입력하세요">
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Verify Name</div>
+                <div class="info-value">
+                    <input type="text" name="memberName" id="verifyName"
+                           class="clean-input" placeholder="가입 시 등록한 이름을 입력하세요">
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Verify Phone</div>
+                <div class="info-value">
+                    <input type="text" name="phoneNumber" id="verifyPhone"
+                           class="clean-input" placeholder="가입 시 등록한 번호를 입력하세요"
+                           oninput="autoHyphen(this)" maxlength="13">
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">New PW</div>
+                <div class="info-value">
+                    <input type="password" name="newPw" id="newPw"
+                           class="clean-input" placeholder="새로운 비밀번호">
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Confirm PW</div>
+                <div class="info-value">
+                    <input type="password" id="confirmPw"
+                           class="clean-input" placeholder="새로운 비밀번호 확인">
+                </div>
+                <span id="pwMsg" class="msg-area"></span>
+            </div>
+
+            <div style="text-align: right;">
+                <button type="submit" class="btn-update" style="background: #1a1a1a; color: #fff;">Change Password</button>
             </div>
         </form>
     </section>
@@ -223,6 +183,8 @@
 </div>
 
 <jsp:include page="/common/footer.jsp" />
+
+<script src="/js/mypage.js"></script>
 
 </body>
 </html>
