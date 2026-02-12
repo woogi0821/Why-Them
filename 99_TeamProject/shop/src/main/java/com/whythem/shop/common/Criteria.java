@@ -5,107 +5,64 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * @author : GGG
- * @fileName : Criteria
- * @since : 2024-04-02 description :
- *      공통 클래스
- *      페이징처리 목적
- *      전자정부 프레임워크에서 가져옴
- *      일부 수정
+ * 통합 페이징 관리 클래스
+ * Criteria(조회 기준) + PageVO(화면 계산) 기능을 하나로 합침
  */
 @Getter
 @Setter
 @ToString
 public class Criteria {
-    /** 검색조건 */
+
+    /* --- [1. DB 조회용 파라미터] --- */
+    private int page;           // 현재 페이지 번호 (사용자 요청)
+    private int size;           // 한 페이지에 보여줄 게시물 수
+    private int offset;         // DB에서 건너뛸 행 개수 (page와 size로 계산)
+
+    /* --- [2. 검색 및 필터 조건] --- */
     private String searchCondition = "";
-
-    /** 검색Keyword */
     private String searchKeyword = "";
+    private String status;      // 프로모션 상태 (READY, ACTIVE, END)
 
-    /** 검색사용여부 */
-    private String searchUseYn = "";
+    /* --- [3. 화면 페이징 버튼 계산 결과] --- */
+    private int total;          // 전체 데이터 개수
+    private int startPage;      // 페이징 블록의 시작 번호
+    private int endPage;        // 페이징 블록의 끝 번호
+    private boolean prev, next; // 이전/다음 버튼 활성화 여부
+    private int realEnd;        // 실제 마지막 페이지 번호
 
-    /** 현재페이지(초기값) */
-    private int page=0;
-
-    /** 페이지갯수: 화면에 보일 행 개수(초기값) */
-    private int size=3;
-
-    /** 오프셋 */
-    private int offset;
-    /** 총페이지 수 */
-    private int totalPages;
-
-    private String insertTime;
-
-    private String updateTime;
-
-    // 현재 페이지
-    private int pageNum;
-
-    // 페이지당 데이터 수
-    private int amount;
-
+    // 기본 생성자: 초기값 설정
     public Criteria() {
-        this.pageNum = 1;
-        this.amount = 10;
-    }
-
-    public Criteria(int pageNum, int amount) {
-        this.pageNum = pageNum;
-        this.amount = amount;
-    }
-
-    public int getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
+        this.page = 1;
+        this.size = 10; // 기본 10개씩 보기
     }
 
     /**
-     * ✅ 오프셋 자동 계산
-     * number = 1 → offset = 0
-     * number = 2 → offset = 3
-     * number = 3 → offset = 6
+     * ✅ 핵심 메서드: 전체 개수를 전달받아 페이징에 필요한 모든 수치를 계산합니다.
+     * 서비스에서 조회가 끝난 직후 또는 컨트롤러에서 호출합니다.
      */
-    public void calculateOffset() {
-        if (page < 1) page = 1;
-        if (size < 1) size = 3;
+    public void calculatePaging(int total) {
+        this.total = total;
 
-        this.offset = (page - 1) * size;
-    }
+        // 1. DB 오프셋 계산: (현재페이지 - 1) * 페이지당 개수
+        this.offset = (this.page - 1) * this.size;
 
-    /** 총페이지 수 자동 계산 */
-    public void calculateTotalPage(int totalNumber) {
-        if (totalNumber < 0) totalNumber = 0;
+        // 2. 화면 하단 끝 페이지 계산 (일반적으로 10개씩 보여줌)
+        // 공식: ceil(현재페이지 / 10.0) * 10
+        this.endPage = (int) (Math.ceil(this.page / 10.0) * 10);
 
-        this.totalPages=(int)Math.ceil((double)totalNumber/size);
-    }
+        // 3. 화면 하단 시작 페이지 계산
+        this.startPage = this.endPage - 9;
 
-    /**
-     * ✅ pageIndex 변경되면 바로 계산되도록 추가
-     */
-    public void setPageOffset(int page) {
-        this.page = page;
-        calculateOffset();
-    }
+        // 4. 실제 전체 데이터 기준 마지막 페이지 계산
+        this.realEnd = (int) (Math.ceil(total / (double) this.size));
 
-    /**
-     * ✅ pageUnit 변경되어도 자동 계산되도록 추가
-     */
-    public void setSizeOffset(int size) {
-        this.size = size;
-        calculateOffset();
+        // 5. 끝 페이지 보정: 실제 마지막 페이지가 계산된 끝 페이지보다 작으면 변경
+        if (this.realEnd < this.endPage) {
+            this.endPage = this.realEnd;
+        }
+
+        // 6. 이전/다음 버튼 유무
+        this.prev = this.startPage > 1;
+        this.next = this.endPage < this.realEnd;
     }
 }

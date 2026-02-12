@@ -4,11 +4,14 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.whythem.shop.promotion.mapper.PromotionMapper">
-    <!--    namespace="패키지명 + 인터페이스명" -->
+
+    <!-- 단건 조회 -->
     <select id="selectPromotion"
             parameterType="long"
-            resultType="com.whythem.shop.promotion.vo.Promotion">
-        SELECT promotion_id,
+            resultType="Promotion">
+
+        SELECT
+        promotion_id,
         promotion_title,
         discount_type,
         discount_value,
@@ -17,75 +20,67 @@
         is_active
         FROM promotion
         WHERE promotion_id = #{promotionId}
+
     </select>
 
-    <update id="updatePromotionStatus">
+
+    <!-- 종료 처리 -->
+    <update id="updatePromotionStatus"
+            parameterType="long">
+
         UPDATE promotion
         SET is_active = 'N'
         WHERE promotion_id = #{promotionId}
+
     </update>
 
-    <select id="selectPromotionList"
-            parameterType="com.example.common.paging.Criteria"
-            resultType="com.example.admin.promotion.vo.PromotionVO">
 
-        SELECT
-        promotion_id,
-        title,
-        start_date,
-        end_date,
-        is_active,
-        created_at
-        FROM promotion
-        WHERE 1 = 1
-
-        <!-- 검색 -->
-        <if test="keyword != null and keyword != ''">
-            AND title LIKE '%' || #{searchKeyword} || '%'
-        </if>
-
-        ORDER BY promotion_id DESC
-
-        OFFSET #{offset} ROWS
-        FETCH NEXT #{amount} ROWS ONLY
-    </select>
-
+    <!-- 전체 개수 (페이징용) -->
     <select id="selectPromotionTotalCount"
-            parameterType="com.example.common.paging.Criteria"
+            parameterType="Criteria"
             resultType="int">
 
         SELECT COUNT(*)
         FROM promotion
         WHERE 1 = 1
 
-        <if test="keyword != null and keyword != ''">
-            AND title LIKE '%' || #{keyword} || '%'
-        </if>
-    </select>
-    <select id="selectPromotionList"
-            parameterType="Criteria"
-            resultType="Promotion">
-
-        SELECT *
-        FROM (
-        SELECT ROWNUM rn, A.*
-        FROM (
-        SELECT promotion_id, promotion_title,
-        discount_type, discount_value,
-        start_date, end_date, is_active
-        FROM promotion
-        WHERE 1=1
-
         <if test="searchKeyword != null and searchKeyword != ''">
             AND promotion_title LIKE '%' || #{searchKeyword} || '%'
         </if>
 
-        ORDER BY promotion_id DESC
-        ) A
-        )
-        WHERE rn <![CDATA[ > ]]> #{offset}
-        AND rn <![CDATA[ <= ]]> #{offset} + #{size}
-
     </select>
+
+
+    <!-- 목록 조회 (페이징 + 검색) -->
+    <select id="selectPromotionList" parameterType="Criteria" resultType="Promotion">
+        SELECT * FROM promotion
+        WHERE 1=1
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND promotion_title LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        -- 💡 이 부분이 있어야 방금 등록한 프로모션이 1페이지 맨 위에 나옵니다!
+        ORDER BY promotion_id DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <insert id="insert" parameterType="Promotion">
+        INSERT INTO promotion (
+        promotion_id,
+        promotion_title,
+        discount_type,
+        discount_value,
+        start_date,
+        end_date,
+        is_active
+        ) VALUES (
+        promotion_seq.NEXTVAL, -- 오라클 시퀀스 사용 예시
+        #{promotionTitle},
+        #{discountType},
+        #{discountValue},
+        #{startDate},
+        #{endDate},
+        'Y' -- 초기 등록 시 기본값 'Y' (활성)
+        )
+    </insert>
 
 </mapper>

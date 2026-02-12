@@ -22,6 +22,5 @@ public class Promotion {
     private LocalDate startDate;    // 시작일
     private LocalDate endDate;      // 종료일
 
-    private String isActive;
-    private String status;          // READY, ACTIVE, END
+    private String isActive;        // Y or N
 }
