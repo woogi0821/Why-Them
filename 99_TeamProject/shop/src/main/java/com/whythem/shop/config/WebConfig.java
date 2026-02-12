@@ -21,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
         String desktopPath = "C:/Users/khuser/Desktop/images/";
 
         registry.addResourceHandler("/upload/**")
-                .addResourceLocations("file:///C:/Users/khuser/Desktop/images/");
+                .addResourceLocations("file:///C:/shop/upload/");
     }
 
     @Override
