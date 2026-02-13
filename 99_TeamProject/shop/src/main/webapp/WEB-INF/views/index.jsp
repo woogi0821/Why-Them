@@ -24,6 +24,8 @@
 
     <jsp:include page="/common/header.jsp" />
 
+    <%-- 중간 생략 (Header 등 동일) --%>
+
     <main id="content-body">
 
         <section class="hero-banner">
@@ -36,11 +38,11 @@
         <section class="curation-section">
             <div class="section-header">
                 <h2 class="section-title">NEW ARRIVALS</h2>
-                <a href="/product/list?sort=new" class="view-more">VIEW ALL +</a>
+                <a href="/product/new/all" class="view-more">VIEW ALL +</a>
             </div>
 
             <div class="grid-container">
-                <c:forEach var="item" items="${productList}" begin="0" end="3">
+                <c:forEach var="item" items="${newList}" >
                     <div class="product-card" onclick="location.href='/product/detail?productId=${item.productId}'">
                         <div class="img-box">
                             <img src="${not empty item.imageUrl ? item.imageUrl : '/img/no-image.jpg'}" alt="${item.name}">
@@ -58,11 +60,11 @@
         <section class="curation-section">
             <div class="section-header">
                 <h2 class="section-title">WEEKLY BEST</h2>
-                <a href="/product/list?sort=best" class="view-more">VIEW ALL +</a>
+                <a href="/product/best/all" class="view-more">VIEW ALL +</a>
             </div>
 
             <div class="grid-container">
-                <c:forEach var="item" items="${productList}" begin="4" end="7">
+                <c:forEach var="item" items="${bestList}">
                     <div class="product-card" onclick="location.href='/product/detail?productId=${item.productId}'">
                         <div class="img-box">
                             <img src="${not empty item.imageUrl ? item.imageUrl : '/img/no-image.jpg'}" alt="${item.name}">
@@ -78,6 +80,8 @@
         </section>
 
     </main>
+
+    <%-- 중간 생략 (Footer 등 동일) --%>
 
     <jsp:include page="/common/footer.jsp" />
 

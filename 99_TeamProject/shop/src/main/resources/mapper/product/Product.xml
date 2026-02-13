@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.whythem.shop.product.mapper.ProductMapper">
-
+<!--카테고리별 조회-->
     <select id="getProductList" resultType="com.whythem.shop.product.vo.ProductVO">
         SELECT
         PRODUCT_ID        AS productId,
@@ -24,7 +24,7 @@
         </where>
         ORDER BY PRODUCT_ID DESC
     </select>
-
+<!--상세 페이지 조회-->
     <select id="findById" resultType="com.whythem.shop.product.vo.ProductVO">
         SELECT
         PRODUCT_ID        AS productId,
@@ -39,5 +39,41 @@
         FROM PRODUCT
         WHERE PRODUCT_ID = #{productId}
     </select>
-    
+    <select id="getWeeklyBest" resultType="com.whythem.shop.product.vo.ProductVO">
+        SELECT * FROM (
+        SELECT
+        PRODUCT_ID        AS productId,
+        PRODUCT_NAME      AS name,
+        BRAND_NAME        AS brandName,
+        PRICE             AS price,
+        IMAGE_URL         AS imageUrl,
+        VIEW_COUNT        AS viewCount
+        FROM PRODUCT
+        ORDER BY VIEW_COUNT DESC, PRODUCT_ID DESC
+        )
+        WHERE ROWNUM &lt;= #{limit}
+    </select>
+<!--   NEW ARRIVALS 메인페이지,  NEW ARRIVALS페이지 상품수 정하기  -->
+    <select id="getNewArrivals" resultType="com.whythem.shop.product.vo.ProductVO">
+        SELECT * FROM (
+        SELECT
+        PRODUCT_ID   AS productId,
+        PRODUCT_NAME AS name,
+        BRAND_NAME   AS brandName,
+        PRICE        AS price,
+        IMAGE_URL    AS imageUrl,
+        UPDATED_AT   AS updatedAt
+        FROM PRODUCT
+        ORDER BY UPDATED_AT DESC, PRODUCT_ID DESC  )
+        WHERE ROWNUM &lt;= #{limit}
+    </select>
+
+<!--조회수 업로드-->
+    <update id="updateViewCount">
+        UPDATE PRODUCT
+        SET VIEW_COUNT = VIEW_COUNT + 1
+        WHERE PRODUCT_ID = #{productId}
+    </update>
+
+
 </mapper>

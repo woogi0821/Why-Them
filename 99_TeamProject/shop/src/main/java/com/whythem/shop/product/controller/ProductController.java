@@ -11,6 +11,7 @@ import java.util.List;
 
 @Controller
 public class ProductController {
+
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
@@ -19,43 +20,72 @@ public class ProductController {
 
     /**
      * 1. 메인 페이지 (index.jsp)
-     * 배너가 있고 NEW/BEST 섹션이 있는 메인 화면
+     * - 메인 섹션용 베스트 4개와 일반 목록을 함께 조회합니다.
      */
     @GetMapping("/")
     public String customerMain(Model model) {
-        // 메인에는 모든 상품을 가져와서 index.jsp에 뿌려줍니다.
+        // 메인페이지에서의 weekly best 상품수
+        List<ProductVO> bestList = productService.getWeeklyBest(4);
+        model.addAttribute("bestList", bestList);
+        // 메인페이지에서의 new arrivals 상품수
+        List<ProductVO> newList = productService.getNewArrivals(4);
+        model.addAttribute("newList", newList);
+        // [메인용] 일반 상품 전체 목록
         List<ProductVO> productList = productService.getProductList(null);
         model.addAttribute("productList", productList);
+
         return "index";
     }
 
     /**
-     * 2. 카테고리별 리스트 페이지 (product/category.jsp)
-     * 각 카테고리 메뉴를 눌렀을 때 나오는 페이지
+     * 2. Weekly Best 전체보기 페이지 (product/weekly_best.jsp)
+     * - [수정사항] 'View All' 클릭 시 전용 베스트 페이지로 이동합니다.
      */
-    @GetMapping("/product/category")
-    public String categoryPage(@RequestParam("categoryId") Long categoryId, Model model) {
+    @GetMapping("/product/best/all")
+    public String viewAllBest(Model model) {
+        // 조회수가 높은 순서대로 전체 상품 리스트 조회
+        List<ProductVO> bestAllList = productService.getWeeklyBest(8);
 
-        // 해당 카테고리 상품만 조회
-        List<ProductVO> productList = productService.getProductList(categoryId);
-        model.addAttribute("productList", productList);
-        model.addAttribute("selectedCategory", categoryId);
+        // JSP에서 사용할 수 있도록 데이터를 모델에 담기
+        model.addAttribute("bestAllList", bestAllList);
+        model.addAttribute("pageTitle", "WEEKLY BEST ALL");
 
-        // 카테고리 이름 매칭 (아래에 정의된 getCategoryName 메서드 사용)
-        String categoryName = getCategoryName(categoryId);
-        model.addAttribute("categoryName", categoryName);
-
-        // 수정된 경로: product 폴더 안의 category.jsp
-        return "product/product_category";
+        // [수정된 경로] product 폴더 안의 weekly_best.jsp 호출
+        return "product/weekly_best";
     }
 
     /**
-     * 3. 상품 상세 페이지 (product/product_detail.jsp)
+     * 3. 카테고리별 리스트 페이지 (product/product_category.jsp)
+     */
+    @GetMapping("/product/category")
+    public String categoryPage(
+            @RequestParam(value = "categoryId", required = false) Long categoryId, Model model) {
+        List<ProductVO> productList = productService.getProductList(categoryId);
+        model.addAttribute("productList", productList);
+        model.addAttribute("categoryName", getCategoryName(categoryId));
+
+        return "product/product_category";
+    }
+    @GetMapping("/product/new/all")
+    public String viewAllNew(Model model) {
+        // New Arrivals 전체보기용 8개 추출
+        List<ProductVO> newList = productService.getNewArrivals(8);
+
+        model.addAttribute("bestAllList", newList);
+        model.addAttribute("categoryName", "NEW ARRIVALS");
+
+        return "product/new_arrivals";
+    }
+
+    /**
+     * 4. 상품 상세 페이지 (product/product_detail.jsp)
      */
     @GetMapping("/product/detail")
     public String productDetail(@RequestParam("productId") Long productId, Model model) {
+        // 서비스 내부에서 조회수 증가(updateViewCount) 후 데이터를 가져옴
         ProductVO product = productService.findById(productId);
         model.addAttribute("product", product);
+
         return "product/product_detail";
     }
 
