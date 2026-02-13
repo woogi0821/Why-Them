@@ -13,6 +13,7 @@ import java.util.List;
 
 @Controller
 public class ProductController {
+
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
@@ -21,7 +22,7 @@ public class ProductController {
 
     /**
      * 1. 메인 페이지 (index.jsp)
-     * 배너가 있고 NEW/BEST 섹션이 있는 메인 화면
+     * - 메인 섹션용 베스트 4개와 일반 목록을 함께 조회합니다.
      */
     @GetMapping("/")
     public String customerMain(Model model, HttpSession session) {
@@ -39,12 +40,13 @@ public class ProductController {
         List<ProductVO> productList = productService.getProductList(null, memberId);
 
         model.addAttribute("productList", productList);
+
         return "index";
     }
 
     /**
-     * 2. 카테고리별 리스트 페이지 (product/category.jsp)
-     * 각 카테고리 메뉴를 눌렀을 때 나오는 페이지
+     * 2. Weekly Best 전체보기 페이지 (product/weekly_best.jsp)
+     * - [수정사항] 'View All' 클릭 시 전용 베스트 페이지로 이동합니다.
      */
     @GetMapping("/product/category")
     public String categoryPage(@RequestParam("categoryId") Long categoryId, Model model, HttpSession session) { // [1] 세션 추가
@@ -70,12 +72,37 @@ public class ProductController {
     }
 
     /**
-     * 3. 상품 상세 페이지 (product/product_detail.jsp)
+     * 3. 카테고리별 리스트 페이지 (product/product_category.jsp)
+     */
+    @GetMapping("/product/category")
+    public String categoryPage(
+            @RequestParam(value = "categoryId", required = false) Long categoryId, Model model) {
+        List<ProductVO> productList = productService.getProductList(categoryId);
+        model.addAttribute("productList", productList);
+        model.addAttribute("categoryName", getCategoryName(categoryId));
+
+        return "product/product_category";
+    }
+    @GetMapping("/product/new/all")
+    public String viewAllNew(Model model) {
+        // New Arrivals 전체보기용 8개 추출
+        List<ProductVO> newList = productService.getNewArrivals(8);
+
+        model.addAttribute("bestAllList", newList);
+        model.addAttribute("categoryName", "NEW ARRIVALS");
+
+        return "product/new_arrivals";
+    }
+
+    /**
+     * 4. 상품 상세 페이지 (product/product_detail.jsp)
      */
     @GetMapping("/product/detail")
     public String productDetail(@RequestParam("productId") Long productId, Model model) {
+        // 서비스 내부에서 조회수 증가(updateViewCount) 후 데이터를 가져옴
         ProductVO product = productService.findById(productId);
         model.addAttribute("product", product);
+
         return "product/product_detail";
     }
 
