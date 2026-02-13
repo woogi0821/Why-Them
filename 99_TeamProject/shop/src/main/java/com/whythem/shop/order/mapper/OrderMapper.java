@@ -1,6 +1,6 @@
 package com.whythem.shop.order.mapper;
 
-import com.whythem.shop.order.vo.CartItemVO;
+import com.whythem.shop.cart.vo.CartItemVO;
 import com.whythem.shop.order.vo.OrderItemVO;
 import com.whythem.shop.order.vo.OrderVO;
 import com.whythem.shop.order.vo.PaymentVO;

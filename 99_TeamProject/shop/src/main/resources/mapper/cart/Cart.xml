@@ -1,8 +1,56 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whythem.shop.cart.mapper.CartMapper">
 
-<mapper namespace="temp">
+    <select id="getCartByMemberId" resultType="com.whythem.shop.cart.vo.CartVO">
+        SELECT
+            CART_ID      AS cartId,
+            MEMBER_ID    AS memberId,
+            CREATED_AT   AS createdAt,
+            UPDATED_AT   AS updatedAt
+        FROM CART
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <insert id="insertCart" parameterType="com.whythem.shop.cart.vo.CartVO">
+        <selectKey keyProperty="cartId" resultType="long" order="BEFORE">
+            SELECT CART_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO CART (CART_ID, MEMBER_ID)
+        VALUES (#{cartId}, #{memberId})
+    </insert>
+
+    <insert id="insertCartItem" parameterType="com.whythem.shop.cart.vo.CartItemVO">
+        INSERT INTO CART_ITEM (CART_ITEM_ID, CART_ID, PRODUCT_ID, QUANTITY)
+        VALUES (CART_ITEM_SEQ.NEXTVAL, #{cartId}, #{productId}, #{quantity})
+    </insert>
+
+    <select id="getCartItemList" resultType="com.whythem.shop.cart.vo.CartItemVO">
+        SELECT
+            CI.CART_ITEM_ID   AS cartItemId,
+            CI.CART_ID        AS cartId,
+            CI.PRODUCT_ID     AS productId,
+            CI.QUANTITY       AS quantity,
+            CI.CREATED_AT     AS createdAt,
+            P.PRODUCT_NAME    AS productName,
+            P.PRICE           AS price,
+            P.IMAGE_URL       AS imageUrl,
+            P.BRAND_NAME      AS brandName
+        FROM CART_ITEM CI
+                 INNER JOIN PRODUCT P ON CI.PRODUCT_ID = P.PRODUCT_ID
+        WHERE CI.CART_ID = #{cartId}
+        ORDER BY CI.CREATED_AT DESC
+    </select>
+
+    <update id="updateCartItemQuantity">
+        UPDATE CART_ITEM
+        SET QUANTITY = #{quantity}
+        WHERE CART_ITEM_ID = #{cartItemId}
+    </update>
+
+    <delete id="deleteCartItem">
+        DELETE FROM CART_ITEM
+        WHERE CART_ITEM_ID = #{cartItemId}
+    </delete>
 
 </mapper>
