@@ -25,7 +25,7 @@ class ProductServiceTest {
         Long categoryId = 1L;
 
         // 2. When (실제 기능 실행)
-        List<ProductVO> list = productService.getProductList(categoryId);
+        List<ProductVO> list = productService.getProductList(categoryId ,0L);
 
         // 3. Then (결과 검증 - 로그는 검증을 위한 보조 수단)
         assertThat(list).isNotEmpty(); // 리스트가 비어있지 않아야 성공
