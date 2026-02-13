@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whythem.shop.wishlist.mapper.WishlistMapper">
+
+    <select id="selectMyWishlist" parameterType="long" resultType="com.whythem.shop.wishlist.vo.WishlistVO">
+        SELECT
+            w.wish_id,
+            w.member_id,
+            w.product_id,
+            w.created_at,
+            p.product_name,
+            p.price,
+            p.image_url
+        FROM wishlist w
+                 INNER JOIN product p ON w.product_id = p.product_id
+        WHERE w.member_id = #{memberId}
+        ORDER BY w.created_at DESC
+    </select>
+
+    <insert id="insertWishlist" parameterType="com.whythem.shop.wishlist.vo.WishlistVO">
+        INSERT INTO wishlist (wish_id,member_id,product_id,created_at)
+        VALUES (wishlist_seq.NEXTVAL, #{memberId},#{productId},SYSDATE)
+    </insert>
+
+    <delete id="deleteWishlist" parameterType="long">
+        DELETE FROM wishlist
+        WHERE wish_id = #{wishId}
+    </delete>
+
+    <delete id="deleteWishlistByMemberAndProduct" parameterType="com.whythem.shop.wishlist.vo.WishlistVO">
+        DELETE FROM wishlist
+        WHERE member_id = #{memberId}
+          AND product_id = #{productId}
+    </delete>
+
+    <select id="checkWishlist" parameterType="com.whythem.shop.wishlist.vo.WishlistVO" resultType="int">
+        SELECT COUNT(*) FROM wishlist
+        WHERE member_id = #{memberId}
+          AND product_id = #{productId}
+    </select>
+
+    <select id="selectTotalPrice" parameterType="long" resultType="long">
+        SELECT NVL(SUM(TRUNC(p.price * (CASE WHEN m.member_grade = 'Y' THEN 0.9 ELSE 1 END))),0)
+        FROM wishlist w
+                 JOIN product p ON w.product_id = p.product_id
+                 JOIN member m ON w.member_id = m.member_id
+        WHERE w.member_id = #{memberId}
+    </select>
+
+    <delete id="deleteAllWishlsit" parameterType="long">
+        DELETE FROM wishlist
+        WHERE member_id = #{memberId}
+    </delete>
+
+</mapper>

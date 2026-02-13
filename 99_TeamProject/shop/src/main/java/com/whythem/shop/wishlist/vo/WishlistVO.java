@@ -10,7 +10,7 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(of = "wishId")
-public class wishlistVO {
+public class WishlistVO {
 
     private Long wishId;
     private Long memberId;

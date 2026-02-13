@@ -225,4 +225,5 @@
         const modal = document.getElementById('login-modal');
         if (event.target == modal) closeLoginModal();
     }
+
 </script>
