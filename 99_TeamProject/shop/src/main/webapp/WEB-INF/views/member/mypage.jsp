@@ -30,17 +30,19 @@
     </div>
 
     <div class="quick-menu-grid">
-        <a href="/wishlist" class="quick-item">
+        <a href="<c:url value='/wishlist/list'/>" class="quick-item">
             <span class="quick-icon"><i class="fa-regular fa-heart"></i></span>
-            <span class="quick-text">Wishlist</span>
+            <span class="quick-text"><c:out value="Wishlist"/></span>
         </a>
-        <a href="/order/list" class="quick-item">
+
+        <a href="<c:url value='/order/list'/>" class="quick-item">
             <span class="quick-icon"><i class="fa-solid fa-bag-shopping"></i></span>
-            <span class="quick-text">Order History</span>
+            <span class="quick-text"><c:out value="Order History"/></span>
         </a>
+
         <a href="javascript:void(0)" class="quick-item" onclick="showPasswordSection()">
             <span class="quick-icon"><i class="fa-solid fa-lock"></i></span>
-            <span class="quick-text">Change Password</span>
+            <span class="quick-text"><c:out value="Change Password"/></span>
         </a>
     </div>
 

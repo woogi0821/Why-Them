@@ -1,3 +1,5 @@
+/* homepage.css 전체 코드 */
+
 /* 공통 리셋 */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -29,19 +31,72 @@ body {
 .user-txt { font-weight: 400; color: #111; margin-right: -10px; }
 
 /* 네비게이션 & 가변형 드롭다운 (밀어내기 방식) */
-.nav-wrapper { border-top: 1px solid #f2f2f2; border-bottom: 1px solid #f2f2f2; transition: all 0.4s ease; }
-.menu-bar { display: flex; justify-content: center; max-width: 1100px; margin: 0 auto; padding: 20px 0; }
-.menu-item { flex: 1; text-align: center; font-weight: 400; font-size: 0.8rem; letter-spacing: 5px; color: #222; }
+.nav-wrapper {
+    border-top: 1px solid #f2f2f2;
+    border-bottom: 1px solid #f2f2f2;
+    transition: all 0.4s ease;
+    /* 기존에 있던 .nav-wrapper:hover 관련 로직 제거됨 */
+}
 
-.full-dropdown { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.4s ease; background: #fff; }
-.nav-wrapper:hover .full-dropdown { max-height: 150px; opacity: 1; padding-bottom: 25px; }
+.menu-bar {
+    display: flex;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 0;
+    /* 메뉴바 자체에 호버 감지 영역 확보를 위해 z-index 조정 가능하나 기본값 유지 */
+}
 
-.drop-container { display: flex; justify-content: center; max-width: 1100px; margin: 0 auto; }
+.menu-item {
+    flex: 1;
+    text-align: center;
+    font-weight: 400;
+    font-size: 0.8rem;
+    letter-spacing: 5px;
+    color: #222;
+    cursor: default; /* 커서 모양 변경 */
+}
+
+.full-dropdown {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    background: #fff;
+}
+
+/* [핵심 수정]
+   1. .menu-bar:hover ~ .full-dropdown : 메뉴 글자들에 마우스 올리면 열림
+   2. .full-dropdown:hover : 열린 드롭다운 안에 마우스가 있어도 유지됨
+   3. 높이(150->120)와 패딩(25->15)을 줄여서 슬림하게 변경
+*/
+.menu-bar:hover ~ .full-dropdown,
+.full-dropdown:hover {
+    max-height: 120px;    /* 높이를 줄임 */
+    opacity: 1;
+    padding-bottom: 15px; /* 하단 여백 줄임 */
+    border-bottom: 1px solid #f2f2f2; /* 열렸을 때 하단 선 추가 (선택사항) */
+}
+
+.drop-container {
+    display: flex;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-top: 10px; /* 상단 여백 추가하여 균형 맞춤 */
+}
+
 .drop-column { flex: 1; text-align: center; }
 .sub-menu { list-style: none; }
+
 .sub-menu li {
-    padding: 6px 0; font-size: 0.75rem; color: #aaa; cursor: pointer; transition: 0.3s;
-    font-weight: 300; letter-spacing: 1px;
+    padding: 4px 0; /* 6px -> 4px로 줄여서 더 조밀하게 */
+    font-size: 0.75rem;
+    color: #aaa;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 300;
+    letter-spacing: 1px;
 }
 .sub-menu li:hover { color: #111; }
 
@@ -72,4 +127,3 @@ body {
 /* 푸터 */
 .footer-section { border-top: 1px solid #f2f2f2; padding: 60px 0; text-align: center; font-size: 0.65rem; color: #ccc; letter-spacing: 2px; }
 .btn-withdraw { border: none; background: none; color: #ddd; cursor: pointer; margin-bottom: 15px; font-size: 0.6rem; text-decoration: underline; }
-

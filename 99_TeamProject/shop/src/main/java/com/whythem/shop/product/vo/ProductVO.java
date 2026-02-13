@@ -23,4 +23,5 @@ public class ProductVO {
 
     private Date createdAt;
     private Date updatedAt;
+    private boolean wished;
 }

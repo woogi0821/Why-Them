@@ -30,7 +30,7 @@ public class WishlistController {
         long totalPrice = wishlistService.getTotalPrice(memberId);
         model.addAttribute("wishlist",list);
         model.addAttribute("totalPrice",totalPrice);
-        return "wishlist/list";
+        return "wishlist/wishlist";
     }
     @PostMapping("/toggle")
     @ResponseBody

@@ -1,7 +1,9 @@
 package com.whythem.shop.product.controller;
 
+import com.whythem.shop.member.vo.MemberVO;
 import com.whythem.shop.product.service.ProductService;
 import com.whythem.shop.product.vo.ProductVO;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +24,20 @@ public class ProductController {
      * 배너가 있고 NEW/BEST 섹션이 있는 메인 화면
      */
     @GetMapping("/")
-    public String customerMain(Model model) {
-        // 메인에는 모든 상품을 가져와서 index.jsp에 뿌려줍니다.
-        List<ProductVO> productList = productService.getProductList(null);
+    public String customerMain(Model model, HttpSession session) {
+        // 1. 로그인 여부 확인 (세션에서 꺼내기)
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+
+        // 2. memberId 구하기
+        // - 로그인을 안 했으면(null) -> 0L (DB에서 0번 회원은 없으므로 찜 안 한 걸로 처리됨)
+        // - 로그인을 했으면 -> 그 사람의 memberId 사용
+        Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
+
+        // 3. 서비스 호출 (매개변수 2개로 변경됨!)
+        // 첫 번째 null: 카테고리 구분 없이 전체 상품 조회 (메인 페이지용)
+        // 두 번째 memberId: 찜 여부 확인용
+        List<ProductVO> productList = productService.getProductList(null, memberId);
+
         model.addAttribute("productList", productList);
         return "index";
     }
@@ -34,18 +47,25 @@ public class ProductController {
      * 각 카테고리 메뉴를 눌렀을 때 나오는 페이지
      */
     @GetMapping("/product/category")
-    public String categoryPage(@RequestParam("categoryId") Long categoryId, Model model) {
+    public String categoryPage(@RequestParam("categoryId") Long categoryId, Model model, HttpSession session) { // [1] 세션 추가
 
-        // 해당 카테고리 상품만 조회
-        List<ProductVO> productList = productService.getProductList(categoryId);
+        // [2] 로그인한 사용자 ID 구하기 (찜 여부 확인용)
+        // - 로그인을 안 했으면 0L, 했으면 실제 ID
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+        Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
+
+        // [3] 서비스 호출 (이제 파라미터 2개를 넘겨야 빨간 줄이 사라집니다!)
+        // - 첫 번째: 어떤 카테고리 상품을 보여줄지
+        // - 두 번째: 누가 찜했는지 확인할지
+        List<ProductVO> productList = productService.getProductList(categoryId, memberId);
+
         model.addAttribute("productList", productList);
         model.addAttribute("selectedCategory", categoryId);
 
-        // 카테고리 이름 매칭 (아래에 정의된 getCategoryName 메서드 사용)
+        // 카테고리 이름 매칭
         String categoryName = getCategoryName(categoryId);
         model.addAttribute("categoryName", categoryName);
 
-        // 수정된 경로: product 폴더 안의 category.jsp
         return "product/product_category";
     }
 

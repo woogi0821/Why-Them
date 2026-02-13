@@ -103,6 +103,37 @@
             grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개씩 깔끔하게 */
             gap: 40px 20px;
         }
+        /* 상품 카드 (기존 스타일에 추가) */
+        .product-card {
+            position: relative; /* 하트 위치 기준점 */
+            cursor: pointer;
+        }
+
+        /* 하트 아이콘 버튼 */
+        .btn-wish-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10; /* 이미지보다 위에 떠 있어야 함 */
+            font-size: 24px;
+            color: #ccc; /* 기본: 빈 하트 색상 (회색) */
+            cursor: pointer;
+            transition: transform 0.2s, color 0.2s;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+        }
+
+        /* 마우스 올렸을 때 살짝 커짐 */
+        .btn-wish-icon:hover {
+            transform: scale(1.2);
+        }
+
+        /* 찜 된 상태 (클래스 추가 시) */
+        .btn-wish-icon.active {
+            color: #e74c3c; /* 빨간색 하트 */
+        }
         /* ============================================================
    반응형 레이아웃 설정
    ============================================================ */

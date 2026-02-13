@@ -13,8 +13,8 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 //상품 목록 가져오기
-    public List<ProductVO> getProductList(Long categoryId) {
-        return productMapper.getProductList(categoryId);
+    public List<ProductVO> getProductList(Long categoryId,Long memberId) {
+        return productMapper.getProductList(categoryId,memberId);
     }
 // 상세조회
     public ProductVO findById(Long productId) {

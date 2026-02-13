@@ -7,22 +7,28 @@
 
     <select id="getProductList" resultType="com.whythem.shop.product.vo.ProductVO">
         SELECT
-        PRODUCT_ID        AS productId,
-        CATEGORY_ID       AS categoryId,
-        PRODUCT_NAME      AS name,
-        BRAND_NAME        AS brandName,
-        PRICE             AS price,
-        STOCK_QUANTITY    AS stockQuantity,
-        DESCRIPTION       AS description,
-        STATUS            AS status,
-        IMAGE_URL         AS imageUrl
-        FROM PRODUCT
+        P.PRODUCT_ID        AS productId,
+        P.CATEGORY_ID       AS categoryId,
+        P.PRODUCT_NAME      AS name,
+        P.BRAND_NAME        AS brandName,
+        P.PRICE             AS price,
+        P.STOCK_QUANTITY    AS stockQuantity,
+        P.DESCRIPTION       AS description,
+        P.STATUS            AS status,
+        P.IMAGE_URL         AS imageUrl,
+
+        (SELECT COUNT(*)
+        FROM WISHLIST W
+        WHERE W.PRODUCT_ID = P.PRODUCT_ID
+        AND W.MEMBER_ID = #{memberId}) AS wished
+
+        FROM PRODUCT P
         <where>
             <if test="categoryId != null">
-                AND CATEGORY_ID = #{categoryId}
+                AND P.CATEGORY_ID = #{categoryId}
             </if>
         </where>
-        ORDER BY PRODUCT_ID DESC
+        ORDER BY P.PRODUCT_ID DESC
     </select>
 
     <select id="findById" resultType="com.whythem.shop.product.vo.ProductVO">
