@@ -51,15 +51,30 @@
     </select>
 
 
-    <!-- 목록 조회 (페이징 + 검색) -->
     <select id="selectPromotionList" parameterType="Criteria" resultType="Promotion">
-        SELECT * FROM promotion
+        SELECT promotion_id,
+        promotion_title,
+        discount_type,
+        discount_value,
+        start_date,
+        end_date,
+        is_active AS isActive
+<!--        * DB의 IS_ACTIVE를 Java의 isActive 필드에 강제로 매핑 */ -->
+        FROM promotion
         WHERE 1=1
+
+        /* 제목 검색어가 입력되었을 경우에만 제목 필터링 적용 */
         <if test="searchKeyword != null and searchKeyword != ''">
             AND promotion_title LIKE '%' || #{searchKeyword} || '%'
         </if>
-        -- 💡 이 부분이 있어야 방금 등록한 프로모션이 1페이지 맨 위에 나옵니다!
+
+<!--        /* 최신순(ID 역순) 정렬 */-->
         ORDER BY promotion_id DESC
+
+<!--        /* 페이징 처리 (Oracle 12c 이상 문법)
+offset: 건너뛸 행의 개수 (예: 2페이지면 앞의 10건 건너뜀)
+        size: 한 페이지에 보여줄 개수
+        */-->
         OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
     </select>
 
@@ -82,5 +97,20 @@
         'Y' -- 초기 등록 시 기본값 'Y' (활성)
         )
     </insert>
+<!--    프로모션 정보 변경(이름, 날짜, 할인율, 활성화 여부를 모두 업데이트)-->
+    <update id="updatePromotion" parameterType="Promotion">
+        UPDATE promotion
+        SET promotion_title = #{promotionTitle},
+        discount_type   = #{discountType},
+        discount_value  = #{discountValue},
+        start_date      = #{startDate},
+        end_date        = #{endDate},
+        is_active       = #{isActive}  WHERE promotion_id  = #{promotionId}
+    </update>
+
+    <update id="deletePromotion" parameterType="long">
+        UPDATE promotion
+        SET is_active = 'D'  WHERE promotion_id = #{promotionId}
+    </update>
 
 </mapper>

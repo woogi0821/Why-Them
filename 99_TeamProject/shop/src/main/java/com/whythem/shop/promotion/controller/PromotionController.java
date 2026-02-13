@@ -19,10 +19,17 @@ public class PromotionController {
     /**
      * 관리자용 프로모션 상세 조회
      */
+    /**
+     * 프로모션 상세 조회
+     * Criteria를 추가로 받아서 상세 페이지로 전달합니다.
+     */
     @GetMapping("/admin/promotion/{promotionId}")
-    public String promotionDetail(@PathVariable Long promotionId, Model model) {
+    public String promotionDetail(@PathVariable Long promotionId,
+                                  @ModelAttribute("criteria") Criteria criteria,
+                                  Model model) {
         Promotion promotion = promotionService.getPromotion(promotionId);
         model.addAttribute("promotion", promotion);
+        // criteria는 @ModelAttribute 덕분에 자동으로 model에 담겨 JSP로 전달됩니다.
         return "admin/promotion/detail";
     }
 
@@ -78,6 +85,41 @@ public class PromotionController {
         rttr.addFlashAttribute("msg", "INSERT_SUCCESS");
 
         // 목록 페이지로 돌아가기 (이때 최신 글이 제일 위에 보이도록 ORDER BY promotion_id DESC 필수)
+        return "redirect:/admin/promotion/list";
+    }
+    /**
+     * 프로모션 수정 페이지로 이동 (register.jsp 재활용)
+     */
+    @GetMapping("/admin/promotion/edit/{promotionId}")
+    public String editPromotionView(@PathVariable Long promotionId,
+                                    @ModelAttribute("criteria") Criteria criteria,
+                                    Model model) {
+        Promotion promotion = promotionService.getPromotion(promotionId);
+        model.addAttribute("promotion", promotion);
+        return "admin/promotion/register";
+    }
+
+    /**
+     * 프로모션 수정 실행 (이름, 날짜, 활성화 여부 등 모두 반영)
+     */
+    @PostMapping("/admin/promotion/update")
+    public String update(@ModelAttribute Promotion promotion, RedirectAttributes rttr) {
+        promotionService.updatePromotion(promotion);
+        rttr.addFlashAttribute("msg", "UPDATE_SUCCESS");
+        // 수정 후에는 보던 상세 페이지로 다시 이동
+        return "redirect:/admin/promotion/" + promotion.getPromotionId();
+    }
+    @PostMapping("/admin/promotion/delete")
+    public String delete(@RequestParam("promotionId") Long promotionId, RedirectAttributes rttr) {
+        int result = promotionService.removePromotion(promotionId);
+
+        System.out.println("DB 수정 결과 건수: " + result);
+
+        if(result > 0) {
+            rttr.addFlashAttribute("msg", "DELETE_SUCCESS"); // 1개 이상 삭제 성공
+        } else {
+            rttr.addFlashAttribute("msg", "DELETE_FAIL");    // 삭제된 행이 없음
+        }
         return "redirect:/admin/promotion/list";
     }
 }

@@ -44,7 +44,43 @@
 </c:if>
 
 <br>
-<button type="button" onclick="location.href='/admin/promotion/list'">목록으로 돌아가기</button>
+<div class="mb-4 flex gap-2">
+  <button type="button"
+          class="flex-1 bg-blue-700 text-white p-2 rounded hover:bg-blue-800"
+          onclick="location.href='/admin/promotion/edit/${promotion.promotionId}'">
+    정보 수정
+  </button>
+
+  <button type="button"
+          class="flex-1 bg-red-600 text-white p-2 rounded hover:bg-red-700"
+          onclick="fn_delete()">
+    삭제하기
+  </button>
+
+  <button type="button"
+          class="flex-1 bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
+          onclick="location.href='/admin/promotion/list?page=${criteria.page}&searchKeyword=${criteria.searchKeyword}'">
+    목록으로
+    </button>
+</div>
+
+<form id="deleteForm" method="post">
+  <input type="hidden" name="promotionId" value="${promotion.promotionId}">
+</form>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script>
+  function fn_delete() {
+    if(confirm("정말로 이 프로모션을 삭제하시겠습니까?")) {
+      // 2. jQuery가 정상 로드되어야 아래 코드가 작동합니다.
+      const form = $("#deleteForm");
+      console.log("폼 전송 시도 중..."); // 브라우저 콘솔에서 확인용
+      form.attr("action", "/admin/promotion/delete");
+      form.submit();
+    }
+  }
+</script>
 
 </body>
 </html>

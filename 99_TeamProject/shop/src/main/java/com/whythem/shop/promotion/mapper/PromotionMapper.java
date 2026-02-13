@@ -43,7 +43,7 @@ public interface PromotionMapper {
      * @param promotion 수정할 정보가 담긴 객체
      * @return 성공 시 1 반환
      */
-    int update(Promotion promotion);
+    int updatePromotion(Promotion promotion);
 
     /**
      * 프로모션 상태 변경 (강제 종료)
@@ -53,5 +53,5 @@ public interface PromotionMapper {
      */
     int updatePromotionStatus(@Param("promotionId") Long promotionId);
     // 등록 성공 시 1, 실패 시 0을 반환합니다.
-
+    int deletePromotion(Long promotionId);
 }

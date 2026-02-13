@@ -51,4 +51,16 @@ public class PromotionService {
         // 필요한 경우 여기서 사전 유효성 검사 로직을 넣을 수 있습니다.
         promotionMapper.insert(promotion);
     }
+
+    public int updatePromotion(Promotion promotion) {
+        return promotionMapper.updatePromotion(promotion);
+    }
+
+    /**
+     * 프로모션 논리 삭제 (IS_ACTIVE = 'D')
+     * @return 삭제(수정)된 행의 개수
+     */
+    public int removePromotion(Long promotionId) {
+        return promotionMapper.deletePromotion(promotionId);
+    }
 }
