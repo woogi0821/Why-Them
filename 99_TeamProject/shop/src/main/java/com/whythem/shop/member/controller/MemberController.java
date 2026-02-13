@@ -28,14 +28,14 @@ public class MemberController {
     private final MemberAddressService memberAddressService;
 
     @GetMapping("/join")
-    public String joinpage(){
+    public String joinpage() {
         return "member/join";
     }
 
     @PostMapping("/join")
-    public String joinProcess(MemberVO memberVO){
+    public String joinProcess(MemberVO memberVO) {
         int result = memberService.joinMember(memberVO);
-        if (result > 0){
+        if (result > 0) {
             return "redirect:/member/login";
         } else {
             return "redirect:/member/join?error=true";
@@ -43,16 +43,16 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String loginpage(){
+    public String loginpage() {
         return "member/login";
     }
 
     @PostMapping("/login")
-    public String loginProcess(MemberVO memberVO, HttpSession session, RedirectAttributes rttr){
+    public String loginProcess(MemberVO memberVO, HttpSession session, RedirectAttributes rttr) {
 
         MemberVO loginResult = memberService.loginMember(memberVO);
 
-        if (loginResult != null){
+        if (loginResult != null) {
             session.setAttribute("loginMember", loginResult);
             session.setMaxInactiveInterval(60 * 30);
             return "redirect:/";
@@ -71,40 +71,43 @@ public class MemberController {
 
     @GetMapping("/idCheck")
     @ResponseBody
-    public int idCheck(@RequestParam("loginId") String loginId){
+    public int idCheck(@RequestParam("loginId") String loginId) {
         return memberService.checkId(loginId);
     }
+
     @GetMapping("/mypage")
-    public String myPage(HttpSession session, Model model){
+    public String myPage(HttpSession session, Model model) {
         MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
         if (loginMember == null) {
             return "redirect:/member/login?msg=session_expired";
         }
         MemberVO myInfo = memberService.getMemberById(loginMember.getLoginId());
-        model.addAttribute("myInfo",myInfo);
+        model.addAttribute("myInfo", myInfo);
         List<MemberAddressVO> addressList = memberAddressService.getAddressList(loginMember.getMemberId());
-        model.addAttribute("addressList",addressList);
+        model.addAttribute("addressList", addressList);
         return "member/mypage";
     }
+
     @PostMapping("/update")
-    public String updateMember(MemberVO member,HttpSession session){
+    public String updateMember(MemberVO member, HttpSession session) {
         MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
         if (loginMember == null) {
             return "redirect:/member/login";
         }
-            member.setLoginId(loginMember.getLoginId());
-            memberService.updateMember(member);
-            loginMember.setMemberName(member.getMemberName());
-            loginMember.setPhoneNumber(member.getPhoneNumber());
-            loginMember.setEmail(member.getEmail());
-            session.setAttribute("loginMember",loginMember);
-            return "redirect:/member/mypage";
-        }
-}   @PostMapping("/resetPw")
-    public String resetPassword(String loginId,String memberName,String phoneNumber,
-                          String newPw, String from,RedirectAttributes rttr){
-    try {
-        memberService.restPassword(loginId,memberName,phoneNumber,newPw);
-        rttr.addFlashAttribute("msg","비밀번호가 성공적으로 변경되었습니다.")
+        member.setLoginId(loginMember.getLoginId());
+        memberService.updateMember(member);
+        loginMember.setMemberName(member.getMemberName());
+        loginMember.setPhoneNumber(member.getPhoneNumber());
+        loginMember.setEmail(member.getEmail());
+        session.setAttribute("loginMember", loginMember);
+        return "redirect:/member/mypage";
     }
 }
+//}   @PostMapping("/resetPw")
+//    public String resetPassword(String loginId,String memberName,String phoneNumber,
+//                          String newPw, String from,RedirectAttributes rttr){
+//    try {
+//        memberService.restPassword(loginId,memberName,phoneNumber,newPw);
+//        rttr.addFlashAttribute("msg","비밀번호가 성공적으로 변경되었습니다.")
+//    }
+//}
