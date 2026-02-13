@@ -15,7 +15,7 @@
     </insert>
 
     <select id="getMemberById" resultType="MemberVO">
-        SELECT MEMBER_ID,LOGIN_ID,LOGIN_PW,EMAIL,PHONE_NUMBER,CREATED_AT,STATUS,MEMBER_GRADE
+        SELECT MEMBER_ID,LOGIN_ID,LOGIN_PW,MEMBER_NAME,EMAIL,PHONE_NUMBER,CREATED_AT,STATUS,MEMBER_GRADE
         FROM MEMBER WHERE MEMBER_ID = #{memberId}
     </select>
 
@@ -40,7 +40,13 @@
         SELECT * FROM MEMBER
         WHERE LOGIN_ID = #{loginId}
     </select>
-    <update id="updatePassword">
+    <update id="updateMember" parameterType="MemberVO">
+        UPDATE MEMBER
+        SET MEMBER_NAME = #{memberName},PHONE_NUMBER = #{phoneNumber},
+            EMAIL = #{email}
+        WHERE LOGIN_ID = #{loginId}
+    </update>
+    <update id="updatePassword" parameterType="MemberVO">
         UPDATE MEMBER
         SET LOGIN_PW = #{loginPw}
         WHERE LOGIN_ID = #{loginId}
