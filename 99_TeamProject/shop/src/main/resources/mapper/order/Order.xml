@@ -3,6 +3,88 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="temp">
+<mapper namespace="com.whythem.shop.order.mapper.OrderMapper">
+    <!-- 장바구니 조회 -->
+    <select id="getCartItemsByMember" resultType="CartItemVO">
+        SELECT
+            ci.CART_ID,
+            ci.CART_ITEM_ID,
+            ci.PRODUCT_ID,
+            ci.QUANTITY,
+            ci.SIZE_VAL,
+            p.PRICE
+        FROM CART_ITEM ci
+        JOIN CART c ON ci.CART_ID = c.CART_ID
+        JOIN PRODUCT p ON ci.PRODUCT_ID = p.PRODUCT_ID
+        WHERE c.MEMBER_ID = #{memberId}
+        AND ci.CART_ITEM_ID IN
+        <foreach collection="itemIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!-- 주문 생성 -->
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="orderId" keyColumn="ORDER_ID">
+        INSERT INTO ORDERS (ORDER_ID, MEMBER_ID, TOTAL_PRICE, STATUS, CREATED_AT)
+        VALUES (ORDERS_SEQ.nextval, #{memberId}, #{totalPrice}, 'PENDING', SYSDATE)
+    </insert>
+    <insert id="insertOrderItem">
+        INSERT INTO ORDER_ITEMS (ORDER_ITEM_ID, ORDER_ID, PRODUCT_ID, QUANTITY, PRICE)
+        VALUES (ORDER_ITEMS_SEQ.nextval, #{orderId}, #{productId}, #{quantity}, #{price})
+    </insert>
+
+<!--    insertPayment(결제 대기 데이터 생성)  -->
+    <insert id="insertPayment"
+            parameterType="PaymentVO">
+        INSERT INTO PAYMENTS(PAYMENT_ID, ORDER_ID, PAYMENT_METHOD, AMOUNT, STATUS, CREATED_AT)
+        VALUES (PAYMENTS_SEQ.NEXTVAL, #{orderId}, #{paymentMethod}, #{amount}, 'READY', SYSDATE)
+    </insert>
+
+<!-- 장바구니 삭제 -->
+    <delete id="deleteSelectedCartItems">
+        DELETE FROM CART_ITEM
+        WHERE CART_ITEM_ID IN
+        <foreach collection="itemIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND CART_ID = (
+            SELECT CART_ID
+            FROM CART
+            WHERE MEMBER_ID = #{memberId}
+        )
+    </delete>
+
+<!-- 결제 상태 변경 (결제대기 → 결제완료)  -->
+    <update id="updatePaymentStatus">
+        UPDATE PAYMENTS
+            SET STATUS = #{status},
+                PAID_AT = SYSDATE
+        WHERE ORDER_ID = #{orderId}
+    </update>
+
+<!--  주문 상태 변경 (주문접수 → 구매확정)  -->
+    <update id="updateOrderStatus">
+        UPDATE ORDERS
+            SET STATUS = #{status}
+        WHERE ORDER_ID = #{orderId}
+    </update>
+
+
+<!--  재고 차감 -->
+    <select id="getOrderItems"
+            resultType="OrderItemVO">
+        SELECT
+            product_id as productId,
+            quantity
+        FROM ORDER_ITEMS
+        WHERE ORDER_ID = #{orderId}
+    </select>
+    <update id="reduceStock">
+        UPDATE PRODUCT
+            SET STOCK_QUANTITY = STOCK_QUANTITY - #{quantity}
+        WHERE PRODUCT_ID = #{productId}
+        AND STOCK_QUANTITY >= #{quantity}
+    </update>
+
 
 </mapper>
