@@ -22,71 +22,73 @@ public class ProductController {
 
     /**
      * 1. 메인 페이지 (index.jsp)
-     * - 메인 섹션용 베스트 4개와 일반 목록을 함께 조회합니다.
      */
     @GetMapping("/")
     public String customerMain(Model model, HttpSession session) {
-        // 1. 로그인 여부 확인 (세션에서 꺼내기)
         MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
-
-        // 2. memberId 구하기
-        // - 로그인을 안 했으면(null) -> 0L (DB에서 0번 회원은 없으므로 찜 안 한 걸로 처리됨)
-        // - 로그인을 했으면 -> 그 사람의 memberId 사용
         Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
 
-        // 3. 서비스 호출 (매개변수 2개로 변경됨!)
-        // 첫 번째 null: 카테고리 구분 없이 전체 상품 조회 (메인 페이지용)
-        // 두 번째 memberId: 찜 여부 확인용
-        List<ProductVO> productList = productService.getProductList(null, memberId);
+        // [수정된 부분]
+        // 기존의 getProductList(null, memberId) 대신,
+        // 상품팀이 만든 전용 메서드를 사용해서 각각 4개씩 가져옵니다.
+        List<ProductVO> newList = productService.getNewArrivals(4, memberId);
+        List<ProductVO> bestList = productService.getWeeklyBest(4, memberId);
 
-        model.addAttribute("productList", productList);
+        // JSP가 애타게 찾던 그 이름표(newList, bestList)를 달아서 보냅니다.
+        model.addAttribute("newList", newList);
+        model.addAttribute("bestList", bestList);
 
         return "index";
     }
 
     /**
      * 2. Weekly Best 전체보기 페이지 (product/weekly_best.jsp)
-     * - [수정사항] 'View All' 클릭 시 전용 베스트 페이지로 이동합니다.
+     * [수정 완료] 주석에 맞게 /product/best/all 경로로 복구하고 memberId 추가!
      */
-    @GetMapping("/product/category")
-    public String categoryPage(@RequestParam("categoryId") Long categoryId, Model model, HttpSession session) { // [1] 세션 추가
-
-        // [2] 로그인한 사용자 ID 구하기 (찜 여부 확인용)
-        // - 로그인을 안 했으면 0L, 했으면 실제 ID
+    @GetMapping("/product/best/all")
+    public String viewAllBest(Model model, HttpSession session) {
         MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
         Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
 
-        // [3] 서비스 호출 (이제 파라미터 2개를 넘겨야 빨간 줄이 사라집니다!)
-        // - 첫 번째: 어떤 카테고리 상품을 보여줄지
-        // - 두 번째: 누가 찜했는지 확인할지
+        List<ProductVO> bestList = productService.getWeeklyBest(8, memberId);
+
+        model.addAttribute("bestAllList", bestList);
+        model.addAttribute("categoryName", "WEEKLY BEST");
+
+        return "product/weekly_best";
+    }
+
+    /**
+     * 3. 카테고리별 리스트 페이지 (product/product_category.jsp)
+     * [수정 완료] 중복된 2개의 메서드를 하나로 깔끔하게 합쳤습니다!
+     */
+    @GetMapping("/product/category")
+    public String categoryPage(
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            Model model, HttpSession session) {
+
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+        Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
+
         List<ProductVO> productList = productService.getProductList(categoryId, memberId);
 
         model.addAttribute("productList", productList);
         model.addAttribute("selectedCategory", categoryId);
-
-        // 카테고리 이름 매칭
-        String categoryName = getCategoryName(categoryId);
-        model.addAttribute("categoryName", categoryName);
+        model.addAttribute("categoryName", getCategoryName(categoryId));
 
         return "product/product_category";
     }
 
     /**
-     * 3. 카테고리별 리스트 페이지 (product/product_category.jsp)
+     * 4. New Arrivals 전체보기 페이지 (product/new_arrivals.jsp)
+     * [수정 완료] memberId 파라미터 추가!
      */
-    @GetMapping("/product/category")
-    public String categoryPage(
-            @RequestParam(value = "categoryId", required = false) Long categoryId, Model model) {
-        List<ProductVO> productList = productService.getProductList(categoryId);
-        model.addAttribute("productList", productList);
-        model.addAttribute("categoryName", getCategoryName(categoryId));
-
-        return "product/product_category";
-    }
     @GetMapping("/product/new/all")
-    public String viewAllNew(Model model) {
-        // New Arrivals 전체보기용 8개 추출
-        List<ProductVO> newList = productService.getNewArrivals(8);
+    public String viewAllNew(Model model, HttpSession session) {
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+        Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
+
+        List<ProductVO> newList = productService.getNewArrivals(8, memberId);
 
         model.addAttribute("bestAllList", newList);
         model.addAttribute("categoryName", "NEW ARRIVALS");
@@ -95,7 +97,7 @@ public class ProductController {
     }
 
     /**
-     * 4. 상품 상세 페이지 (product/product_detail.jsp)
+     * 5. 상품 상세 페이지 (product/product_detail.jsp)
      */
     @GetMapping("/product/detail")
     public String productDetail(@RequestParam("productId") Long productId, Model model) {
@@ -112,7 +114,6 @@ public class ProductController {
     private String getCategoryName(Long categoryId) {
         if (categoryId == null) return "ALL COLLECTIONS";
 
-        // intValue()로 변환하여 switch문 처리
         switch (categoryId.intValue()) {
             case 1:  return "COAT";
             case 2:  return "SHIRTS";
