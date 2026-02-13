@@ -46,7 +46,7 @@ body {
 .sub-menu li:hover { color: #111; }
 
 /* 상품 섹션 및 그리드 (4x3 정렬) */
-.stitle {
+.title {
     text-align: center; font-family: 'Cormorant Garamond', serif;
     letter-spacing: 10px; margin: 70px 0 60px; font-size: 1.5rem; font-weight: 300;
 }

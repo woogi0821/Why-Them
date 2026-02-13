@@ -67,4 +67,105 @@
         }
         .info-box .name { font-size: 16px; margin-bottom: 10px; color: #333; }
         .info-box .price { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 500; }
-    
+        /* 메인 배너 스타일 */
+        .hero-banner {
+            width: 100%;
+            height: 600px; /* 시원하게 큰 높이 */
+            background-image: url('/images/banner_main.png'); /* 고화질 이미지 필수 */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            margin-bottom: 80px; /* 여백의 미 */
+        }
+        .hero-content h1 { font-size: 3rem; letter-spacing: 5px; font-weight: 300; }
+        .hero-content p { font-size: 1.2rem; margin-top: 20px; letter-spacing: 2px; }
+
+        /* 섹션 스타일 */
+        .curation-section { margin-bottom: 100px; padding: 0 50px; }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd; /* 얇은 선으로 정돈 */
+            padding-bottom: 15px;
+        }
+        .section-title { font-size: 1.8rem; font-weight: 400; letter-spacing: 2px; }
+        .view-more { color: #555; text-decoration: none; font-size: 0.9rem; }
+
+        /* 그리드 (기존 유지하되 간격 조정) */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개씩 깔끔하게 */
+            gap: 40px 20px;
+        }
+        /* ============================================================
+   반응형 레이아웃 설정
+   ============================================================ */
+
+        /* ============================================================
+           반응형 레이아웃 설정 (index.css 맨 하단에 위치시켜야 함)
+           ============================================================ */
+
+        /* 1. 태블릿 사이즈 (최대 1024px) */
+        @media screen and (max-width: 1024px) {
+            #content-body {
+                padding: 0 20px 60px !important; /* 여백 축소 */
+            }
+
+            .grid-container {
+                /* 강제로 3열로 변경 */
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 30px 15px !important;
+            }
+
+            .hero-banner {
+                height: 400px !important;
+            }
+
+            .stitle {
+                font-size: 2.2rem !important;
+            }
+        }
+
+        /* 2. 모바일 화면 (최대 768px) */
+        @media screen and (max-width: 768px) {
+            .grid-container {
+                /* 강제로 2열로 변경 */
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 20px 10px !important;
+            }
+
+            .curation-section {
+                padding: 0 15px !important;
+            }
+
+            .hero-content h1 {
+                font-size: 1.8rem !important;
+            }
+
+            .hero-banner {
+                height: 300px !important;
+                margin-bottom: 40px !important;
+            }
+        }
+
+        /* 3. 초소형 모바일 (최대 480px) */
+        @media screen and (max-width: 480px) {
+            .title {
+                font-size: 1.5rem !important;
+                letter-spacing: 0.1em !important;
+            }
+
+            .info-box .name {
+                font-size: 13px !important;
+            }
+
+            .info-box .price {
+                font-size: 15px !important;
+            }
+        }

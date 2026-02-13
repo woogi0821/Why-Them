@@ -7,6 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>LALA BOUTIQUE | OFFICIAL STORE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/index.css">
     <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
@@ -15,42 +16,7 @@
     <meta name="apple-mobile-web-app-title" content="LALA BOUTIQUE" />
     <link rel="manifest" href="/images/site.webmanifest" />
     <style>
-        /* 메인 배너 스타일 */
-        .hero-banner {
-            width: 100%;
-            height: 600px; /* 시원하게 큰 높이 */
-            background-image: url('/images/banner_main.png'); /* 고화질 이미지 필수 */
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
-            margin-bottom: 80px; /* 여백의 미 */
-        }
-        .hero-content h1 { font-size: 3rem; letter-spacing: 5px; font-weight: 300; }
-        .hero-content p { font-size: 1.2rem; margin-top: 20px; letter-spacing: 2px; }
 
-        /* 섹션 스타일 */
-        .curation-section { margin-bottom: 100px; padding: 0 50px; }
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #ddd; /* 얇은 선으로 정돈 */
-            padding-bottom: 15px;
-        }
-        .section-title { font-size: 1.8rem; font-weight: 400; letter-spacing: 2px; }
-        .view-more { color: #555; text-decoration: none; font-size: 0.9rem; }
-
-        /* 그리드 (기존 유지하되 간격 조정) */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개씩 깔끔하게 */
-            gap: 40px 20px;
-        }
     </style>
 </head>
 <body>
