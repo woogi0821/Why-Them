@@ -45,7 +45,7 @@ public class OrderService {
             orderItem.setProductId(item.getProductId());
             orderItem.setQuantity(item.getQuantity());
 //          orderItem.setPrice(20000.0);                    // 테스트 데이터
-            orderItem.setPrice(item.getPrice().doubleValue()); //이부분 CartVO에서 Long으로 선언해놔서 더블밸류만 좀 붙였습니다.
+            orderItem.setPrice(item.getPrice().doubleValue()); //이부분 CartVO에서 Long으로 선언해놔서 캐스팅만 좀 했습니다.
 
             orderMapper.insertOrderItem(orderItem);
         }

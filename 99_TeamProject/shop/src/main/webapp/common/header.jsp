@@ -71,19 +71,28 @@
 
     <aside class="top-utils">
         <c:choose>
+
             <c:when test="${empty sessionScope.loginMember}">
                 <span id="auth-btn" class="util-link" onclick="openLoginModal()">LOGIN</span>
                 <span class="util-link" onclick="location.href='/member/join'">JOIN</span>
             </c:when>
+
+
             <c:otherwise>
-                <span class="user-txt" style="font-weight:bold; margin-right:10px;">${sessionScope.loginMember.memberName}님</span>
+                <span class="user-txt" style="font-weight:bold; margin-right:10px;">
+                    ${sessionScope.loginMember.memberName}님
+                </span>
+
+
                 <c:if test="${sessionScope.loginMember.memberGrade == 'Y'}">
                     <span class="util-link" onclick="location.href='/admin/admin_main'" style="color:red;">ADMIN</span>
                 </c:if>
+
                 <span class="util-link" onclick="location.href='/member/logout'">LOGOUT</span>
                 <span class="util-link" onclick="location.href='/member/mypage'">MYPAGE</span>
                 <span class="util-link" onclick="location.href='/wishlist/list'">WISHLIST</span>
-                <span class="util-link" onclick="location.href='/order/cart'">CART</span>
+
+                <span class="util-link" onclick="location.href='/cart/list'">CART</span>
             </c:otherwise>
         </c:choose>
     </aside>
