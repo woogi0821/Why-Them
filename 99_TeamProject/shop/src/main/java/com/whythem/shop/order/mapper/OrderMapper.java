@@ -12,6 +12,7 @@ import java.util.List;
 @Mapper
 public interface OrderMapper {
     //  1. 주문 생성 단계
+    Double getProductPrice(Long productId);                                      // 상세 페이지 가격 조회
     List<CartItemVO> getCartItemsByMember(Long memberId, List<Long> itemIds);    // 회원 장바구니 아이템 조회
     void insertOrder(OrderVO order);                                             // 주문 생성(insert 후 생성 된 orderId를 받아와야 함)
     void insertOrderItem(OrderItemVO orderItem);                                 // 주문 상세 생성(CartItem 정보를 바탕으로 삽입)
@@ -19,7 +20,7 @@ public interface OrderMapper {
     void deleteSelectedCartItems(@Param("memberId") Long memberId, @Param("itemIds") List<Long> itemIds);   // 장바구니 선택된 아이템 삭제
 
     //  2. 결제 단계
-//    1) 결제 상태값 변경
+    //    1) 결제 상태값 변경
     void updatePaymentStatus(@Param("orderId") Long orderId, @Param("status") String status);
     //    2) 주문 상태 변경 (주문접수 → 구매확정)
     void updateOrderStatus(@Param("orderId") Long orderId, @Param("status") String status);

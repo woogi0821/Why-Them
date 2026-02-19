@@ -149,12 +149,35 @@
       ${product.description}
     </div>
 
-    <div class="action-btns">
-      <button type="button" class="btn-buy" onclick="alert('주문 페이지로 이동합니다.')">ADD TO BAG</button>
-      <button type="button" class="btn-cart">WISH LIST</button>
-    </div>
+    <!-- 주문 폼 시작 -->
+    <form id="orderForm" name="orderForm" method="post">
+      <!-- 로그인된 회원 ID -->
+      <input type="text" name="memberId" value="1111" />
+
+      <!-- 상품 정보 -->
+      <input type="text" name="productId" value="${product.productId}" />
+      <input type="text" name="productName" value="${product.name}" />
+      <input type="text" name="price" value="${product.price}" />
+      <!-- 수량 (기본 1) -->
+      <input type="text" name="quantity" value="1" />
+
+      <div class="action-btns">
+        <button type="button" class="btn-buy" onclick="fn_directOrder('주문 페이지로 이동합니다.')">ADD TO BAG</button>
+        <button type="button" class="btn-cart">WISH LIST</button>
+      </div>
+    </form>
+
   </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+  function fn_directOrder() {
+    <%--action="${pageContext.request.contextPath}/orders/direct"--%>
+    console.log("주문 페이지로 이동합니다.");
+    $("#orderForm").attr("action", "${pageContext.request.contextPath}/orders/direct").submit();
+  }
+</script>
 
 </body>
 </html>

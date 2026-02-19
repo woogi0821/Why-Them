@@ -9,27 +9,70 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class OrderService {
     @Autowired
     private OrderMapper orderMapper;
-
-    //  1. 주문 생성 단계
+/*
+    1. 주문 (상세페이지, 장바구니 주문 공통로직)
+*/
+    //  상세페이지 주문
     @Transactional
-    public Long processOrder(Long memberId, List<Long> itemIds, Double requestTotalPrice) {
-        // 1) 장바구니 아이템 조회
-        List<CartItemVO> cartItems = orderMapper.getCartItemsByMember(memberId, itemIds);
-        if (cartItems.isEmpty()) throw new RuntimeException("장바구니가 비어있습니다.");
+    public Long processDirectOrder(Long memberId, Long productId, int quantity, Double requestTotalPrice) {
+        // 1. 보안을 위해 DB에서 상품 가격 재조회
+        Double dbPrice = orderMapper.getProductPrice(productId);
+        if (dbPrice == null) throw new RuntimeException("상품 정보가 없습니다.");
 
-        // 2) 서버에서 합계 금액을 계산
+        // 2. 단건 상품을 리스트로 규격화
+        OrderItemVO item = new OrderItemVO();
+        item.setProductId(productId);
+        item.setQuantity(quantity);
+        item.setPrice(dbPrice);
+
+        // 3. 공통 로직 호출
+        return createOrder(memberId, Collections.singletonList(item), requestTotalPrice);
+    }
+
+//  장바구니 주문
+    @Transactional
+    public Long processCartOrder(Long memberId, List<Long> cartItemIds, Double requestTotalPrice) {
+        List<CartItemVO> cartItems = orderMapper.getCartItemsByMember(memberId, cartItemIds);
+        if (cartItems.isEmpty()) throw new RuntimeException("주문할 상품이 없습니다.");
+
+        // 2. CartItem -> OrderItem 복사
+        List<OrderItemVO> orderItems = new ArrayList<>();
+        for (CartItemVO cart : cartItems) {
+            OrderItemVO item = new OrderItemVO();
+            item.setProductId(cart.getProductId());
+            item.setQuantity(cart.getQuantity());
+            item.setPrice(cart.getPrice());         // DB에서 가져온 신뢰할 수 있는 가격
+            orderItems.add(item);
+        }
+
+        // 3. 장바구니 주문 생성
+        Long orderId = createOrder(memberId, orderItems, requestTotalPrice);
+
+        // 4. 장바구니 삭제 (공통 로직 성공 시 실행)
+        orderMapper.deleteSelectedCartItems(memberId, cartItemIds);
+
+        return orderId;
+    }
+
+
+//  주문 생성 공통 로직
+    @Transactional
+    public Long createOrder(Long memberId, List<OrderItemVO> orderItems, Double requestTotalPrice) {
+        // 1) 서버에서 합계 금액을 계산 (보안 검사)
         double calculatedTotal = 0;
-        for (CartItemVO item : cartItems) {
+        for (OrderItemVO item : orderItems) {
             calculatedTotal += (item.getPrice() * item.getQuantity());
         }
-        if (!requestTotalPrice.equals(calculatedTotal)) {
-            throw new RuntimeException("결제 금액이 일치하지 않습니다. (보안 위반 의심)");
+        if (Double.compare(requestTotalPrice, calculatedTotal) != 0) {
+            throw new RuntimeException("결제 금액이 일치하지 않습니다.");
         }
 
         // 3) 주문 생성
@@ -39,31 +82,25 @@ public class OrderService {
         orderMapper.insertOrder(order); // XML 설정에 의해 orderId가 VO에 채워짐
 
         // 4) 주문 상세 생성 (CartItem -> OrderItem 복사)
-        for (CartItemVO item : cartItems) {
-            OrderItemVO orderItem = new OrderItemVO();
-            orderItem.setOrderId(order.getOrderId());
-            orderItem.setProductId(item.getProductId());
-            orderItem.setQuantity(item.getQuantity());
-//          orderItem.setPrice(20000.0);                    // 테스트 데이터
-            orderItem.setPrice(item.getPrice());
+        for (OrderItemVO item : orderItems) {
+            item.setOrderId(order.getOrderId());
 
-            orderMapper.insertOrderItem(orderItem);
+            orderMapper.insertOrderItem(item);
         }
 
 //      5) 결제 대기
         PaymentVO payment = new PaymentVO();
         payment.setOrderId(order.getOrderId());
         payment.setAmount(calculatedTotal);
-        payment.setPaymentMethod("0");          // 결제방법 K:카카오, N:네이버, C: Card
+        payment.setPaymentMethod("0");          // 결제방법 K:카카오, N:네이버, C: CARD
         orderMapper.insertPayment(payment);
-
-//      6) 장바구니 삭제
-        orderMapper.deleteSelectedCartItems(memberId, itemIds);
 
         return order.getOrderId(); // 생성된 주문번호 반환
     }
 
-    //  2. 결제 단계
+/*
+    2. 결제 단계(상태변경 및 재고차감)
+*/
     @Transactional
     public void completePayment(Long orderId){
         // 1) 결제 및 주문 상태 변경
