@@ -1,6 +1,7 @@
 package com.whythem.shop.product.vo;
 
 import lombok.*;
+
 import java.util.Date;
 
 @Getter
@@ -8,20 +9,18 @@ import java.util.Date;
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class ProductVO {
-    // 1. DB 매칭 필드
+public class testvo {
     private Long productId;
     private Long categoryId;
-    private String name;           // DB: PRODUCT_NAME
-    private String brandName;      // ★ [복구 완료] DB: BRAND_NAME
+    private String product_name;
     private int price;
-    private int stockQuantity;
+    private int stock_quantity;
     private String description;
     private String status;
-    private int viewCount;
-    private String imageUrl;       // DB: IMAGE_URL
-
+    private int view_count;
+    private String imageUrl;
     private Date createdAt;
     private Date updatedAt;
-    private boolean wished = false;
+    private String brandName;
+
 }

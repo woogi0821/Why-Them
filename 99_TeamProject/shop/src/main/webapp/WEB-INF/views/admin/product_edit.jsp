@@ -23,8 +23,17 @@
         <div class="form-group">
             <label>카테고리</label>
             <select name="categoryId" required>
-                <option value="1" ${product.categoryId == 1 ? 'selected' : ''}>상의</option>
-                <option value="2" ${product.categoryId == 2 ? 'selected' : ''}>티셔츠</option>
+                <option value="1" ${product.categoryId == 1 ? 'selected' : ''}>코트</option>
+                <option value="2" ${product.categoryId == 2 ? 'selected' : ''}>셔츠</option>
+                <option value="3" ${product.categoryId == 3 ? 'selected' : ''}>스웨터</option>
+                <option value="4" ${product.categoryId == 4 ? 'selected' : ''}>팬츠</option>
+                <option value="5" ${product.categoryId == 5 ? 'selected' : ''}>스커트</option>
+                <option value="6" ${product.categoryId == 6 ? 'selected' : ''}>원피스</option>
+                <option value="7" ${product.categoryId == 7 ? 'selected' : ''}>수트</option>
+                <option value="8" ${product.categoryId == 8 ? 'selected' : ''}>드레스슈즈</option>
+                <option value="9" ${product.categoryId == 9 ? 'selected' : ''}>샌들</option>
+                <option value="10" ${product.categoryId == 10 ? 'selected' : ''}>백</option>
+                <option value="11" ${product.categoryId == 11 ? 'selected' : ''}>모자</option>
             </select>
         </div>
 

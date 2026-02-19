@@ -3,7 +3,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Sans+KR:wght@100;300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/homepage.css">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     /* [스타일 유지] 프리미엄 로그인 모달 */
     .modal-overlay {
@@ -71,19 +71,28 @@
 
     <aside class="top-utils">
         <c:choose>
+
             <c:when test="${empty sessionScope.loginMember}">
                 <span id="auth-btn" class="util-link" onclick="openLoginModal()">LOGIN</span>
                 <span class="util-link" onclick="location.href='/member/join'">JOIN</span>
             </c:when>
+
+
             <c:otherwise>
-                <span class="user-txt" style="font-weight:bold; margin-right:10px;">${sessionScope.loginMember.memberName}님</span>
+                <span class="user-txt" style="font-weight:bold; margin-right:10px;">
+                    ${sessionScope.loginMember.memberName}님
+                </span>
+
+
                 <c:if test="${sessionScope.loginMember.memberGrade == 'Y'}">
                     <span class="util-link" onclick="location.href='/admin/admin_main'" style="color:red;">ADMIN</span>
                 </c:if>
+
                 <span class="util-link" onclick="location.href='/member/logout'">LOGOUT</span>
                 <span class="util-link" onclick="location.href='/member/mypage'">MYPAGE</span>
-                <span class="util-link" onclick="location.href='/wishlist'">WISHLIST</span>
-                <span class="util-link" onclick="location.href='/order/cart'">CART</span>
+                <span class="util-link" onclick="location.href='/wishlist/list'">WISHLIST</span>
+
+                <span class="util-link" onclick="location.href='/cart/list'">CART</span>
             </c:otherwise>
         </c:choose>
     </aside>
@@ -96,14 +105,49 @@
         <div class="menu-item">SETS</div>
         <div class="menu-item">SHOES</div>
         <div class="menu-item">ACC</div>
+        <div class="menu-item">EVENT</div>
     </div>
+
     <div class="full-dropdown">
         <div class="drop-container">
-            <div class="drop-column"><ul class="sub-menu"><li onclick="loadCategory(1)">코트</li><li onclick="loadCategory(2)">셔츠</li><li onclick="loadCategory(3)">스웨터</li></ul></div>
-            <div class="drop-column"><ul class="sub-menu"><li onclick="loadCategory(4)">팬츠</li><li onclick="loadCategory(5)">스커트</li></ul></div>
-            <div class="drop-column"><ul class="sub-menu"><li onclick="loadCategory(6)">원피스</li><li onclick="loadCategory(7)">수트</li></ul></div>
-            <div class="drop-column"><ul class="sub-menu"><li onclick="loadCategory(8)">드레스슈즈</li><li onclick="loadCategory(9)">샌들</li></ul></div>
-            <div class="drop-column"><ul class="sub-menu"><li onclick="loadCategory(10)">백</li><li onclick="loadCategory(11)">모자</li></ul></div>
+            <div class="drop-column">
+                <ul class="sub-menu">
+                    <li onclick="loadCategory(1)">코트</li>
+                    <li onclick="loadCategory(2)">셔츠</li>
+                    <li onclick="loadCategory(3)">스웨터</li>
+                </ul>
+            </div>
+            <div class="drop-column">
+                <ul class="sub-menu">
+                    <li onclick="loadCategory(4)">팬츠</li>
+                    <li onclick="loadCategory(5)">스커트</li>
+                </ul>
+            </div>
+            <div class="drop-column">
+                <ul class="sub-menu">
+                    <li onclick="loadCategory(6)">원피스</li>
+                    <li onclick="loadCategory(7)">수트</li>
+                </ul>
+            </div>
+            <div class="drop-column">
+                <ul class="sub-menu">
+                    <li onclick="loadCategory(8)">드레스슈즈</li>
+                    <li onclick="loadCategory(9)">샌들</li>
+                </ul>
+            </div>
+            <div class="drop-column">
+                <ul class="sub-menu">
+                    <li onclick="loadCategory(10)">백</li>
+                    <li onclick="loadCategory(11)">모자</li>
+                </ul>
+            </div>
+
+            <div class="drop-column">
+                <ul class="sub-menu">
+                    <li onclick="location.href='/event/list?status=ongoing'">진행중인 이벤트</li>
+                    <li onclick="location.href='/event/list?status=ended'">종료된 이벤트</li>
+                </ul>
+            </div>
         </div>
     </div>
 </nav>
@@ -160,7 +204,7 @@
 </div>
 
 <script>
-    function loadCategory(categoryId) { location.href = "/?categoryId=" + categoryId; }
+    function loadCategory(categoryId) { location.href = "/product/category?categoryId=" + categoryId; }
 
     // 모달 열기/닫기
     function openLoginModal() {
@@ -225,4 +269,5 @@
         const modal = document.getElementById('login-modal');
         if (event.target == modal) closeLoginModal();
     }
+
 </script>

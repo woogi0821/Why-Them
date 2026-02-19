@@ -214,3 +214,15 @@ CREATE TABLE PROMOTION_PRODUCT (
                                    CONSTRAINT FK_PP_PROMO FOREIGN KEY (PROMOTION_ID) REFERENCES PROMOTION(PROMOTION_ID) ON DELETE CASCADE,
                                    CONSTRAINT FK_PP_PROD FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCT(PRODUCT_ID) ON DELETE CASCADE
 );
+-- 1. 위시리스트용 시퀀스 (오라클 표준)
+CREATE SEQUENCE IF NOT EXISTS seq_wishlist
+START WITH 1
+INCREMENT BY 1;
+
+-- 2. 위시리스트 테이블 (오라클 환경 최적화)
+CREATE TABLE IF NOT EXISTS wishlist (
+                                        wish_id    NUMBER(19) DEFAULT seq_wishlist.NEXTVAL PRIMARY KEY, -- BIGINT 대신 NUMBER(19)
+    member_id  NUMBER(19) NOT NULL,                                -- 회원번호
+    product_id NUMBER(19) NOT NULL,                                -- 상품번호
+    created_at DATE DEFAULT CURRENT_TIMESTAMP                       -- TIMESTAMP 대신 DATE도 가능 (오라클 친화적)
+    );

@@ -1,70 +1,151 @@
 package com.whythem.shop.product.controller;
 
+import com.whythem.shop.member.vo.MemberVO;
 import com.whythem.shop.product.service.ProductService;
 import com.whythem.shop.product.vo.ProductVO;
+import com.whythem.shop.wishlist.service.WishlistService;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
+@RequiredArgsConstructor // 생성자 자동 생성 (의존성 주입 해결)
 public class ProductController {
+
     private final ProductService productService;
+    private final WishlistService wishlistService; // 위시리스트 서비스 정상 연결
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
+    /**
+     * 1. 메인 페이지 (index.jsp)
+     */
+    @GetMapping("/")
+    public String customerMain(Model model, HttpSession session) {
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+        Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
 
-    @GetMapping("/") // 이제 주소는 이거 하나면 충분합니다!
-    public String customerMain(@RequestParam(value = "categoryId", required = false) Long categoryId, Model model) {
+        // 1. 신상품 / 베스트 상품 각각 4개씩 가져오기
+        List<ProductVO> newList = productService.getNewArrivals(4, memberId);
+        List<ProductVO> bestList = productService.getWeeklyBest(4, memberId);
 
-        // 1. 상품 리스트 가져오기 (categoryId가 null이면 전체, 아니면 필터링)
-        List<ProductVO> productList = productService.getProductList(categoryId);
-        model.addAttribute("productList", productList);
-        model.addAttribute("selectedCategory", categoryId);
+        // 2. 로그인한 회원이라면 찜 여부(wished) 확인해서 하트 불 켜주기
+        if (memberId != 0L) {
+            List<Long> myWishedProductIds = wishlistService.getWishlistProductIds(memberId);
 
-        // 2. 카테고리 이름 매칭 (기본값 설정)
-        String categoryName = "ALL COLLECTIONS";
-
-        // categoryId가 null이 아닐 때만 이름 변경 로직 실행
-        if (categoryId != null) {
-            if (categoryId == 1) categoryName = "COAT";
-            else if (categoryId == 2) categoryName = "SHIRTS";
-            else if (categoryId == 3) categoryName = "SWEATER";
-            else if (categoryId == 4) categoryName = "PANTS";
-            else if (categoryId == 5) categoryName = "SKIRTS";
-            else if (categoryId == 6) categoryName = "DRESS";
-            else if (categoryId == 7) categoryName = "SUIT";
-            else if (categoryId == 8) categoryName = "SHOSES";
-            else if (categoryId == 9) categoryName = "SANDALS";
-            else if (categoryId == 10) categoryName = "BAG";
-            else if (categoryId == 11) categoryName = "HAT";
+            if (myWishedProductIds != null && !myWishedProductIds.isEmpty()) {
+                // 신상품 찜 체크
+                for (ProductVO p : newList) {
+                    if (myWishedProductIds.contains(p.getProductId())) {
+                        p.setWished(true);
+                    }
+                }
+                // 베스트 상품 찜 체크
+                for (ProductVO p : bestList) {
+                    if (myWishedProductIds.contains(p.getProductId())) {
+                        p.setWished(true);
+                    }
+                }
+            }
         }
 
-        // 3. JSP로 전달
-        model.addAttribute("categoryName", categoryName);
+        // ★ 3. JSP가 기다리는 데이터 최종 전송! (팀장님이 찾으시던 그 부분!)
+        model.addAttribute("newList", newList);
+        model.addAttribute("bestList", bestList);
 
         return "index";
     }
+
+
+    /**
+     * 2. Weekly Best 전체보기 페이지 (product/weekly_best.jsp)
+     * [수정 완료] 주석에 맞게 /product/best/all 경로로 복구하고 memberId 추가!
+     */
+    @GetMapping("/product/best/all")
+    public String viewAllBest(Model model, HttpSession session) {
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+        Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
+
+        List<ProductVO> bestList = productService.getWeeklyBest(8, memberId);
+
+        model.addAttribute("bestAllList", bestList);
+        model.addAttribute("categoryName", "WEEKLY BEST");
+
+        return "product/weekly_best";
+    }
+
+    /**
+     * 3. 카테고리별 리스트 페이지 (product/product_category.jsp)
+     * [수정 완료] 중복된 2개의 메서드를 하나로 깔끔하게 합쳤습니다!
+     */
+    @GetMapping("/product/category")
+    public String categoryPage(
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            Model model, HttpSession session) {
+
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+        Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
+
+        List<ProductVO> productList = productService.getProductList(categoryId, memberId);
+
+        model.addAttribute("productList", productList);
+        model.addAttribute("selectedCategory", categoryId);
+        model.addAttribute("categoryName", getCategoryName(categoryId));
+
+        return "product/product_category";
+    }
+
+    /**
+     * 4. New Arrivals 전체보기 페이지 (product/new_arrivals.jsp)
+     * [수정 완료] memberId 파라미터 추가!
+     */
+    @GetMapping("/product/new/all")
+    public String viewAllNew(Model model, HttpSession session) {
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+        Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
+
+        List<ProductVO> newList = productService.getNewArrivals(8, memberId);
+
+        model.addAttribute("bestAllList", newList);
+        model.addAttribute("categoryName", "NEW ARRIVALS");
+
+        return "product/new_arrivals";
+    }
+
+    /**
+     * 5. 상품 상세 페이지 (product/product_detail.jsp)
+     */
     @GetMapping("/product/detail")
     public String productDetail(@RequestParam("productId") Long productId, Model model) {
-
-        // 만약 AdminService에 있는 메서드를 그대로 쓰고 싶다면 타입만 맞춰주세요.
-        // (AdminVO와 Product 클래스가 호환되거나 같은 것이라면 가능)
+        // 서비스 내부에서 조회수 증가(updateViewCount) 후 데이터를 가져옴
         ProductVO product = productService.findById(productId);
-
         model.addAttribute("product", product);
 
-        // 리턴 경로를 "product/product_detail"로 설정 (WEB-INF/views/product/product_detail.jsp)
         return "product/product_detail";
     }
 
+    /**
+     * [도우미 메서드] 카테고리 ID를 영어 이름으로 변환
+     */
+    private String getCategoryName(Long categoryId) {
+        if (categoryId == null) return "ALL COLLECTIONS";
+
+        switch (categoryId.intValue()) {
+            case 1:  return "COAT";
+            case 2:  return "SHIRTS";
+            case 3:  return "SWEATER";
+            case 4:  return "PANTS";
+            case 5:  return "SKIRTS";
+            case 6:  return "DRESS";
+            case 7:  return "SUIT";
+            case 8:  return "SHOES";
+            case 9:  return "SANDALS";
+            case 10: return "BAG";
+            case 11: return "HAT";
+            default: return "COLLECTION";
+        }
+    }
 }
