@@ -1,12 +1,12 @@
 package com.whythem.shop.member.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class MemberAddressVO {
     private Long addressId; //PK
     private Long memberId; //FK
