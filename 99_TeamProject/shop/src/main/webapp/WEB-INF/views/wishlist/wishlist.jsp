@@ -320,14 +320,34 @@
             .catch(err => console.error(err));
     }
 
-    /* 3. 장바구니 담기 (예시 기능) */
+    /* 3. 장바구니 담기 (CartController 연동 완료) */
     function addToCart(productId) {
-        // 장바구니 컨트롤러가 있다면 연결
-        /*
-        fetch('/cart/add', { ... })
-        .then(...)
-        */
-        alert('장바구니 기능은 아직 연결되지 않았습니다.\n(상품 ID: ' + productId + ')');
+        if (!confirm('이 상품을 장바구니에 담으시겠습니까?')) return;
+
+        // 1. 보이지 않는 가짜 폼(Form)을 생성
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/cart/add';
+
+        // 2. 컨트롤러가 기다리는 'productId' 데이터 세팅
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'productId';
+        idInput.value = productId;
+        form.appendChild(idInput);
+
+        // 3. 컨트롤러가 기다리는 'quantity' (위시리스트에서 담을 땐 기본 1개)
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'hidden';
+        qtyInput.name = 'quantity';
+        qtyInput.value = '1';
+        form.appendChild(qtyInput);
+
+        // 4. 문서에 폼을 붙이고 전송 (발사!)
+        document.body.appendChild(form);
+        form.submit();
+
+        // 전송 직후 컨트롤러 로직(INSERT)이 돌고, 알아서 /cart/list 로 리다이렉트 됩니다.
     }
 </script>
 

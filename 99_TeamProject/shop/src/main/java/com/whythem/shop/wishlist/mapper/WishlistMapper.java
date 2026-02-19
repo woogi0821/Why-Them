@@ -21,4 +21,6 @@ public interface WishlistMapper {
     long selectTotalPrice(Long memberId);
     //찜목록 전체 삭제 성공여부
     int deleteAllWishlist(Long memberId);
+    //로그인한 회원별 찜목록 번호 리스트만 가져오기
+    List<Long> selectWishlistProductIds(Long memberId);
 }
