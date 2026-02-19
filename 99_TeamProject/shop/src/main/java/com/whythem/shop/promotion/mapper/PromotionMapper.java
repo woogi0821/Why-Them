@@ -52,6 +52,19 @@ public interface PromotionMapper {
      * @return 성공 시 1 반환
      */
     int updatePromotionStatus(@Param("promotionId") Long promotionId);
+
     // 등록 성공 시 1, 실패 시 0을 반환합니다.
     int deletePromotion(Long promotionId);
+
+    // 1. 진행 중인 이벤트 개수
+    int countActivePromotions();
+
+    // 2. 프로모션이 적용된(할인율 > 0) 상품 수
+    int countDiscountedProducts();
+
+    // 3. 오늘 판매된 프로모션 상품의 매출 합계
+    Long sumTodayPromotionSales();
+
+//    사용자 메인용: 현재 진행 중인 프로모션 목록 조회
+    List<Promotion> getActivePromotions();
 }

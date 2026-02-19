@@ -59,7 +59,7 @@
 
   <button type="button"
           class="flex-1 bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
-          onclick="location.href='/admin/promotion/list?page=${criteria.page}&searchKeyword=${criteria.searchKeyword}'">
+          onclick="location.href='/admin/promotion_list?page=${criteria.page}&searchKeyword=${criteria.searchKeyword}'">
     목록으로
     </button>
 </div>

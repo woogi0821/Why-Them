@@ -23,4 +23,5 @@ public class Promotion {
     private LocalDate endDate;      // 종료일
 
     private String isActive;        // Y or N
+    private String imagePath;
 }

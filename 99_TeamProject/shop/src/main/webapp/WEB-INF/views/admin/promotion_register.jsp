@@ -70,7 +70,7 @@
           <button type="button" class="flex-1 bg-green-700 text-white p-2 rounded hover:bg-green-800"
                   onclick="fn_save('edit')">수정</button>
           <button type="button" class="flex-1 bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
-                  onclick="location.href='/admin/promotion/list'">취소</button>
+                  onclick="location.href='/admin/promotion_list'">취소</button>
         </c:otherwise>
       </c:choose>
     </div>

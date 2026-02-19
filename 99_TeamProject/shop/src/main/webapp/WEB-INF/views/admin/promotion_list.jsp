@@ -3,15 +3,41 @@
 <%@ page import="java.time.LocalDate" %>
 <html>
 <head>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <title>프로모션 관리 목록 (뼈대)</title>
     <style>
         /* 최소한의 가독성을 위한 기본 선 긋기 - 나중에 팀 CSS로 대체 */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #f4f4f4; }
-        .pagination { display: flex; list-style: none; padding: 0; justify-content: center; }
-        .pagination li { margin: 5px; }
-        .active { font-weight: bold; text-decoration: underline; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            justify-content: center;
+        }
+
+        .pagination li {
+            margin: 5px;
+        }
+
+        .active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -19,16 +45,49 @@
 <h1>프로모션 관리 목록</h1>
 
 <div style="display: flex; justify-content: space-between;">
-    <a href="/admin/promotion/register">[신규 프로모션 등록]</a>
+    <a href="/admin/promotion_register">[신규 프로모션 등록]</a>
 
-    <form action="/admin/promotion/list" method="get">
-        <input type="text" name="searchKeyword" value="${param.searchKeyword}" placeholder="제목 검색">
+    <form action="/admin/promotion_list" method="get">
+        <input type="text" name="searchKeyword" value="${criteria.searchKeyword}" placeholder="제목 검색">
         <button type="submit">검색</button>
     </form>
 </div>
 
-<c:set var="today" value="<%= LocalDate.now() %>" />
+<c:set var="today" value="<%= LocalDate.now() %>"/>
+<div class="container">
+    <h2>프로모션 관리 대시보드</h2>
 
+    <div class="dashboard-summary" style="display: flex; gap: 20px; margin-bottom: 30px;">
+        <div class="card" style="border: 1px solid #ddd; padding: 20px; flex: 1; text-align: center;">
+            <h4>진행 중 이벤트</h4>
+            <p><span id="activeCount" style="font-size: 24px; font-weight: bold; color: #007bff;">0</span>개</p>
+        </div>
+        <div class="card" style="border: 1px solid #ddd; padding: 20px; flex: 1; text-align: center;">
+            <h4>할인 적용 상품</h4>
+            <p><span id="productCount" style="font-size: 24px; font-weight: bold; color: #28a745;">0</span>개</p>
+        </div>
+        <div class="card" style="border: 1px solid #ddd; padding: 20px; flex: 1; text-align: center;">
+            <h4>오늘의 프로모션 매출</h4>
+            <p><span id="salesAmount" style="font-size: 24px; font-weight: bold; color: #dc3545;">0</span>원</p>
+        </div>
+    </div>
+
+    <table class="table">
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/api/promotion/dashboard-stats')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('activeCount').innerText = (data.activePromotions || 0);
+                document.getElementById('productCount').innerText = (data.discountedProducts || 0);
+                document.getElementById('salesAmount').innerText = (data.todaySales || 0).toLocaleString();
+            })
+            .catch(err => console.error("데이터 로드 실패:", err));
+    });
+</script>
 <table>
     <thead>
     <tr>
@@ -46,7 +105,7 @@
             <td>${promotion.promotionId}</td>
             <td class="px-4 py-2 border-b">
                     <%-- 삭제된 데이터는 제목에 취소선 추가 --%>
-                <a href="/admin/promotion/${promotion.promotionId}?page=${criteria.page}&searchKeyword=${criteria.searchKeyword}"
+                <a href="/admin/${promotion.promotionId}?page=${criteria.page}&searchKeyword=${criteria.searchKeyword}"
                    class="text-blue-600 hover:underline font-medium">
                     <c:choose>
                         <c:when test="${promotion.isActive eq 'D'}">
@@ -77,7 +136,7 @@
                     <%-- 삭제된 데이터는 종료 버튼을 아예 숨김 --%>
                 <c:if test="${promotion.isActive eq 'Y' && !today.isBefore(promotion.startDate) && !today.isAfter(promotion.endDate)}">
                     <form action="/admin/promotion/end" method="post" style="display:inline;">
-                        <input type="hidden" name="promotionId" value="${promotion.promotionId}" />
+                        <input type="hidden" name="promotionId" value="${promotion.promotionId}"/>
                         <button type="submit">종료</button>
                     </form>
                 </c:if>
@@ -101,17 +160,21 @@
         <li><a href="?page=${criteria.endPage + 1}&searchKeyword=${param.searchKeyword}">다음</a></li>
     </c:if>
 </ul>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     const msg = "${msg}";
-    if(msg === "INSERT_SUCCESS") alert("등록되었습니다.");
+    if (msg === "INSERT_SUCCESS") alert("등록되었습니다.");
 </script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // 컨트롤러에서 보낸 msg 값을 읽어옴
         const msg = "${msg}";
 
-        if (msg === "DELETE_SUCCESS") {
+        if (msg === "INSERT_SUCCESS") {
+            alert("등록되었습니다.");
+        } else if (msg === "SEARCH_EMPTY") {
+            alert("해당 이름의 프로모션이 존재하지 않습니다.");
+        } else if (msg === "DELETE_SUCCESS") {
             alert("프로모션이 안전하게 삭제되었습니다.");
         } else if (msg === "UPDATE_SUCCESS") {
             alert("프로모션 정보가 수정되었습니다.");

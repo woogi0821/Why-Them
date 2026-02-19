@@ -107,10 +107,38 @@ offset: 건너뛸 행의 개수 (예: 2페이지면 앞의 10건 건너뜀)
         end_date        = #{endDate},
         is_active       = #{isActive}  WHERE promotion_id  = #{promotionId}
     </update>
-
     <update id="deletePromotion" parameterType="long">
         UPDATE promotion
         SET is_active = 'D'  WHERE promotion_id = #{promotionId}
     </update>
-
+    <!-- 1. 진행 중인 이벤트 개수 -->
+    <select id="countActivePromotions" resultType="int">
+        SELECT COUNT(*)
+        FROM promotion
+        WHERE status = 'OPEN'
+    </select>
+<!-- 2. 프로모션이 적용된(할인율 > 0) 상품 수 -->
+    <select id="countDiscountedProducts" resultType="int">
+        SELECT COUNT(*)
+        FROM product
+        WHERE discount_rate > 0
+    </select>
+<!-- 3. 오늘 판매된 프로모션 상품의 매출 합계 -->
+    <select id="sumTodayPromotionSales" resultType="long">
+        SELECT 0 FROM DUAL
+    </select>
+    <select id="getActivePromotions" resultType="Promotion">
+        SELECT
+        promotion_id AS promotionId,
+        promotion_title AS promotionTitle,
+        discount_type AS discountType,
+        discount_value AS discountValue,
+        start_date AS startDate,
+        end_date AS endDate,
+        image_path AS imagePath,
+        status AS isActive  FROM promotion
+        WHERE status = 'ACTIVE'
+        AND TRUNC(SYSDATE) BETWEEN TRUNC(start_date) AND TRUNC(end_date)
+        ORDER BY promotionId DESC
+    </select>
 </mapper>
