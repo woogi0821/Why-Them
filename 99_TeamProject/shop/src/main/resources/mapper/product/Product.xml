@@ -45,6 +45,7 @@
         FROM PRODUCT
         WHERE PRODUCT_ID = #{productId}
     </select>
+<!-- WeeklyBest    -->
     <select id="getWeeklyBest" resultType="com.whythem.shop.product.vo.ProductVO">
         SELECT * FROM (
         SELECT

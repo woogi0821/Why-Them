@@ -24,10 +24,12 @@
       z-index: 10;
       border-radius: 2px;
     }
-    /* 상품 정보 스타일 (기존 css에 없다면 추가) */
+    /* 상품 정보 스타일 */
     .info-box { padding: 10px 0; text-align: center; }
     .info-box .name { font-weight: bold; margin-bottom: 5px; }
     .info-box .price { color: #555; }
+    /* 조회수 스타일 (다른 페이지와 통일) */
+    .view-count { font-size: 11px; color: #999; margin-bottom: 4px; }
   </style>
 </head>
 <body>
@@ -38,19 +40,23 @@
   <main id="content-body">
     <section class="weekly-best-section">
       <h2 id="main-title" class="stitle">
+        <%-- 1. 카테고리/섹션명 보안 처리 --%>
         <c:out value="${not empty categoryName ? categoryName : 'WEEKLY BEST'}" />
       </h2>
 
       <div id="grid-root" class="grid-container">
         <c:forEach var="item" items="${bestAllList}" varStatus="status">
-          <div class="product-card" onclick="location.href='/product/detail?productId=${item.productId}'">
+          <%-- 2. 상세 페이지 이동 링크 보안 처리 --%>
+          <div class="product-card" onclick="location.href='/product/detail?productId=<c:out value="${item.productId}"/>'">
 
+              <%-- 순위 숫자는 시스템 값이라 안전합니다 --%>
             <span class="rank-badge">${status.count}</span>
 
             <div class="img-box">
               <c:choose>
                 <c:when test="${not empty item.imageUrl}">
-                  <img src="${item.imageUrl}" alt="${item.name}">
+                  <%-- 3. 이미지 alt 속성 보안 처리 --%>
+                  <img src="${item.imageUrl}" alt="<c:out value='${item.name}' />">
                 </c:when>
                 <c:otherwise>
                   <img src="/img/no-image.jpg" alt="No Image">
@@ -59,8 +65,13 @@
             </div>
 
             <div class="info-box">
-              <p class="brand">${item.brandName}</p>
-              <p class="name">${item.name}</p>
+                <%-- 4. 요청하신 조회수 표시 추가 --%>
+              <p class="view-count">VIEWS <c:out value="${item.viewCount}" default="0" /></p>
+
+                <%-- 5. 브랜드명 & 상품명 보안 처리 --%>
+              <p class="brand"><c:out value="${item.brandName}" default="LALA BOUTIQUE" /></p>
+              <p class="name"><c:out value="${item.name}" /></p>
+
               <p class="price">
                 ₩ <fmt:formatNumber value="${item.price}" pattern="#,###"/>
               </p>

@@ -6,8 +6,10 @@ import com.whythem.shop.common.CommonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 관리자 상품 관리 서비스
@@ -53,6 +55,48 @@ public class AdminService {
      */
     @Transactional
     public void updateAdminProduct(AdminVO product) {
+        // 1. 기존 DB 정보 조회 (삭제할 파일명을 알기 위해)
+        AdminVO oldData = adminMapper.findAdminProductById(product.getProductId());
+
+        MultipartFile newFile = product.getProductImage();
+
+        // 2. 새 파일이 업로드된 경우
+        if (newFile != null && !newFile.isEmpty()) {
+
+            // [A] 기존 파일이 폴더에 있다면 삭제 (2개 중복 방지 핵심)
+            if (oldData != null && oldData.getImageUrl() != null) {
+                try {
+                    String oldUrl = oldData.getImageUrl();
+                    // "/upload/uuid.jpg" -> "uuid.jpg"만 추출
+                    String oldFileName = oldUrl.substring(oldUrl.lastIndexOf("/") + 1);
+                    commonUtil.deleteFile(oldFileName);
+                } catch (Exception e) {
+                    System.err.println("기존 파일 삭제 실패: " + e.getMessage());
+                }
+            }
+
+            // [B] 새 파일명 생성 (확장자 유지하여 흰색 파일 방지)
+            String originalName = newFile.getOriginalFilename();
+            String extension = (originalName != null && originalName.contains("."))
+                    ? originalName.substring(originalName.lastIndexOf(".")) : "";
+
+            String newFileName = UUID.randomUUID().toString() + extension;
+
+            try {
+                // 여기서 서버 폴더(C:/shop/upload/)에 실제 저장 (딱 1번 실행)
+                commonUtil.saveFile(newFile, newFileName);
+                // DB 저장을 위해 VO에 경로 세팅
+                product.setImageUrl("/upload/" + newFileName);
+            } catch (Exception e) {
+                throw new RuntimeException("파일 저장 오류", e);
+            }
+
+        } else {
+            // 새 파일을 안 올렸으면 기존 이미지 경로를 유지
+            product.setImageUrl(oldData.getImageUrl());
+        }
+
+        // 3. DB 업데이트
         adminMapper.updateAdminProduct(product);
     }
 

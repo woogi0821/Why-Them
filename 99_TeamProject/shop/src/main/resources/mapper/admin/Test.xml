@@ -3,9 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.whythem.shop.admin.mapper.AdminMapper">
-
-    <select id="getAdminProductList" resultType="com.whythem.shop.admin.vo.AdminVO">
+<mapper namespace="com.whythem.shop.admin.mapper.TestMapper">
+    <select id="getTestProductList" resultType="com.whythem.shop.admin.vo.TestVO">
         SELECT
         PRODUCT_ID        AS productId,
         CATEGORY_ID       AS categoryId,
@@ -25,7 +24,7 @@
         ORDER BY PRODUCT_ID DESC
     </select>
 
-    <select id="findAdminProductById" resultType="com.whythem.shop.admin.vo.AdminVO">
+    <select id="findTestProductById" resultType="com.whythem.shop.admin.vo.TestVO">
         SELECT
         PRODUCT_ID        AS productId,
         CATEGORY_ID       AS categoryId,
@@ -40,7 +39,7 @@
         WHERE PRODUCT_ID = #{productId}
     </select>
 
-    <insert id="insertAdminProduct" parameterType="com.whythem.shop.admin.vo.AdminVO">
+    <insert id="insertTestProduct" parameterType="com.whythem.shop.admin.vo.TestVO">
         <selectKey keyProperty="productId" resultType="long" order="BEFORE">
             SELECT PRODUCT_SEQ.NEXTVAL FROM DUAL
         </selectKey>
@@ -55,7 +54,7 @@
         )
     </insert>
 
-    <update id="updateAdminProduct" parameterType="com.whythem.shop.admin.vo.AdminVO">
+    <update id="updateTestProduct" parameterType="com.whythem.shop.admin.vo.TestVO">
         UPDATE PRODUCT
         SET
         CATEGORY_ID    = #{categoryId},
@@ -69,8 +68,9 @@
         WHERE PRODUCT_ID = #{productId}
     </update>
 
-    <delete id="deleteAdminProduct">
+    <delete id="deleteTestProduct">
         DELETE FROM PRODUCT WHERE PRODUCT_ID = #{productId}
     </delete>
+
 
 </mapper>

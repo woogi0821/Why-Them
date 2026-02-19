@@ -69,6 +69,7 @@
             </div>
         </section>
 
+        <%-- NEW ARRIVALS 섹션 --%>
         <section class="curation-section">
             <div class="section-header">
                 <h2 class="section-title">NEW ARRIVALS</h2>
@@ -77,19 +78,22 @@
 
             <div class="grid-container">
                 <c:forEach var="item" items="${newList}" >
-                    <div class="product-card" onclick="location.href='/product/detail?productId=${item.productId}'">
+                    <%-- 클릭 시 이동하는 ID값도 c:out으로 안전하게 처리 --%>
+                    <div class="product-card" onclick="location.href='/product/detail?productId=<c:out value="${item.productId}"/>'">
 
                         <button type="button" class="btn-wish-icon ${item.wished ? 'active' : ''}"
-                                onclick="toggleWishList(event, '${item.productId}', this)">
+                                onclick="toggleWishList(event, '<c:out value="${item.productId}"/>', this)">
                             ♥
                         </button>
 
                         <div class="img-box">
-                            <img src="${not empty item.imageUrl ? item.imageUrl : '/img/no-image.jpg'}" alt="${item.name}">
+                            <img src="${not empty item.imageUrl ? item.imageUrl : '/img/no-image.jpg'}"
+                                 alt="<c:out value='${item.name}' />">
                         </div>
                         <div class="info-box">
-                            <p class="brand">${item.brandName}</p>
-                            <p class="name">${item.name}</p>
+                                <%-- 브랜드명과 상품명에 c:out 적용 --%>
+                            <p class="brand"><c:out value="${item.brandName}" default="LALA BOUTIQUE" /></p>
+                            <p class="name"><c:out value="${item.name}" /></p>
                             <p class="price">₩ <fmt:formatNumber value="${item.price}" pattern="#,###"/></p>
                         </div>
                     </div>
@@ -97,6 +101,7 @@
             </div>
         </section>
 
+        <%-- WEEKLY BEST 섹션 --%>
         <section class="curation-section">
             <div class="section-header">
                 <h2 class="section-title">WEEKLY BEST</h2>
@@ -105,19 +110,20 @@
 
             <div class="grid-container">
                 <c:forEach var="item" items="${bestList}">
-                    <div class="product-card" onclick="location.href='/product/detail?productId=${item.productId}'">
+                    <div class="product-card" onclick="location.href='/product/detail?productId=<c:out value="${item.productId}"/>'">
 
                         <button type="button" class="btn-wish-icon ${item.wished ? 'active' : ''}"
-                                onclick="toggleWishList(event, '${item.productId}', this)">
+                                onclick="toggleWishList(event, '<c:out value="${item.productId}"/>', this)">
                             ♥
                         </button>
 
                         <div class="img-box">
-                            <img src="${not empty item.imageUrl ? item.imageUrl : '/img/no-image.jpg'}" alt="${item.name}">
+                            <img src="${not empty item.imageUrl ? item.imageUrl : '/img/no-image.jpg'}"
+                                 alt="<c:out value='${item.name}' />">
                         </div>
                         <div class="info-box">
-                            <p class="brand">${item.brandName}</p>
-                            <p class="name">${item.name}</p>
+                            <p class="brand"><c:out value="${item.brandName}" default="LALA BOUTIQUE" /></p>
+                            <p class="name"><c:out value="${item.name}" /></p>
                             <p class="price">₩ <fmt:formatNumber value="${item.price}" pattern="#,###"/></p>
                         </div>
                     </div>

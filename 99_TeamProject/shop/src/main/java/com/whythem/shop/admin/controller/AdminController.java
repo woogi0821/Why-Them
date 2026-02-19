@@ -70,10 +70,6 @@ public class AdminController {
     // 5. 상품 수정 처리
     @PostMapping("/product/edit")
     public String editProcess(AdminVO product) {
-        if (product.getProductImage() != null && !product.getProductImage().isEmpty()) {
-            product.setImageUrl(saveFile(product.getProductImage()));
-        }
-
         // AdminService의 수정 메서드 호출
         adminService.updateAdminProduct(product);
 
