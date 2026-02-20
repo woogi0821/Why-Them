@@ -1,7 +1,6 @@
 package com.whythem.shop.product.vo;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 import java.util.Date;
 
 @Getter
@@ -24,4 +23,5 @@ public class ProductVO {
 
     private Date createdAt;
     private Date updatedAt;
+    private boolean wished = false;
 }

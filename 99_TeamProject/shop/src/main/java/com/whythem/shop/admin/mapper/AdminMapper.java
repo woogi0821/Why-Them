@@ -17,13 +17,9 @@ public interface AdminMapper {
     // 3. 신규 상품 정보 등록 (이미지 경로는 AdminVO의 imageUrl 필드로 통합)
     void insertAdminProduct(AdminVO product);
 
-    // [삭제] 4. insertAdminProductImage 메서드 삭제함
-
     // 5. 상품 정보 수정
     void updateAdminProduct(AdminVO product);
 
     // 6. 상품 데이터 삭제
     void deleteAdminProduct(Long productId);
-
-    // [삭제] 7. deleteAdminProductImages 메서드 삭제함
 }

@@ -3,7 +3,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Sans+KR:wght@100;300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/homepage.css">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     /* [스타일 유지] 프리미엄 로그인 모달 */
     .modal-overlay {
@@ -64,6 +64,34 @@
 
     /* 에러 메시지 (모달용) */
     .modal-msg { font-size: 12px; color: #e74c3c; display: block; margin-bottom: 15px; text-align: left; }
+    /* [추가] 뱃지 위치를 잡기 위한 부모 클래스 */
+    .badge-wrapper { position: relative; display: inline-block; }
+
+    /* 장바구니 숫자 뱃지 (빨간색 동그라미) */
+    /* 장바구니 숫자 뱃지 (완벽 중앙 정렬 & 2자리수 알약 대응) */
+    .cart-badge {
+        position: absolute; top: -8px; right: -14px;
+        background: #e74c3c; color: #fff; font-size: 9px; font-weight: 700;
+
+        /* 1자리일 땐 동그라미, 2자리일 땐 알약 모양으로 자연스럽게 늘어납니다 */
+        min-width: 16px; height: 16px;
+        padding: 0 5px;
+        border-radius: 10px;
+
+        display: flex; justify-content: center; align-items: center;
+
+        /* ★ 핵심: 부모에게서 물려받은 글자 간격을 0으로 없애서 완벽한 중앙에 위치시킴 */
+        letter-spacing: 0;
+        box-sizing: border-box;
+    }
+
+    /* 위시리스트 N 뱃지 (검정색 네모) */
+    .wish-badge {
+        position: absolute; top: -6px; right: -12px;
+        background: #111; color: #fff; font-size: 8px; font-weight: bold;
+        padding: 2px 4px; border-radius: 3px; letter-spacing: 0;
+        display: none; /* 평소엔 숨겨둠 */
+    }
 </style>
 
 <header class="top-bar">
@@ -71,19 +99,39 @@
 
     <aside class="top-utils">
         <c:choose>
+
             <c:when test="${empty sessionScope.loginMember}">
                 <span id="auth-btn" class="util-link" onclick="openLoginModal()">LOGIN</span>
                 <span class="util-link" onclick="location.href='/member/join'">JOIN</span>
             </c:when>
+
+
             <c:otherwise>
-                <span class="user-txt" style="font-weight:bold; margin-right:10px;">${sessionScope.loginMember.memberName}님</span>
+                <span class="user-txt" style="font-weight:bold; margin-right:10px;">
+                    ${sessionScope.loginMember.memberName}님
+                </span>
+
+
                 <c:if test="${sessionScope.loginMember.memberGrade == 'Y'}">
                     <span class="util-link" onclick="location.href='/admin/admin_main'" style="color:red;">ADMIN</span>
                 </c:if>
+
                 <span class="util-link" onclick="location.href='/member/logout'">LOGOUT</span>
                 <span class="util-link" onclick="location.href='/member/mypage'">MYPAGE</span>
-                <span class="util-link" onclick="location.href='/wishlist'">WISHLIST</span>
-                <span class="util-link" onclick="location.href='/order/cart'">CART</span>
+                <span class="util-link badge-wrapper" onclick="location.href='/wishlist/list'">
+                    WISHLIST
+                    <span id="header-wish-badge" class="wish-badge">N</span>
+                </span>
+
+                <%-- ★ [수정됨] 장바구니 뱃지 --%>
+                <span class="util-link badge-wrapper" onclick="location.href='/cart/list'">
+                    CART
+                    <%-- 서버에서 세션에 cartCount를 담아준다고 가정한 JSTL 처리 --%>
+                    <span id="header-cart-badge" class="cart-badge"
+                          style="display: ${empty sessionScope.cartCount || sessionScope.cartCount == 0 ? 'none' : 'flex'}">
+                            ${empty sessionScope.cartCount ? 0 : sessionScope.cartCount}
+                    </span>
+                </span>
             </c:otherwise>
         </c:choose>
     </aside>
@@ -96,14 +144,49 @@
         <div class="menu-item">SETS</div>
         <div class="menu-item">SHOES</div>
         <div class="menu-item">ACC</div>
+        <div class="menu-item">EVENT</div>
     </div>
+
     <div class="full-dropdown">
         <div class="drop-container">
-            <div class="drop-column"><ul class="sub-menu"><li onclick="loadCategory(1)">코트</li><li onclick="loadCategory(2)">셔츠</li><li onclick="loadCategory(3)">스웨터</li></ul></div>
-            <div class="drop-column"><ul class="sub-menu"><li onclick="loadCategory(4)">팬츠</li><li onclick="loadCategory(5)">스커트</li></ul></div>
-            <div class="drop-column"><ul class="sub-menu"><li onclick="loadCategory(6)">원피스</li><li onclick="loadCategory(7)">수트</li></ul></div>
-            <div class="drop-column"><ul class="sub-menu"><li onclick="loadCategory(8)">드레스슈즈</li><li onclick="loadCategory(9)">샌들</li></ul></div>
-            <div class="drop-column"><ul class="sub-menu"><li onclick="loadCategory(10)">백</li><li onclick="loadCategory(11)">모자</li></ul></div>
+            <div class="drop-column">
+                <ul class="sub-menu">
+                    <li onclick="loadCategory(1)">코트</li>
+                    <li onclick="loadCategory(2)">셔츠</li>
+                    <li onclick="loadCategory(3)">스웨터</li>
+                </ul>
+            </div>
+            <div class="drop-column">
+                <ul class="sub-menu">
+                    <li onclick="loadCategory(4)">팬츠</li>
+                    <li onclick="loadCategory(5)">스커트</li>
+                </ul>
+            </div>
+            <div class="drop-column">
+                <ul class="sub-menu">
+                    <li onclick="loadCategory(6)">원피스</li>
+                    <li onclick="loadCategory(7)">수트</li>
+                </ul>
+            </div>
+            <div class="drop-column">
+                <ul class="sub-menu">
+                    <li onclick="loadCategory(8)">드레스슈즈</li>
+                    <li onclick="loadCategory(9)">샌들</li>
+                </ul>
+            </div>
+            <div class="drop-column">
+                <ul class="sub-menu">
+                    <li onclick="loadCategory(10)">백</li>
+                    <li onclick="loadCategory(11)">모자</li>
+                </ul>
+            </div>
+
+            <div class="drop-column">
+                <ul class="sub-menu">
+                    <li onclick="location.href='/event/list?status=ongoing'">진행중인 이벤트</li>
+                    <li onclick="location.href='/event/list?status=ended'">종료된 이벤트</li>
+                </ul>
+            </div>
         </div>
     </div>
 </nav>
@@ -142,8 +225,8 @@
 
                 <input type="text" name="loginId" id="modal_id" class="login-input" placeholder="User ID" autocomplete="off">
                 <input type="text" name="memberName" id="modal_name" class="login-input" placeholder="Name" autocomplete="off">
-                <input type="text" name="phoneNumber" id="modal_phone" class="login-input" placeholder="Phone (010-0000-0000)" autocomplete="off">
-
+                <%-- ★ [수정] 자동 하이픈 기능 추가 --%>
+                <input type="text" name="phoneNumber" id="modal_phone" class="login-input" placeholder="Phone (010-0000-0000)" autocomplete="off" oninput="autoHyphen(this)" maxlength="13">
                 <input type="password" name="newPw" id="modal_newPw" class="login-input" placeholder="New Password">
                 <input type="password" id="modal_confirmPw" class="login-input" placeholder="Confirm Password">
 
@@ -160,7 +243,27 @@
 </div>
 
 <script>
-    function loadCategory(categoryId) { location.href = "/?categoryId=" + categoryId; }
+    // [완벽 수정] 100% 안전한 하이픈 자동 생성기 (글자 자르기 방식)
+    function autoHyphen(target) {
+        // 1. 사용자가 입력한 값에서 숫자만 싹 다 발라냅니다.
+        let val = target.value.replace(/[^0-9]/g, '');
+        let res = '';
+
+        // 2. 글자 수에 맞춰서 하이픈(-)을 안전하게 조립합니다.
+        if (val.length < 4) {
+            res = val; // 010
+        } else if (val.length < 8) {
+            res = val.substring(0, 3) + '-' + val.substring(3); // 010-1234
+        } else {
+            // 010-1234-5678 (11자리까지만 자름)
+            res = val.substring(0, 3) + '-' + val.substring(3, 7) + '-' + val.substring(7, 11);
+        }
+
+        // 3. 조립된 결과를 다시 입력창에 꽂아줍니다.
+        target.value = res;
+    }
+    // 카테고리 이동
+    function loadCategory(categoryId) { location.href = "/product/category?categoryId=" + categoryId; }
 
     // 모달 열기/닫기
     function openLoginModal() {
@@ -225,4 +328,58 @@
         const modal = document.getElementById('login-modal');
         if (event.target == modal) closeLoginModal();
     }
+
+    // [유지] 장바구니 뱃지 숫자 업데이트
+    function updateCartBadgeCount(newCount) {
+        const badge = document.getElementById('header-cart-badge');
+        if (badge) {
+            badge.innerText = newCount;
+            badge.style.display = newCount > 0 ? 'flex' : 'none';
+        }
+    }
+
+    /* =========================================
+       ★ [수정/추가] 위시리스트 N 뱃지 로컬스토리지 연동
+       ========================================= */
+
+    // 1. 페이지가 로드될 때마다 브라우저 창고(localStorage) 검사
+    document.addEventListener('DOMContentLoaded', function() {
+        if (localStorage.getItem('hasNewWish') === 'Y') {
+            const badge = document.getElementById('header-wish-badge');
+            if (badge) badge.style.display = 'block';
+        }
+    });
+
+    // 2. 하트를 눌렀을 때 호출 (N 뱃지 켜기 + 창고에 메모)
+    function showWishNewBadge() {
+        const badge = document.getElementById('header-wish-badge');
+        if (badge) {
+            badge.style.display = 'block';
+        }
+        localStorage.setItem('hasNewWish', 'Y'); // "새 위시리스트 있음" 메모 저장
+    }
+
+    // 3. 위시리스트 페이지에 들어갔을 때 호출 (N 뱃지 끄기 + 창고 메모 찢기)
+    function hideWishNewBadge() {
+        const badge = document.getElementById('header-wish-badge');
+        if (badge) {
+            badge.style.display = 'none';
+        }
+        localStorage.removeItem('hasNewWish'); // 메모 삭제
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        if (typeof hideWishNewBadge === 'function') {
+            hideWishNewBadge();
+        }
+    });
+
 </script>
+<%-- ★ [추가] 컨트롤러에서 보낸 성공/실패 메시지 띄우기 --%>
+<c:if test="${not empty msg}">
+    <script>
+        // 브라우저에 알림창 띄우기
+        alert('<c:out value="${msg}"/>');
+    </script>
+</c:if>

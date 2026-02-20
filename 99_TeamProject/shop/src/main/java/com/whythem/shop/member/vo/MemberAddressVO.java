@@ -1,12 +1,12 @@
 package com.whythem.shop.member.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class MemberAddressVO {
     private Long addressId; //PK
     private Long memberId; //FK
@@ -17,4 +17,9 @@ public class MemberAddressVO {
     private String baseAddress;
     private String detailAddress;
     private String isDefault;
+
+//  추가 메서드
+    public String getFullAddress() {
+        return "( " + zipCode + " ) " + baseAddress + ", " + detailAddress;
+    }
 }

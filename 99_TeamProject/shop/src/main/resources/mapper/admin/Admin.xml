@@ -54,19 +54,6 @@
         #{imageUrl, jdbcType=VARCHAR}, SYSDATE, SYSDATE
         )
     </insert>
-    <insert id="insertAdminProductImage">
-        INSERT INTO PRODUCT_IMAGE (
-        IMAGE_ID,
-        PRODUCT_ID,
-        IMAGE_URL,
-        IS_MAIN
-        ) VALUES (
-        PRODUCT_IMAGE_SEQ.NEXTVAL,
-        #{productId},
-        #{imageUrl},
-        #{isMain}
-        )
-    </insert>
 
     <update id="updateAdminProduct" parameterType="com.whythem.shop.admin.vo.AdminVO">
         UPDATE PRODUCT
