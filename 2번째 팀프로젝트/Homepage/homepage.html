@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>LALA BOUTIQUE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Sans+KR:wght@100;300&display=swap" rel="stylesheet">
+    <style>
+        /* 기초 HTML/CSS만 사용 [cite: 2026-01-29] */
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        body { background: #fff; font-family: 'Cormorant Garamond', serif; color: #111; -webkit-font-smoothing: antialiased; }
+        
+        /* 상단 유틸리티 [cite: 2026-01-30] */
+        .top-utils { position: absolute; top: 35px; right: 60px; font-size: 10px; display: flex; gap: 35px; letter-spacing: 2px; color: #999; text-transform: uppercase; font-family: 'Noto Sans KR'; z-index: 1001; }
+        .top-utils span { cursor: pointer; }
+
+        header { height: 160px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .logo { font-size: 45px; letter-spacing: 25px; text-transform: uppercase; font-weight: 300; margin-right: -25px; }
+
+        /* 네비게이션 및 전체 드롭다운 로직 */
+        .nav-wrapper { position: sticky; top: 0; z-index: 1000; background: #fff; border-top: 1px solid #f2f2f2; border-bottom: 1px solid #f2f2f2; }
+        .menu-bar { width: 100%; max-width: 1100px; margin: auto; height: 70px; display: flex; justify-content: space-around; align-items: center; }
+        .menu-link { font-size: 13px; font-weight: 300; letter-spacing: 6px; color: #222; text-transform: uppercase; cursor: pointer; height: 100%; display: flex; align-items: center; }
+        
+        /* 전체 영역 드롭다운 스타일 */
+        .full-dropdown { display: none; position: absolute; top: 71px; left: 0; width: 100%; background: #fff; border-bottom: 1px solid #eee; padding: 40px 0 60px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.02); }
+        .nav-wrapper:hover .full-dropdown { display: block; }
+        .drop-container { width: 100%; max-width: 1100px; margin: auto; display: flex; justify-content: space-around; }
+        
+        .drop-column { width: 120px; text-align: center; }
+        .drop-title { font-size: 11px; font-weight: 400; color: #000; letter-spacing: 3px; margin-bottom: 25px; border-bottom: 1px solid #f5f5f5; padding-bottom: 10px; visibility: hidden; } /* 구조용 */
+        .drop-link { font-size: 10px; color: #bbb; cursor: pointer; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; display: block; transition: 0.3s; }
+        .drop-link:hover { color: #000; }
+
+        /* 상품 그리드 및 카드 [cite: 2026-01-30] */
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px 20px; padding: 0 60px; margin: 80px 0; }
+        .card { position: relative; cursor: pointer; }
+        .img-box { width: 100%; aspect-ratio: 9/16; overflow: hidden; background: #f9f9f9; position: relative; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; }
+        
+        /* 찜(WISH) 버튼 [cite: 2026-01-30] */
+        .card-btns { position: absolute; bottom: -60px; left: 0; width: 100%; display: flex; transition: 0.4s; z-index: 10; }
+        .card:hover .card-btns { bottom: 0; }
+        .card-btns button { flex: 1; height: 60px; border: none; background: #000; color: #fff; font-size: 10px; cursor: pointer; letter-spacing: 2px; font-family: 'Noto Sans KR'; }
+
+        /* 모달 및 기타 [cite: 2026-01-30] */
+        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); }
+        .modal-content { margin: 50px auto; width: 90%; max-width: 800px; padding: 60px; position: relative; }
+        .close-x { position: absolute; top: 20px; right: 20px; font-size: 30px; cursor: pointer; }
+        
+        .footer-del { position: absolute; bottom: 20px; right: 40px; font-size: 9px; color: #eee; cursor: pointer; text-decoration: none; }
+        footer { padding: 100px 40px; border-top: 1px solid #eee; font-size: 10px; color: #ccc; text-align: center; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+<div class="top-utils">
+    <span onclick="alert('SIGN IN')">SIGN IN</span>
+    <span onclick="viewList('WISH')">WISH LIST (<span id="w-cnt">0</span>)</span>
+    <span onclick="viewList('CART')">CART (<span id="c-cnt">0</span>)</span>
+</div>
+
+<header onclick="location.reload()"><div class="logo">lala boutique</div></header>
+
+<div class="nav-wrapper">
+    <div class="menu-bar">
+        <span class="menu-link">TOP</span>
+        <span class="menu-link">BOTTOM</span>
+        <span class="menu-link">SET</span>
+        <span class="menu-link">SHOES</span>
+        <span class="menu-link">ACC</span>
+    </div>
+    
+    <div class="full-dropdown">
+        <div class="drop-container">
+            <div class="drop-column">
+                <span class="drop-link" onclick="showCat('top/coat','COAT')">COAT</span>
+                <span class="drop-link" onclick="showCat('top/shirts','SHIRTS')">SHIRTS</span>
+                <span class="drop-link" onclick="showCat('top/sweater','SWEATER')">SWEATER</span>
+            </div>
+            <div class="drop-column">
+                <span class="drop-link" onclick="showCat('bottom/pants','PANTS')">PANTS</span>
+                <span class="drop-link" onclick="showCat('bottom/skirts','SKIRTS')">SKIRTS</span>
+            </div>
+            <div class="drop-column">
+                <span class="drop-link" onclick="showCat('set/onepiece','ONEPIECE')">ONEPIECE</span>
+                <span class="drop-link" onclick="showCat('set/suit','SUIT')">SUIT</span>
+            </div>
+            <div class="drop-column">
+                <span class="drop-link" onclick="showCat('shoes/dressshoe','DRESSSHOE')">DRESSSHOE</span>
+                <span class="drop-link" onclick="showCat('shoes/sandals','SANDALS')">SANDALS</span>
+            </div>
+            <div class="drop-column">
+                <span class="drop-link" onclick="showCat('acc/bag','BAG')">BAG</span>
+                <span class="drop-link" onclick="showCat('acc/hat','HAT')">HAT</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="main-area"></div>
+
+<div id="detailModal" class="modal">
+    <div class="modal-content"><span class="close-x" onclick="closeModal('detailModal')">&times;</span><div id="detail-body" style="display:flex; gap:50px;"></div></div>
+</div>
+
+<div id="listModal" class="modal">
+    <div class="modal-content" style="max-width:500px;"><span class="close-x" onclick="closeModal('listModal')">&times;</span><h2 id="ltitle" style="text-align:center; letter-spacing:10px; margin-bottom:30px;"></h2><div id="list-items-container"></div></div>
+</div>
+
+<footer><p>© 2026 LALA BOUTIQUE. ALL RIGHTS RESERVED.</p></footer>
+<a class="footer-del" onclick="if(confirm('DELETE?')) alert('DELETED')">DELETE ACCOUNT</a>
+
+<script>
+    /* 설명은 주석으로 마침표 없이 간결하게 [cite: 2026-01-22] */
+    let wList = JSON.parse(localStorage.getItem('w_l')) || [];
+    let cList = JSON.parse(localStorage.getItem('c_l')) || [];
+    let curCatItems = [];
+
+    const adjs = ["Silent", "Urban", "Classic", "Pure", "Grand", "Ethereal", "Minimal", "Ivory"];
+    const nouns = ["Silk", "Wool", "Linen", "Satin", "Cashmere", "Heritage", "Edition", "Crepe"];
+
+    function updateUI() {
+        document.getElementById('w-cnt').innerText = wList.length;
+        document.getElementById('c-cnt').innerText = cList.length;
+    }
+
+    /* 이미지 경로 매칭 */
+    function showCat(path, title) {
+        const area = document.getElementById('main-area');
+        area.innerHTML = `<h2 style="text-align:center; margin-top:100px; letter-spacing:15px; font-weight:300; text-transform:uppercase;">${title}</h2><div class="grid" id="c-grid"></div>`;
+        const grid = document.getElementById('c-grid');
+        curCatItems = [];
+        for(let i=1; i<=12; i++) {
+            const name = `${adjs[i % 8]} ${nouns[i % 8]}`;
+            const item = { id: Date.now()+i, n: name, p: 1450000 + (i*10000), img: `img/${path}/${i}.jpg` };
+            curCatItems.push(item);
+            grid.innerHTML += `
+                <div class="card" onclick="openDetail(${i-1})">
+                    <div class="img-box">
+                        <img src="${item.img}" onerror="this.src='https://via.placeholder.com/900x1600/f4f4f4/999?text=${name}'">
+                        <div class="card-btns">
+                            <button onclick='event.stopPropagation(); addAct("WISH", ${i-1})'>WISH</button>
+                            <button onclick='event.stopPropagation(); addAct("CART", ${i-1})'>ADD TO CART</button>
+                        </div>
+                    </div>
+                    <div style="padding:20px 0; text-align:center;"><p style="font-size:11px; text-transform:uppercase; letter-spacing:1px;">${item.n}</p><p style="font-size:10px; color:#888;">₩ ${item.p.toLocaleString()}</p></div>
+                </div>`;
+        }
+        window.scrollTo(0,0);
+    }
+
+    function openDetail(idx) {
+        const item = curCatItems[idx];
+        document.getElementById('detail-body').innerHTML = `
+            <img src="${item.img}" style="width:45%; aspect-ratio:9/16; object-fit:cover;" onerror="this.src='https://via.placeholder.com/900x1600/f4f4f4/999?text=${item.n}'">
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:center; padding-left:50px;">
+                <h2 style="font-size:30px; letter-spacing:5px; margin-bottom:20px; font-weight:300;">${item.n}</h2>
+                <p style="font-size:18px; color:#888; margin-bottom:40px;">₩ ${item.p.toLocaleString()}</p>
+                <button onclick='addAct("CART", ${idx})' style="width:100%; height:60px; background:#000; color:#fff; border:none; cursor:pointer;">ADD TO CART</button>
+            </div>`;
+        document.getElementById('detailModal').style.display = 'block';
+    }
+
+    function addAct(type, idx) {
+        const item = curCatItems[idx];
+        if(type === 'WISH') { wList.push(item); alert("ADDED TO WISH LIST"); }
+        else { cList.push(item); alert("ADDED TO CART"); }
+        save();
+    }
+
+    function viewList(type) {
+        const container = document.getElementById('list-items-container');
+        const list = type === 'WISH' ? wList : cList;
+        document.getElementById('ltitle').innerText = type;
+        container.innerHTML = list.length === 0 ? '<p style="padding:50px 0; color:#ccc; text-align:center;">EMPTY</p>' : '';
+        list.forEach((item, i) => {
+            container.innerHTML += `<div style="display:flex; align-items:center; padding:15px 0; border-bottom:1px solid #eee;">
+                <div style="flex:1; text-align:left;"><p style="font-size:11px;">${item.n}</p></div>
+                <button onclick="removeItem('${type}', ${i})" style="border:none; background:none; font-size:9px; cursor:pointer; color:#aaa;">DEL</button>
+            </div>`;
+        });
+        document.getElementById('listModal').style.display = 'block';
+    }
+
+    function removeItem(type, idx) { if(type === 'WISH') wList.splice(idx, 1); else cList.splice(idx, 1); save(); viewList(type); }
+    function save() { localStorage.setItem('w_l', JSON.stringify(wList)); localStorage.setItem('c_l', JSON.stringify(cList)); updateUI(); }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    window.onload = () => { updateUI(); showCat('top/coat', 'COAT'); }
+</script>
+</body>
+</html>
