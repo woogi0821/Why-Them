@@ -42,18 +42,9 @@ public class AdminController {
 
     // 3. 상품 등록 처리
     @PostMapping("/product/add")
-    public String addProcess(AdminVO product) {
-        MultipartFile file = product.getProductImage();
-
-        if (file != null && !file.isEmpty()) {
-            String path = saveFile(file);
-            product.setImageUrl(path);
-            // savedPaths.add(path); <- 이 부분도 이제 필요 없으니 삭제
-        }
-
-        // AdminService의 등록 메서드 호출 (인수 1개로 맞춤)
+    public String addProcess(AdminVO product) throws Exception {
+        // 서비스에서 발생한 예외가 여기까지 전달됩니다.
         adminService.registerAdminProduct(product);
-
         return "redirect:/admin/admin_main";
     }
 
@@ -69,17 +60,19 @@ public class AdminController {
 
     // 5. 상품 수정 처리
     @PostMapping("/product/edit")
-    public String editProcess(AdminVO product) {
-        // AdminService의 수정 메서드 호출
+    public String updateProcess(AdminVO product) throws Exception {
+        // 수정 로직 역시 서비스에서 예외를 던지므로 throws를 붙입니다.
         adminService.updateAdminProduct(product);
 
         return "redirect:/admin/admin_main";
     }
 
-
-    @GetMapping("/product/delete")
+// 6. 상품 삭제
+    @PostMapping("/product/delete") // @GetMapping에서 @PostMapping으로 변경
     public String deleteProcess(@RequestParam("productId") Long productId) {
+        // 서비스 호출 (이미지 파일 삭제 + DB 삭제 로직이 들어있어야 함)
         adminService.deleteAdminProduct(productId);
+
         return "redirect:/admin/admin_main";
     }
 

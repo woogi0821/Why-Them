@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,47 +45,62 @@ public class AdminService {
      * [등록] 새로운 상품 저장
      * @param product 등록할 상품 정보가 담긴 객체
      */
-    @Transactional // DB 작업 도중 오류 발생 시 자동 롤백
-    public void registerAdminProduct(AdminVO product) {
+    @Transactional // 이제 에러가 발생하면 DB 저장도 자동으로 취소됩니다.
+    public void registerAdminProduct(AdminVO product) throws Exception {
+        MultipartFile file = product.getProductImage();
+
+        if (file != null && !file.isEmpty()) {
+            String uuid = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            File saveFile = new File("C:/shop/upload", uuid);
+
+            // try-catch를 제거하고 바로 실행 (에러는 위로 던짐)
+            file.transferTo(saveFile);
+
+            // 기존에 성공했던 경로 형식 그대로 유지
+            product.setImageUrl("/upload/" + uuid);
+        }
+
         adminMapper.insertAdminProduct(product);
     }
-
     /**
      * [수정] 기존 상품 정보 업데이트
      * @param product 수정된 상품 정보 객체
      */
     @Transactional
-    public void updateAdminProduct(AdminVO product) {
-        // 1. 기존 데이터 미리 가져오기
+    public void updateAdminProduct(AdminVO product) throws Exception {
+        // 1. 기존 데이터 가져오기
         AdminVO oldData = adminMapper.findAdminProductById(product.getProductId());
         MultipartFile newFile = product.getProductImage();
 
         // 2. 새 파일이 있는 경우만 파일 교체 작업 수행
         if (newFile != null && !newFile.isEmpty()) {
 
-            // [삭제] 기존 파일이 있다면 한 줄로 정리
+            // [삭제] 기존 파일이 있다면 삭제 (알려주신 /upload/ 방식에 맞춰 파일명만 추출)
             if (oldData != null && oldData.getImageUrl() != null) {
-                commonUtil.deleteFile(oldData.getImageUrl().substring(oldData.getImageUrl().lastIndexOf("/") + 1));
+                // substring(8)은 "/upload/" 뒷부분만 가져옵니다.
+                String oldFileName = oldData.getImageUrl().substring(8);
+                File file = new File("C:/shop/upload", oldFileName);
+                if(file.exists()) file.delete();
             }
 
-            // [이름 생성] 확장자 추출과 UUID 결합을 한 번에
-            String originalName = newFile.getOriginalFilename();
-            String extension = originalName.contains(".") ? originalName.substring(originalName.lastIndexOf(".")) : "";
-            String newFileName = UUID.randomUUID() + extension;
+            // [이름 생성] 사용자님의 기존 방식 그대로 UUID와 원본 파일명 결합
+            String newFileName = UUID.randomUUID().toString() + "_" + newFile.getOriginalFilename();
 
-            // [저장] 예외 처리는 필요하지만 코드는 간결하게
-            try {
-                commonUtil.saveFile(newFile, newFileName);
-                product.setImageUrl("/upload/" + newFileName);
-            } catch (Exception e) {
-                throw new RuntimeException("파일 교체 실패", e);
-            }
+            // [저장] try-catch 없이 바로 실행 (예외는 밖으로 던짐)
+            File saveFile = new File("C:/shop/upload", newFileName);
+            newFile.transferTo(saveFile);
+
+            // 경로 세팅
+            product.setImageUrl("/upload/" + newFileName);
+
         } else {
-            // 새 파일 없으면 기존 경로 그대로 사용
-            product.setImageUrl(oldData.getImageUrl());
+            // 새 파일 없으면 기존 경로 그대로 유지
+            if (oldData != null) {
+                product.setImageUrl(oldData.getImageUrl());
+            }
         }
 
-        // 3. DB 업데이트 (공통)
+        // 3. DB 업데이트
         adminMapper.updateAdminProduct(product);
     }
 

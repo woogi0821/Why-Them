@@ -60,7 +60,19 @@
     .prod-img { width: 60px; height: 60px; border-radius: 4px; object-fit: cover; border: 1px solid #eee; }
 
     .edit-link { color: #3498db; font-weight: bold; margin-right: 12px; }
-    .delete-link { color: #e74c3c; font-weight: bold; }
+    .btn-link-style {
+      background: none;    /* 배경 제거 */
+      border: none;        /* 테두리 제거 */
+      padding: 0;          /* 여백 제거 */
+      font: inherit;       /* 부모 요소의 폰트 그대로 사용 */
+      cursor: pointer;     /* 마우스 올리면 손가락 모양 */
+      color: #dc3545;      /* 삭제 버튼용 빨간색 (원하는 색으로 변경 가능) */
+      text-decoration: none; /* 밑줄 제거 */
+    }
+
+    .btn-link-style:hover {
+      text-decoration: underline; /* 마우스 올렸을 때만 밑줄 (선택사항) */
+    }
   </style>
 </head>
 <body>
@@ -148,9 +160,14 @@
             <td>
                 <%-- 링크의 파라미터로 들어가는 ID값도 c:out 처리 가능합니다 --%>
               <a href="/admin/product/edit?productId=<c:out value='${item.productId}' />" class="edit-link">수정</a>
-              <a href="/admin/product/delete?productId=<c:out value='${item.productId}' />"
-                 class="delete-link"
-                 onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+                    <%-- 삭제 링크 (POST 전송용 숨겨진 폼 + 자바스크립트) --%>
+                  <form action="/admin/product/delete" method="post" style="display:inline;">
+                    <input type="hidden" name="productId" value="${item.productId}">
+                    <button type="submit" class="btn-link-style"
+                            onclick="return confirm('정말 삭제하시겠습니까?');">
+                      삭제
+                    </button>
+                  </form>
             </td>
           </tr>
         </c:forEach>
