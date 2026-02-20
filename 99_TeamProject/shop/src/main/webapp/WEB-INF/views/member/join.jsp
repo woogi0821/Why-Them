@@ -42,15 +42,8 @@
 
             <div class="form-group">
                 <label>PASSWORD</label>
-                <input type="password" id="loginPw" name="loginPw" placeholder="8자리 이상 입력" onkeyup="checkPw()">
+                <input type="password" id="loginPw" name="loginPw" placeholder="8자리 이상 입력">
             </div>
-
-            <div class="form-group">
-                <label>CONFIRM PASSWORD</label>
-                <input type="password" id="loginPwConfirm" placeholder="비밀번호 다시 입력" onkeyup="checkPw()">
-                <span id="pwMatchMsg" style="font-size: 12px; margin-top: 5px; display: block;"></span>
-            </div>
-
 
             <div class="form-group">
                 <label>NAME</label>
