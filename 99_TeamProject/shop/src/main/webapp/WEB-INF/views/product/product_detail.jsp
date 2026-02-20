@@ -208,25 +208,27 @@
   }
   /* ★ [추가] 바로 구매 기능 */
   function buyNow(productId) {
-    // 결제팀으로 상품번호와 수량(1개)을 바로 쏴줍니다.
-    const form = document.createElement('form');
-    form.method = 'GET'; // 결제팀이 GET을 쓰는지 POST를 쓰는지에 따라 수정 필요
-    form.action = '/order/form'; // ★ 결제팀의 결제 폼 주소 (임의 작성)
+    if (confirm("상품을 주문하시겠습니까?")) {
+      // 결제팀으로 상품번호와 수량(1개)을 바로 쏴줍니다.
+      const form = document.createElement('form');
+      form.method = 'POST'; // 결제팀이 GET을 쓰는지 POST를 쓰는지에 따라 수정 필요
+      form.action = '/order/directConfirm'; // ★ 결제팀의 결제 폼 주소 (임의 작성)
 
-    const idInput = document.createElement('input');
-    idInput.type = 'hidden';
-    idInput.name = 'productId';
-    idInput.value = productId;
-    form.appendChild(idInput);
+      const idInput = document.createElement('input');
+      idInput.type = 'hidden';
+      idInput.name = 'productId';
+      idInput.value = productId;
+      form.appendChild(idInput);
 
-    const qtyInput = document.createElement('input');
-    qtyInput.type = 'hidden';
-    qtyInput.name = 'quantity';
-    qtyInput.value = '1';
-    form.appendChild(qtyInput);
+      const qtyInput = document.createElement('input');
+      qtyInput.type = 'hidden';
+      qtyInput.name = 'quantity';
+      qtyInput.value = '1';
+      form.appendChild(qtyInput);
 
-    document.body.appendChild(form);
-    form.submit();
+      document.body.appendChild(form);
+      form.submit();
+    }
   }
 </script>
 

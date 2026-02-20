@@ -26,7 +26,7 @@
 
     <c:if test="${not empty cartList}">
 
-        <form action="/order/form" method="get" id="orderForm">
+        <form id="orderForm" name="orderForm" action="${pageContext.request.contextPath}/order/cartConfirm" method="post">
 
             <table class="cart-table">
                 <colgroup>
@@ -73,7 +73,9 @@
                         </td>
 
                         <td class="price-col">
-                            <fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###"/> KRW
+                            <span class="item-price" data-price="${item.price * item.quantity}">
+                                <fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###"/> KRW
+                            </span>
                         </td>
 
                         <td>
@@ -95,13 +97,13 @@
                         <span>FREE</span> </div>
                     <div class="summary-row total">
                         <span>TOTAL</span>
-                        <span style="font-family: 'Cormorant Garamond';">
-                                <fmt:formatNumber value="${totalPrice}" pattern="#,###"/> KRW
-                            </span>
+                        <span id="totalPriceDisplay" style="font-family: 'Cormorant Garamond';">
+                            <fmt:formatNumber value="${totalPrice}" pattern="#,###"/> KRW
+                        </span>
                     </div>
                 </div>
-
-                <button type="submit" class="btn-checkout">CHECKOUT</button>
+                <input type="hidden" id="totalPriceInput" name="totalPrice" value="${totalPrice}" readonly>
+                <button type="button" class="btn-checkout" onclick="selectedItemsOrder()">CHECKOUT</button>
             </div>
 
         </form>
@@ -129,7 +131,40 @@
         checkAll.addEventListener('change', function() {
             const checkboxes = document.querySelectorAll('.item-check');
             checkboxes.forEach(cb => cb.checked = this.checked);
+            updateTotalPrice();
         });
+    }
+    // 개별 체크박스 금액 변경
+    document.querySelectorAll('.item-check').forEach(cb => {
+        cb.addEventListener('change', updateTotalPrice);
+    });
+
+    // 상품 총 금액 구하기
+    function updateTotalPrice() {
+        const checkedItems = document.querySelectorAll('.item-check:checked');
+        let total = 0;
+
+        checkedItems.forEach(cb => {
+            const row = cb.closest('tr');
+            const priceElement = row.querySelector('.item-price');
+            const price = parseInt(priceElement.dataset.price);
+            total += price;
+        });
+
+        // 숫자 포맷 (콤마)
+        const formatted = total.toLocaleString('ko-KR') + " KRW";
+
+        document.getElementById('totalPriceDisplay').innerText = formatted;
+        document.getElementById('totalPriceInput').value = total;
+    }
+
+    // 선택항목 주문
+    function selectedItemsOrder() {
+        if (!document.querySelector('.item-check:checked'))
+            return alert("주문할 상품을 선택해주세요!");
+
+        if (confirm("선택하신 상품을 주문하시겠습니까?"))
+            orderForm.submit();
     }
 </script>
 

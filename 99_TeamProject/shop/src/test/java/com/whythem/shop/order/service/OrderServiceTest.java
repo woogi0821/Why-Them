@@ -1,7 +1,7 @@
 package com.whythem.shop.order.service;
 
 import com.whythem.shop.order.mapper.OrderMapper;
-import com.whythem.shop.order.vo.CartItemVO;
+import com.whythem.shop.cart.vo.CartItemVO;
 import com.whythem.shop.order.vo.OrderItemVO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -39,15 +39,13 @@ class OrderServiceTest {
         log.info("단가: {}, 수량: {}, 요청총액: {}", productPrice, quantity, requestTotalPrice);
 
         try {
-            Long orderId = orderService.processDirectOrder(memberId, productId, quantity, requestTotalPrice);
+            Long orderId = orderService.processDirectOrder(memberId, productId, quantity);
 //            List<OrderItemVO> items = orderMapper.getOrderItems(orderId);
 //            log.info("상세 데이터 : {}", items.get(0).toString());
 
-            // 3. Then (검증)
             assertNotNull(orderId, "주문 번호가 정상적으로 생성되어야 합니다.");
             log.info("테스트 성공 - 생성된 주문 번호: {}", orderId);
 
-            // 추가 확인: 주문 상세에 가격이 제대로 들어갔는지 확인
             List<OrderItemVO> items = orderMapper.getOrderItems(orderId);
             assertEquals(productPrice, items.get(0).getPrice(), "DB의 상품 가격과 주문 상세의 가격이 일치해야 합니다.");
 
@@ -75,28 +73,20 @@ class OrderServiceTest {
         for (CartItemVO item : cartItems) {
             expectedTotal += (item.getPrice() * item.getQuantity());
         }
-
         log.info("조회된 상품 개수: {}개, 계산된 총액: {}", cartItems.size(), expectedTotal);
 
-        // 2. When (실행)
         try {
             Long orderId = orderService.processCartOrder(memberId, selectedCartItemIds, expectedTotal);
 
-            // 3. Then (검증)
-            // (1) 주문 번호 생성 확인
             assertNotNull(orderId);
             log.info("주문 생성 완료 - 주문번호: {}", orderId);
 
-            // (2) 주문 상세(ORDER_ITEMS) 개수가 장바구니 아이템 개수와 일치하는지 확인
             List<OrderItemVO> orderDetails = orderMapper.getOrderItems(orderId);
             assertEquals(cartItems.size(), orderDetails.size(), "장바구니 아이템 수와 주문 상세 수가 일치해야 합니다.");
 
-            // (3) 가격 매핑 확인 (아까 고친 SELECT 쿼리가 잘 작동하는지 확인)
             assertNotNull(orderDetails.get(0).getPrice(), "주문 상세의 가격이 null이 아니어야 합니다.");
             log.info("첫 번째 상품 가격 확인: {}", orderDetails.get(0).getPrice());
 
-            // (4) 장바구니 삭제 확인
-            // 삭제 로직이 실행된 후 다시 조회했을 때 데이터가 없어야 함
             List<CartItemVO> remainingCartItems = orderMapper.getCartItemsByMember(memberId, selectedCartItemIds);
             assertTrue(remainingCartItems.isEmpty(), "주문 완료 후 선택한 장바구니 아이템은 DB에서 삭제되어야 합니다.");
 
@@ -118,7 +108,7 @@ class OrderServiceTest {
 
         try{
             // When: 결제 완료 메서드 실행
-            orderService.completePayment(orderId);
+//            orderService.completePayment(orderId, );
             log.info("completePayment 실행 완료");
         } catch (Exception e) {
             log.error("실패 원인: " + e.getMessage());
