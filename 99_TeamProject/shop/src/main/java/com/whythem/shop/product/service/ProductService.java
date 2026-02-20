@@ -2,20 +2,17 @@ package com.whythem.shop.product.service;
 
 import com.whythem.shop.product.mapper.ProductMapper;
 import com.whythem.shop.product.vo.ProductVO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
     private final ProductMapper productMapper;
-
-    // 생성자 주입방식 (Recommended)
-    public ProductService(ProductMapper productMapper) {
-        this.productMapper = productMapper;
-    }
 
     /**
      * 상품 목록 가져오기 (위시리스트 찜 여부 포함)

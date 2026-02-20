@@ -6,8 +6,10 @@ import com.whythem.shop.common.CommonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 관리자 상품 관리 서비스
@@ -53,6 +55,36 @@ public class AdminService {
      */
     @Transactional
     public void updateAdminProduct(AdminVO product) {
+        // 1. 기존 데이터 미리 가져오기
+        AdminVO oldData = adminMapper.findAdminProductById(product.getProductId());
+        MultipartFile newFile = product.getProductImage();
+
+        // 2. 새 파일이 있는 경우만 파일 교체 작업 수행
+        if (newFile != null && !newFile.isEmpty()) {
+
+            // [삭제] 기존 파일이 있다면 한 줄로 정리
+            if (oldData != null && oldData.getImageUrl() != null) {
+                commonUtil.deleteFile(oldData.getImageUrl().substring(oldData.getImageUrl().lastIndexOf("/") + 1));
+            }
+
+            // [이름 생성] 확장자 추출과 UUID 결합을 한 번에
+            String originalName = newFile.getOriginalFilename();
+            String extension = originalName.contains(".") ? originalName.substring(originalName.lastIndexOf(".")) : "";
+            String newFileName = UUID.randomUUID() + extension;
+
+            // [저장] 예외 처리는 필요하지만 코드는 간결하게
+            try {
+                commonUtil.saveFile(newFile, newFileName);
+                product.setImageUrl("/upload/" + newFileName);
+            } catch (Exception e) {
+                throw new RuntimeException("파일 교체 실패", e);
+            }
+        } else {
+            // 새 파일 없으면 기존 경로 그대로 사용
+            product.setImageUrl(oldData.getImageUrl());
+        }
+
+        // 3. DB 업데이트 (공통)
         adminMapper.updateAdminProduct(product);
     }
 

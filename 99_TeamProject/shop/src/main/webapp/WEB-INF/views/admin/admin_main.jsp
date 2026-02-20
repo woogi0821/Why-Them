@@ -66,7 +66,9 @@
 <body>
 
 <div class="sidebar">
-  <div class="sidebar-header">ADMIN</div>
+  <div class="sidebar-header">
+    <a href="/">HOME</a>
+  </div>
 
   <div class="menu-section">
     <div class="menu-title">📦 상품 관리</div>
@@ -89,8 +91,7 @@
   <div class="menu-section">
     <div class="menu-title">🔥 프로모션 관리</div>
     <div class="category-list">
-      <a href="/admin/promotion_list" class="category-item">진행중인 이벤트</a>
-      <a href="/admin/coupon_list" class="category-item">쿠폰 관리</a>
+      <a href="/admin/promotion_list" class="category-item">전체 프로모션 관리</a>
     </div>
   </div>
 </div>
@@ -98,7 +99,12 @@
 <div class="main-content">
   <div class="top-nav">
     <div style="font-size: 0.85rem; color: #7f8c8d;">
-      상품 관리 / <b>${empty selectedCategory ? '전체 리스트' : '카테고리 ID: '.concat(selectedCategory)}</b>
+      상품 관리 / <b>
+      <c:choose>
+        <c:when test="${empty selectedCategory}">전체 리스트</c:when>
+        <c:otherwise>카테고리 ID: <c:out value="${selectedCategory}" /></c:otherwise>
+      </c:choose>
+    </b>
     </div>
   </div>
 
@@ -122,15 +128,27 @@
         <tbody>
         <c:forEach var="item" items="${productList}">
           <tr>
-            <td>${item.productId}</td>
+              <%-- ID나 숫자는 비교적 안전하지만, 습관적으로 c:out을 쓰는 것이 좋습니다 --%>
+            <td><c:out value="${item.productId}" /></td>
+
             <td>
-              <img src="${not empty item.imageUrl ? item.imageUrl : '/img/no-image.jpg'}" class="prod-img">
+                <%-- 이미지의 alt 속성(설명)에도 상품명이 들어가므로 c:out 적용 --%>
+              <img src="${not empty item.imageUrl ? item.imageUrl : '/img/no-image.jpg'}"
+                   class="prod-img"
+                   alt="<c:out value='${item.name}' />">
             </td>
-            <td style="font-weight: 600;">${item.name}</td>
+
+              <%-- ★ 가장 중요한 부분: 상품명 출력 (해킹 방지 핵심) --%>
+            <td style="font-weight: 600;">
+              <c:out value="${item.name}" default="이름 없음" />
+            </td>
+
             <td><fmt:formatNumber value="${item.price}" pattern="#,###"/>원</td>
+
             <td>
-              <a href="/admin/product/edit?productId=${item.productId}" class="edit-link">수정</a>
-              <a href="/admin/product/delete?productId=${item.productId}"
+                <%-- 링크의 파라미터로 들어가는 ID값도 c:out 처리 가능합니다 --%>
+              <a href="/admin/product/edit?productId=<c:out value='${item.productId}' />" class="edit-link">수정</a>
+              <a href="/admin/product/delete?productId=<c:out value='${item.productId}' />"
                  class="delete-link"
                  onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
             </td>

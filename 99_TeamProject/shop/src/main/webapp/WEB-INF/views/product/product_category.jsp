@@ -22,6 +22,8 @@
         }
         .btn-wish-icon:hover { transform: scale(1.1); background: rgba(255, 255, 255, 0.8); }
         .btn-wish-icon.active { color: #e74c3c; }
+        /* 조회수 스타일 */
+        .view-count { font-size: 11px; color: #999; margin-bottom: 2px; }
     </style>
 </head>
 <body>
@@ -32,22 +34,25 @@
     <main id="content-body">
         <section class="special-section">
             <h2 id="main-title" class="stitle">
+                <%-- 1. 카테고리 이름 보안 처리 --%>
                 <c:out value="${not empty categoryName ? categoryName : 'COLLECTION'}" />
             </h2>
             <div id="grid-root" class="grid-container">
 
                 <c:forEach var="item" items="${productList}">
-                    <div class="product-card" onclick="location.href='/product/detail?productId=${item.productId}'">
+                    <%-- 2. URL 파라미터 보안 처리 --%>
+                    <div class="product-card" onclick="location.href='/product/detail?productId=<c:out value="${item.productId}"/>'">
 
                         <button type="button" class="btn-wish-icon ${item.wished ? 'active' : ''}"
-                                onclick="toggleWishList(event, '${item.productId}', this)">
+                                onclick="toggleWishList(event, '<c:out value="${item.productId}"/>', this)">
                             ♥
                         </button>
 
                         <div class="img-box">
                             <c:choose>
                                 <c:when test="${not empty item.imageUrl}">
-                                    <img src="${item.imageUrl}" alt="${item.name}">
+                                    <%-- 3. 이미지 alt 속성 보안 처리 --%>
+                                    <img src="${item.imageUrl}" alt="<c:out value='${item.name}' />">
                                 </c:when>
                                 <c:otherwise>
                                     <img src="/img/no-image.jpg" alt="No Image">
@@ -55,8 +60,12 @@
                             </c:choose>
                         </div>
                         <div class="info-box">
-                            <p class="name">${item.name}</p>
-                            <p class="brand">${item.brandName}</p>
+                                <%-- 4. 요청하신 조회수 표시 추가 --%>
+                            <p class="view-count">VIEWS <c:out value="${item.viewCount}" default="0" /></p>
+
+                                <%-- 5. 상품명 & 브랜드명 보안 처리 --%>
+                            <p class="name"><c:out value="${item.name}" /></p>
+                            <p class="brand"><c:out value="${item.brandName}" default="LALA BOUTIQUE" /></p>
                             <p class="price">₩ <fmt:formatNumber value="${item.price}" pattern="#,###"/></p>
                         </div>
                     </div>

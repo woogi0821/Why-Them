@@ -45,6 +45,7 @@
         FROM PRODUCT
         WHERE PRODUCT_ID = #{productId}
     </select>
+<!-- WeeklyBest    -->
     <select id="getWeeklyBest" resultType="com.whythem.shop.product.vo.ProductVO">
         SELECT * FROM (
         SELECT
@@ -65,12 +66,11 @@
         SELECT
         PRODUCT_ID   AS productId,
         PRODUCT_NAME AS name,
-        BRAND_NAME   AS brandName,
-        PRICE        AS price,
         IMAGE_URL    AS imageUrl,
-        UPDATED_AT   AS updatedAt
-        FROM PRODUCT
-        ORDER BY UPDATED_AT DESC, PRODUCT_ID DESC  )
+        PRICE        AS price,
+        BRAND_NAME   AS brandName,
+        CREATED_AT   AS createdAt  FROM PRODUCT
+        ORDER BY CREATED_AT DESC, PRODUCT_ID DESC  )
         WHERE ROWNUM &lt;= #{limit}
     </select>
 
