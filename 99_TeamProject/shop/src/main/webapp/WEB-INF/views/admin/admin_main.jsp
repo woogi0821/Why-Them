@@ -91,7 +91,7 @@
   <div class="menu-section">
     <div class="menu-title">🔥 프로모션 관리</div>
     <div class="category-list">
-      <a href="/promotion/promotion_list" class="category-item">전체 프로모션 관리</a>
+      <a href="/admin/promotion_list" class="category-item">전체 프로모션 관리</a>
     </div>
   </div>
 </div>
