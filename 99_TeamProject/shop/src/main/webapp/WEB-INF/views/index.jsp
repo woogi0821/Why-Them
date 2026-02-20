@@ -9,6 +9,10 @@
     <title>LALA BOUTIQUE | OFFICIAL STORE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/index.css">
+
+    <%-- ★ [추가] Swiper CSS --%>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
+
     <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
     <link rel="shortcut icon" href="/images/favicon.ico" />
@@ -51,6 +55,76 @@
         .btn-wish-icon.active {
             color: #e74c3c;
         }
+
+        /* =========================================
+           ★ [추가] 메인 Swiper 배너 스타일
+           ========================================= */
+        .main-swiper-container {
+            width: 100%;
+            height: 600px; /* 배너 높이 (필요시 조절) */
+            position: relative;
+            margin-bottom: 80px; /* 상품 섹션과의 간격 */
+        }
+
+        .main-swiper {
+            width: 100%;
+            height: 100%;
+        }
+
+        .main-swiper .swiper-slide {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .main-swiper .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 슬라이드 위에 올라가는 텍스트 (옵션) */
+        .slide-text-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* 글씨가 잘 보이게 그림자 */
+            z-index: 10;
+        }
+
+        .slide-text-box h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            letter-spacing: 5px;
+            font-weight: 300;
+            margin-bottom: 15px;
+        }
+
+        .slide-text-box p {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* Swiper 페이징 버튼 (점) 커스텀 */
+        .swiper-pagination-bullet {
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+        .swiper-pagination-bullet-active {
+            opacity: 1;
+            width: 30px; /* 선택된 점은 길쭉하게 변경 */
+            border-radius: 5px;
+            background: #fff;
+        }
     </style>
 </head>
 <body>
@@ -58,14 +132,36 @@
 
     <jsp:include page="/common/header.jsp" />
 
-    <%-- 중간 생략 (Header 등 동일) --%>
-
     <main id="content-body">
 
-        <section class="hero-banner">
-            <div class="hero-content">
-                <h1>2026 SPRING COLLECTION</h1>
-                <p>Discover the new elegance.</p>
+        <%-- ★ [수정] 빈 이미지 대신 플레이스홀더(사이즈 표시) 적용 --%>
+        <section class="main-swiper-container">
+            <div class="swiper main-swiper">
+                <div class="swiper-wrapper">
+                    <%-- 슬라이드 1 --%>
+                    <div class="swiper-slide">
+                        <img src="https://placehold.co/1920x600/222222/666666?text=1920x600" alt="Slide 1">
+                        <div class="slide-text-box">
+                            <%-- 여기에 텍스트 필요할 경우 p태그 h태그로 넣어주세요 --%>
+                        </div>
+                    </div>
+                    <%-- 슬라이드 2 --%>
+                    <div class="swiper-slide">
+                        <img src="https://placehold.co/1920x600/333333/777777?text=1920x600" alt="Slide 2">
+                        <div class="slide-text-box">
+                            <%-- 여기에 텍스트 필요할 경우 p태그 h태그로 넣어주세요 --%>
+                        </div>
+                    </div>
+                    <%-- 슬라이드 3 (이벤트 등) --%>
+                    <div class="swiper-slide">
+                        <img src="https://placehold.co/1920x600/444444/888888?text=1920x600" alt="Slide 3">
+                        <div class="slide-text-box">
+                            <%-- 여기에 텍스트 필요할 경우 p태그 h태그로 넣어주세요 --%>
+                        </div>
+                    </div>
+                </div>
+                <%-- 하단 점(Pagination) 영역 --%>
+                <div class="swiper-pagination"></div>
             </div>
         </section>
 
@@ -133,19 +229,41 @@
 
     </main>
 
-    <%-- 중간 생략 (Footer 등 동일) --%>
-
     <jsp:include page="/common/footer.jsp" />
 
 </div>
 
+<%-- ★ [추가] Swiper JS 라이브러리 --%>
+<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+
 <script>
+    /* =========================================
+       ★ [추가] Swiper 초기화 및 자동 롤링 설정
+       ========================================= */
+    document.addEventListener('DOMContentLoaded', function() {
+        var swiper = new Swiper(".main-swiper", {
+            loop: true, // 무한 반복
+            autoplay: {
+                delay: 4000, // 4초마다 자동 넘김
+                disableOnInteraction: false, // 고객이 건드려도 자동 넘김 유지
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true, // 점 누르면 해당 슬라이드로 이동
+            },
+            effect: "fade", // 사진이 밀리는 대신 부드럽게 겹쳐서 바뀌는 효과 (고급스러움 추가)
+            fadeEffect: {
+                crossFade: true
+            }
+        });
+    });
+
+    /* --- 기존 하트(위시리스트) 로직 완벽 복구 --- */
     function toggleWishList(event, productId, btnElement) {
-        // [중요] 부모 요소(카드)의 클릭 이벤트(상세페이지 이동)를 막음
         event.stopPropagation();
         event.preventDefault();
 
-        // AJAX 요청
+        // 생략되었던 fetch 옵션 원복!
         fetch('/wishlist/toggle', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -159,11 +277,16 @@
                     }
                 }
                 else if (result === 'add') {
-                    btnElement.classList.add('active'); // 빨갛게
+                    btnElement.classList.add('active');
                     showToast('위시리스트에 담았습니다.');
+
+                    // ★ [여기에 추가!] 헤더에 있는 N 뱃지 띄우기 함수 호출
+                    if (typeof showWishNewBadge === 'function') {
+                        showWishNewBadge();
+                    }
                 }
                 else if (result === 'remove') {
-                    btnElement.classList.remove('active'); // 회색으로
+                    btnElement.classList.remove('active');
                     showToast('위시리스트에서 삭제했습니다.');
                 }
             })
@@ -173,7 +296,6 @@
             });
     }
 
-    // 토스트 메시지 생성 함수
     function showToast(message) {
         let toast = document.getElementById('toast-msg');
         if (!toast) {
