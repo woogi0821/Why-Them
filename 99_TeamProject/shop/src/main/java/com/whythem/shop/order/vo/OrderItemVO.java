@@ -16,5 +16,6 @@ public class OrderItemVO {
 
 //  필드추가
     private String productName;
+    private String imageUrl;
     private Double totalPrice;
 }

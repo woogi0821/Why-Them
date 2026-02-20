@@ -21,7 +21,16 @@
         <input type="hidden" name="orderId" value="<c:out value="${orderId}"/>" >
         <c:forEach var="item" items="${orderItems}">
             <div class="product-row">
-                <div class="product-img"></div>
+                <div class="product-img">
+                    <c:choose>
+                        <c:when test="${not empty item.imageUrl}">
+                            <img src="${item.imageUrl}" alt="${item.productName}">
+                        </c:when>
+                        <c:otherwise>
+                            <div style="width:80px; height:100px; background:#eee;"></div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
                 <div class="product-info">
                     <div class="product-name"><c:out value="${item.productName}"/></div>
                     <div class="product-option">수량: <c:out value="${item.quantity}"/></div>

@@ -70,6 +70,7 @@
             oi.price,
             oi.quantity,
             p.product_name,
+            p.image_url,
             (oi.price * oi.quantity) AS totalPrice
         FROM ORDER_ITEMS oi
         JOIN ORDERS o ON oi.order_id = o.order_id
