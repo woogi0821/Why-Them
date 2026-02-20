@@ -55,48 +55,36 @@ public class AdminService {
      */
     @Transactional
     public void updateAdminProduct(AdminVO product) {
-        // 1. 기존 DB 정보 조회 (삭제할 파일명을 알기 위해)
+        // 1. 기존 데이터 미리 가져오기
         AdminVO oldData = adminMapper.findAdminProductById(product.getProductId());
-
         MultipartFile newFile = product.getProductImage();
 
-        // 2. 새 파일이 업로드된 경우
+        // 2. 새 파일이 있는 경우만 파일 교체 작업 수행
         if (newFile != null && !newFile.isEmpty()) {
 
-            // [A] 기존 파일이 폴더에 있다면 삭제 (2개 중복 방지 핵심)
+            // [삭제] 기존 파일이 있다면 한 줄로 정리
             if (oldData != null && oldData.getImageUrl() != null) {
-                try {
-                    String oldUrl = oldData.getImageUrl();
-                    // "/upload/uuid.jpg" -> "uuid.jpg"만 추출
-                    String oldFileName = oldUrl.substring(oldUrl.lastIndexOf("/") + 1);
-                    commonUtil.deleteFile(oldFileName);
-                } catch (Exception e) {
-                    System.err.println("기존 파일 삭제 실패: " + e.getMessage());
-                }
+                commonUtil.deleteFile(oldData.getImageUrl().substring(oldData.getImageUrl().lastIndexOf("/") + 1));
             }
 
-            // [B] 새 파일명 생성 (확장자 유지하여 흰색 파일 방지)
+            // [이름 생성] 확장자 추출과 UUID 결합을 한 번에
             String originalName = newFile.getOriginalFilename();
-            String extension = (originalName != null && originalName.contains("."))
-                    ? originalName.substring(originalName.lastIndexOf(".")) : "";
+            String extension = originalName.contains(".") ? originalName.substring(originalName.lastIndexOf(".")) : "";
+            String newFileName = UUID.randomUUID() + extension;
 
-            String newFileName = UUID.randomUUID().toString() + extension;
-
+            // [저장] 예외 처리는 필요하지만 코드는 간결하게
             try {
-                // 여기서 서버 폴더(C:/shop/upload/)에 실제 저장 (딱 1번 실행)
                 commonUtil.saveFile(newFile, newFileName);
-                // DB 저장을 위해 VO에 경로 세팅
                 product.setImageUrl("/upload/" + newFileName);
             } catch (Exception e) {
-                throw new RuntimeException("파일 저장 오류", e);
+                throw new RuntimeException("파일 교체 실패", e);
             }
-
         } else {
-            // 새 파일을 안 올렸으면 기존 이미지 경로를 유지
+            // 새 파일 없으면 기존 경로 그대로 사용
             product.setImageUrl(oldData.getImageUrl());
         }
 
-        // 3. DB 업데이트
+        // 3. DB 업데이트 (공통)
         adminMapper.updateAdminProduct(product);
     }
 
