@@ -94,21 +94,24 @@ public class PromotionService {
 //    @param promotion 적용할 프로모션 객체
 //    @return 할인 적용된 최종 가격
 //
-    public int calculateDiscountedPrice(int originalPrice, Promotion promotion) {
-        if (promotion == null) return originalPrice;
+public int calculateDiscountedPrice(int originalPrice, Promotion promotion) {
+    // 프로모션이 없거나 정보가 부족하면 원가 그대로 반환
+    if (promotion == null || promotion.getDiscountType() == null) {
+        return originalPrice;
+    }
 
         int discountValue = promotion.getDiscountValue();
-        String type = promotion.getDiscountType(); // "AMOUNT" 또는 "RATE"
+        int finalPrice = originalPrice;
 
-        if ("AMOUNT".equals(type)) {
-            // 정액 할인 (원가 - 할인액)
-            return Math.max(0, originalPrice - discountValue);
-        } else if ("RATE".equals(type)) {
-            // 정률 할인 (원가 - (원가 * 할인율 / 100))
-            double discountAmount = originalPrice * (discountValue / 100.0);
-            return (int) (originalPrice - discountAmount);
+        // 타입에 따른 계산
+        if ("AMOUNT".equals(promotion.getDiscountType())) {
+            finalPrice = originalPrice - discountValue;
+        } else if ("RATE".equals(promotion.getDiscountType())) {
+            // 소수점 처리는 Math.round로 한 줄로 끝내기
+            finalPrice = (int) Math.round(originalPrice * (1 - discountValue / 100.0));
         }
-
-        return originalPrice;
+//        1단위 버리고 10원으로 끝나도록 조정(예: 17,856원 -> 17,850원)
+    int truncatedPrice = (finalPrice / 10) * 10;
+    return Math.max(0, truncatedPrice);
     }
 }
