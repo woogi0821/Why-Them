@@ -15,7 +15,4 @@ public class OrderVO {
     private Double totalPrice;
     private String status;
     private LocalDateTime createdAt;
-
-//  주문 상세 리스트
-//    private List<OrderItemVO> orderItemsVOS;
 }

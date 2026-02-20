@@ -4,20 +4,26 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.whythem.shop.order.mapper.OrderMapper">
+    <!--  상품 가격 조회  -->
+    <select id="getProductPrice" resultType="double">
+        SELECT price FROM PRODUCT
+        WHERE product_id = #{productId}
+    </select>
+
     <!-- 장바구니 조회 -->
     <select id="getCartItemsByMember" resultType="CartItemVO">
         SELECT
-            ci.CART_ID,
-            ci.CART_ITEM_ID,
-            ci.PRODUCT_ID,
-            ci.QUANTITY,
-            ci.SIZE_VAL,
-            p.PRICE
+            ci.cart_id,
+            ci.cart_item_id,
+            ci.product_id,
+            ci.quantity,
+            ci.size_val,
+            p.price
         FROM CART_ITEM ci
-        JOIN CART c ON ci.CART_ID = c.CART_ID
-        JOIN PRODUCT p ON ci.PRODUCT_ID = p.PRODUCT_ID
-        WHERE c.MEMBER_ID = #{memberId}
-        AND ci.CART_ITEM_ID IN
+        JOIN CART c ON ci.cart_id = c.cart_id
+        JOIN PRODUCT p ON ci.product_id = p.product_id
+        WHERE c.member_id = #{memberId}
+        AND ci.cart_item_id IN
         <foreach collection="itemIds" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -33,14 +39,14 @@
         VALUES (ORDER_ITEMS_SEQ.nextval, #{orderId}, #{productId}, #{quantity}, #{price})
     </insert>
 
-<!--    insertPayment(결제 대기 데이터 생성)  -->
+    <!--    결제 대기 데이터 생성  -->
     <insert id="insertPayment"
             parameterType="PaymentVO">
         INSERT INTO PAYMENTS(PAYMENT_ID, ORDER_ID, PAYMENT_METHOD, AMOUNT, STATUS, CREATED_AT)
         VALUES (PAYMENTS_SEQ.NEXTVAL, #{orderId}, #{paymentMethod}, #{amount}, 'READY', SYSDATE)
     </insert>
 
-<!-- 장바구니 삭제 -->
+    <!-- 장바구니 삭제 -->
     <delete id="deleteSelectedCartItems">
         DELETE FROM CART_ITEM
         WHERE CART_ITEM_ID IN
@@ -48,34 +54,62 @@
             #{id}
         </foreach>
         AND CART_ID = (
-            SELECT CART_ID
+            SELECT cart_id
             FROM CART
-            WHERE MEMBER_ID = #{memberId}
+            WHERE member_id = #{memberId}
         )
     </delete>
 
-<!-- 결제 상태 변경 (결제대기 → 결제완료)  -->
-    <update id="updatePaymentStatus">
+    <!-- 주문 확인 -->
+    <select id="selectOrderList"
+            resultType="OrderItemVO">
+        SELECT
+            oi.order_item_id,
+            oi.order_id,
+            oi.product_id,
+            oi.price,
+            oi.quantity,
+            p.product_name,
+            p.image_url,
+            (oi.price * oi.quantity) AS totalPrice
+        FROM ORDER_ITEMS oi
+        JOIN ORDERS o ON oi.order_id = o.order_id
+        JOIN product p ON oi.product_id = p.product_id
+        WHERE o.order_id = #{orderId}
+            AND o.member_id = #{memberId}
+    </select>
+    <select id="selectMemberById"
+            resultType="MemberAddressVO"
+            parameterType="long">
+        SELECT
+            recipient_name, recipient_phone, zip_code, base_address, detail_address
+        FROM MEMBER_ADDRESS
+        WHERE member_id = #{memberId}
+    </select>
+
+    <!-- 결제/주문 상태 변경 -->
+    <update id="updatePaymentCompleted">
         UPDATE PAYMENTS
-            SET STATUS = #{status},
+            SET PAYMENT_METHOD = #{paymentMethod},
+                STATUS = #{status},
                 PAID_AT = SYSDATE
         WHERE ORDER_ID = #{orderId}
     </update>
-
-<!--  주문 상태 변경 (주문접수 → 구매확정)  -->
     <update id="updateOrderStatus">
         UPDATE ORDERS
             SET STATUS = #{status}
         WHERE ORDER_ID = #{orderId}
     </update>
 
-
-<!--  재고 차감 -->
+    <!--  재고 차감 -->
     <select id="getOrderItems"
             resultType="OrderItemVO">
         SELECT
-            product_id as productId,
-            quantity
+            order_item_id AS orderItemId,
+            order_id AS orderId,
+            product_id AS productId,
+            quantity,
+            price
         FROM ORDER_ITEMS
         WHERE ORDER_ID = #{orderId}
     </select>
@@ -86,5 +120,30 @@
         AND STOCK_QUANTITY >= #{quantity}
     </update>
 
+    <!--  결제 정보 조회  -->
+    <select id="selectPaymentByOrderId" resultType="PaymentVO">
+        SELECT
+            order_id AS orderId,
+            payment_method AS paymentMethod,
+            amount,
+            status,
+            paid_at AS paidAt
+        FROM PAYMENTS
+        WHERE order_id = #{orderId}
+    </select>
+
+    <!--  주문 내역 조회  -->
+    <select id="selectPaymentsByMemberId" resultType="PaymentVO" parameterType="long">
+        SELECT
+            p.order_id,
+            p.payment_method,
+            p.amount,
+            p.status,
+            p.paid_at
+        FROM PAYMENTS p
+        JOIN ORDERS o ON p.order_id = o.order_id
+        WHERE o.member_id = #{memberId}
+        ORDER BY p.payment_id DESC
+    </select>
 
 </mapper>

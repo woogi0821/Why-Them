@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentVO {
-    private Long paymentId;       // PK
-    private Long orderId;         // FK
-    private String paymentMethod; // PK     // 결제방법
-    private Double amount;                  // 최종결제금액
-    private String status;                  // 결제상태
-    private LocalDateTime paidAt;           // 결제완료일
+    private Long paymentId;             // PK
+    private Long orderId;               // FK
+    private String paymentMethod;       // PK
+    private Double amount;
+    private String status;
+    private LocalDateTime paidAt;
     private LocalDateTime createdAt;
 }
