@@ -35,13 +35,4 @@ class AdminServiceTest {
         log.info("조회성공 -> 상품명 : {},가격:{}",adminVO.getName(),adminVO.getPrice());
     }
 
-    @Test
-    @Transactional
-    void deleteAdminProduct() {
-        Long targetId=60L;
-        adminService.deleteAdminProduct(targetId);
-        AdminVO result = adminService.findAdminProductById(targetId);
-        assertThat(result).isNull();
-        log.info("삭제성공 :{}",targetId);
-    }
 }

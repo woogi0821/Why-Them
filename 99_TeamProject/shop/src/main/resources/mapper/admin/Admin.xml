@@ -18,11 +18,27 @@
         IMAGE_URL         AS imageUrl
         FROM PRODUCT
         <where>
-            <if test="categoryId != null">
-                AND CATEGORY_ID = #{categoryId}
-            </if>
+            STATUS = 'SALE' <if test="categoryId != null">
+            AND CATEGORY_ID = #{categoryId}
+        </if>
         </where>
         ORDER BY PRODUCT_ID DESC
+    </select>
+
+    <select id="getStoppedProductList" resultType="com.whythem.shop.admin.vo.AdminVO">
+        SELECT
+        PRODUCT_ID        AS productId,
+        CATEGORY_ID       AS categoryId,
+        PRODUCT_NAME      AS name,
+        BRAND_NAME        AS brandName,
+        PRICE             AS price,
+        STOCK_QUANTITY    AS stockQuantity,
+        DESCRIPTION       AS description,
+        STATUS            AS status,
+        IMAGE_URL         AS imageUrl
+        FROM PRODUCT
+        WHERE STATUS = 'STOP'
+        ORDER BY UPDATED_AT DESC
     </select>
 
     <select id="findAdminProductById" resultType="com.whythem.shop.admin.vo.AdminVO">
@@ -69,8 +85,18 @@
         WHERE PRODUCT_ID = #{productId}
     </update>
 
-    <delete id="deleteAdminProduct">
-        DELETE FROM PRODUCT WHERE PRODUCT_ID = #{productId}
-    </delete>
+    <update id="deleteAdminProduct">
+        UPDATE PRODUCT
+        SET STATUS = 'STOP',
+        UPDATED_AT = SYSDATE
+        WHERE PRODUCT_ID = #{productId}
+    </update>
+
+    <update id="restoreAdminProduct">
+        UPDATE PRODUCT
+        SET STATUS = 'SALE',
+        UPDATED_AT = SYSDATE
+        WHERE PRODUCT_ID = #{productId}
+    </update>
 
 </mapper>
