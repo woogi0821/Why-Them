@@ -211,21 +211,24 @@
   }
 
   /* 바로 구매 기능 */
+  /* ★ [완벽 수정] 바로 구매 기능 (컨트롤러 매핑 완료) */
   function buyNow(productId) {
-    const form = document.createElement('form');
-    form.method = 'GET';
-    form.action = '/order/form';
+    var form = document.createElement('form');
+    // 1. 컨트롤러가 기다리는 POST 방식으로 변경
+    form.method = 'POST';
+    // 2. 컨트롤러의 실제 매핑 주소로 변경
+    form.action = '/order/directConfirm';
 
-    const idInput = document.createElement('input');
+    var idInput = document.createElement('input');
     idInput.type = 'hidden';
     idInput.name = 'productId';
     idInput.value = productId;
     form.appendChild(idInput);
 
-    const qtyInput = document.createElement('input');
+    var qtyInput = document.createElement('input');
     qtyInput.type = 'hidden';
     qtyInput.name = 'quantity';
-    qtyInput.value = '1';
+    qtyInput.value = '1'; // 상세페이지 기본 구매 수량 1개
     form.appendChild(qtyInput);
 
     document.body.appendChild(form);
