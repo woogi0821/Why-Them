@@ -108,11 +108,11 @@ public class MemberController {
     // 비밀번호,주소변경은 try/catch를 사용 -> UX디테일을 챙김
     @PostMapping("/resetPw")
     public String resetPassword(
-            String loginId,
-            String memberName,
-            String phoneNumber,
-            String newPw,
-            String from,
+            @RequestParam("loginId") String loginId,
+            @RequestParam("memberName") String memberName,
+            @RequestParam("phoneNumber") String phoneNumber,
+            @RequestParam("newPw") String newPw,
+            @RequestParam(value = "from",required = false,defaultValue = "login")String from,
             RedirectAttributes rttr){
         try {
             memberService.resetPassword(loginId,memberName,phoneNumber,newPw);
@@ -149,6 +149,20 @@ public class MemberController {
         }else {
             return "redirect:/member/mypage#address-section";
         }
+    }
+    // [복구] 비밀번호 확인 (AJAX 용) - MemberController.java 안에 있어야 합니다!
+    @PostMapping("/checkPw")
+    @ResponseBody
+    public boolean checkPw(@RequestParam("currentPw") String currentPw, HttpSession session) {
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+
+        // 로그인이 풀렸으면 false
+        if (loginMember == null) {
+            return false;
+        }
+
+        // 서비스단에 검증 요청
+        return memberService.checkPassword(loginMember.getLoginId(), currentPw);
     }
 }
 

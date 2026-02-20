@@ -54,4 +54,10 @@
         WHERE member_id = #{memberId}
     </delete>
 
+    <select id="selectWishlistProductIds" resultType="long">
+        SELECT PRODUCT_ID
+        FROM WISHLIST
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+
 </mapper>

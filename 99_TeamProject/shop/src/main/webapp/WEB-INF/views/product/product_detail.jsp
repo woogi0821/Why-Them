@@ -20,8 +20,14 @@
     .desc-text { font-size: 14px; line-height: 1.8; color: #666; margin-bottom: 50px; border-top: 1px solid #eee; padding-top: 30px; white-space: pre-wrap; }
 
     .action-btns { display: flex; flex-direction: column; gap: 12px; }
-    .btn-buy { background: #111; color: #fff; padding: 18px; border: none; cursor: pointer; font-size: 14px; letter-spacing: 1px; transition: 0.3s; }
-    .btn-buy:hover { background: #333; }
+
+    /* ★ [추가] 바로결제 버튼 스타일 (강조: 검정) */
+    .btn-buy-now { background: #111; color: #fff; padding: 18px; border: 1px solid #111; cursor: pointer; font-size: 14px; letter-spacing: 1px; transition: 0.3s; }
+    .btn-buy-now:hover { background: #333; }
+
+    /* 장바구니 버튼 스타일 (서브: 흰색으로 변경) */
+    .btn-buy { background: #fff; color: #111; padding: 18px; border: 1px solid #111; cursor: pointer; font-size: 14px; letter-spacing: 1px; transition: 0.3s; }
+    .btn-buy:hover { background: #f9f9f9; }
 
     .btn-cart {
       background: #fff; color: #111; padding: 18px; border: 1px solid #111;
@@ -91,8 +97,11 @@
     </div>
 
     <div class="action-btns">
-      <button type="button" class="btn-buy" onclick="alert('주문 페이지로 이동합니다.')">ADD TO BAG</button>
+      <%-- ★ [추가] 바로결제 버튼 --%>
+      <button type="button" class="btn-buy-now" onclick="buyNow('<c:out value="${product.productId}"/>')">BUY NOW</button>
 
+      <%-- 기존 장바구니 버튼 (기능 유지) --%>
+        <button type="button" class="btn-buy" onclick="addToCart('<c:out value="${product.productId}"/>')">ADD TO BAG</button>
       <%-- 6. 위시리스트 버튼 내 ID 값 및 상태 텍스트 처리 --%>
       <button type="button" id="btn-wish"
               class="btn-cart ${isWished ? 'active' : ''}"
@@ -107,6 +116,30 @@
 </div>
 
 <script>
+  /* ★ [추가] 바로 구매 기능 */
+  function buyNow(productId) {
+    // 결제팀으로 상품번호와 수량(1개)을 GET 방식으로 전송
+    const form = document.createElement('form');
+    form.method = 'GET';
+    form.action = '/order/form'; // 결제 폼 주소
+
+    const idInput = document.createElement('input');
+    idInput.type = 'hidden';
+    idInput.name = 'productId';
+    idInput.value = productId;
+    form.appendChild(idInput);
+
+    const qtyInput = document.createElement('input');
+    qtyInput.type = 'hidden';
+    qtyInput.name = 'quantity';
+    qtyInput.value = '1';
+    form.appendChild(qtyInput);
+
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  /* 기존 기능 완벽 유지 */
   function toggleDetailWish(productId) {
     fetch('/wishlist/toggle', {
       method: 'POST',
@@ -146,6 +179,59 @@
     toast.innerText = message;
     toast.style.opacity = '1';
     setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+  }
+  /* ★ [추가] 장바구니 담기 기능 */
+  function addToCart(productId) {
+    // 장바구니 컨트롤러로 상품번호와 수량(1개)을 POST 방식으로 전송
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/cart/add'; // ★ 장바구니 추가 폼 주소
+
+    const idInput = document.createElement('input');
+    idInput.type = 'hidden';
+    idInput.name = 'productId';
+    idInput.value = productId;
+    form.appendChild(idInput);
+
+    const qtyInput = document.createElement('input');
+    qtyInput.type = 'hidden';
+    qtyInput.name = 'quantity';
+    qtyInput.value = '1';
+    form.appendChild(qtyInput);
+
+    document.body.appendChild(form);
+    form.submit();
+  }
+  /* ★ [수정됨] 장바구니 즉시 담기 (AJAX 연동) */
+  function addToCart(productId) {
+    // 1. fetch를 이용해 백그라운드로 상품번호와 수량(1개 고정)을 컨트롤러로 전송
+    fetch('/cart/addAjax', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'productId=' + productId + '&quantity=1'
+    })
+            .then(response => response.json()) // 2. 백엔드에서 JSON 데이터를 받아옵니다 (status, cartCount)
+            .then(data => {
+              if (data.status === 'login') {
+                if(confirm('로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?')) {
+                  location.href = '/member/login';
+                }
+              } else if (data.status === 'success') {
+                // 3. 성공 시: 토스트 메시지 띄우기
+                if (typeof showToast === 'function') {
+                  showToast('장바구니에 상품을 담았습니다.');
+                }
+
+                // 4. 성공 시: 헤더에 있는 뱃지 업데이트 함수 즉시 실행! (비서 역할)
+                if (typeof updateCartBadgeCount === 'function') {
+                  updateCartBadgeCount(data.cartCount);
+                }
+              }
+            })
+            .catch(err => {
+              console.error(err);
+              alert("서버 통신 중 오류가 발생했습니다.");
+            });
   }
 </script>
 

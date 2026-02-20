@@ -3,7 +3,9 @@ package com.whythem.shop.product.controller;
 import com.whythem.shop.member.vo.MemberVO;
 import com.whythem.shop.product.service.ProductService;
 import com.whythem.shop.product.vo.ProductVO;
+import com.whythem.shop.wishlist.service.WishlistService;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,13 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor // 생성자 자동 생성 (의존성 주입 해결)
 public class ProductController {
 
     private final ProductService productService;
-
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
+    private final WishlistService wishlistService; // 위시리스트 서비스 정상 연결
 
     /**
      * 1. 메인 페이지 (index.jsp)
@@ -28,18 +28,37 @@ public class ProductController {
         MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
         Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
 
-        // [수정된 부분]
-        // 기존의 getProductList(null, memberId) 대신,
-        // 상품팀이 만든 전용 메서드를 사용해서 각각 4개씩 가져옵니다.
+        // 1. 신상품 / 베스트 상품 각각 4개씩 가져오기
         List<ProductVO> newList = productService.getNewArrivals(4, memberId);
         List<ProductVO> bestList = productService.getWeeklyBest(4, memberId);
 
-        // JSP가 애타게 찾던 그 이름표(newList, bestList)를 달아서 보냅니다.
+        // 2. 로그인한 회원이라면 찜 여부(wished) 확인해서 하트 불 켜주기
+        if (memberId != 0L) {
+            List<Long> myWishedProductIds = wishlistService.getWishlistProductIds(memberId);
+
+            if (myWishedProductIds != null && !myWishedProductIds.isEmpty()) {
+                // 신상품 찜 체크
+                for (ProductVO p : newList) {
+                    if (myWishedProductIds.contains(p.getProductId())) {
+                        p.setWished(true);
+                    }
+                }
+                // 베스트 상품 찜 체크
+                for (ProductVO p : bestList) {
+                    if (myWishedProductIds.contains(p.getProductId())) {
+                        p.setWished(true);
+                    }
+                }
+            }
+        }
+
+        // ★ 3. JSP가 기다리는 데이터 최종 전송! (팀장님이 찾으시던 그 부분!)
         model.addAttribute("newList", newList);
         model.addAttribute("bestList", bestList);
 
         return "index";
     }
+
 
     /**
      * 2. Weekly Best 전체보기 페이지 (product/weekly_best.jsp)

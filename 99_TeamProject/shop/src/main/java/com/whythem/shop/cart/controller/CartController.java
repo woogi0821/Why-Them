@@ -9,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/cart")
@@ -79,5 +81,29 @@ public class CartController {
 
         cartService.removeCartItem(cartItemId);
         return "redirect:/cart/list";
+    }
+
+    @PostMapping("/addAjax")
+    @ResponseBody
+    public Map<String, Object> addCartAjax(@RequestParam Long productId,
+                                           @RequestParam(defaultValue = "1") int quantity,
+                                           HttpSession session){
+        Map<String, Object> resultMap = new HashMap<>();
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+
+        if (loginMember == null) {
+            resultMap.put("status","login");
+            return resultMap;
+        }
+        CartItemVO cartItemVO = new CartItemVO();
+        cartItemVO.setProductId(productId);
+        cartItemVO.setQuantity(quantity);
+
+        cartService.addCart(loginMember.getMemberId(),cartItemVO);
+        int currentCartCount = cartService.getMyCartList(loginMember.getMemberId()).size();
+        session.setAttribute("cartCount",currentCartCount);
+        resultMap.put("status","success");
+        resultMap.put("cartCount",currentCartCount);
+        return resultMap;
     }
 }

@@ -42,7 +42,13 @@
 
             <div class="form-group">
                 <label>PASSWORD</label>
-                <input type="password" id="loginPw" name="loginPw" placeholder="8자리 이상 입력">
+                <input type="password" id="loginPw" name="loginPw" placeholder="8자리 이상 입력" oninput="checkJoinPw()">
+            </div>
+
+            <div class="form-group">
+                <label>CONFIRM PW</label>
+                <input type="password" id="loginPwConfirm" placeholder="비밀번호 다시 입력" oninput="checkJoinPw()">
+                <span id="joinPwMsg" style="display:block; margin-top:5px; font-size:12px;"></span>
             </div>
 
             <div class="form-group">
