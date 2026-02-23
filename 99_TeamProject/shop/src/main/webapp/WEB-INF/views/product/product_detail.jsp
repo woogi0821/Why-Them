@@ -213,6 +213,10 @@
   /* 바로 구매 기능 */
   /* ★ [완벽 수정] 바로 구매 기능 (컨트롤러 매핑 완료) */
   function buyNow(productId) {
+    if (!confirm("해당 상품을 바로 구매하시겠습니까?")) {
+      return;
+    }
+
     var form = document.createElement('form');
     // 1. 컨트롤러가 기다리는 POST 방식으로 변경
     form.method = 'POST';

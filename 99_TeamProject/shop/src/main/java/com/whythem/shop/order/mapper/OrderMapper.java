@@ -18,7 +18,7 @@ public interface OrderMapper {
     void insertOrder(OrderVO order);
     void insertOrderItem(OrderItemVO orderItem);
     void insertPayment(PaymentVO payment);
-    void deleteSelectedCartItems(@Param("memberId") Long memberId, @Param("itemIds") List<Long> itemIds);
+    void deleteSelectedCartItems(@Param("memberId") Long memberId, @Param("itemIds") List<Long> productIds);
 
     // 주문 확인 단계
     List<OrderItemVO> selectOrderList(Long orderId, Long memberId);
@@ -33,4 +33,6 @@ public interface OrderMapper {
     // 결제 확인
     PaymentVO selectPaymentByOrderId(@Param("orderId") Long orderId);
     List<PaymentVO> selectPaymentsByMemberId(@Param("memberId") Long memberId);
+    void updatePaymentCartItems(@Param("orderId") Long orderId, @Param("cartItemIds") String cartItemIds);
+    String getCartItemIdsByPayment(@Param("orderId") Long orderId);
 }

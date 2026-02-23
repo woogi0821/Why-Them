@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +18,8 @@ public class PaymentVO {
     private String status;
     private LocalDateTime paidAt;
     private LocalDateTime createdAt;
+
+    // 필드 추가
+    private List<Long> cartItemIds;
+    private String cartItemIdsStr; // DB 저장용
 }

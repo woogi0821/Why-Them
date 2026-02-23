@@ -33,9 +33,9 @@
             <div class="summary-row">
                 <span>결제 수단</span>
                 <span>
-                    ${paymentMethod == 'kakao' ? '카카오페이' :
-                      paymentMethod == 'naver' ? '네이버페이' :
-                      paymentMethod == 'card'  ? '신용/체크카드':'기타'}
+                    ${paymentMethod == 'K' ? '카카오페이' :
+                      paymentMethod == 'N' ? '네이버페이' :
+                      paymentMethod == 'C'  ? '신용/체크카드':'기타'}
                 </span>
             </div>
             <div class="summary-row">
