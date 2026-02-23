@@ -112,4 +112,15 @@ public class AdminService {
         adminMapper.restoreAdminProduct(productId);
         log.info("상품 판매 재개 완료: ID {}", productId);
     }
+    public int getStoppedProductCount() {
+        return adminMapper.getStoppedProductCount();
+    }
+
+    public List<AdminVO> getRecentProducts(int limit) {
+        return adminMapper.getRecentProducts(limit);
+    }
+
+    public List<AdminVO> getLowStockProducts(int limit) {
+        return adminMapper.getLowStockProducts(limit);
+    }
 }

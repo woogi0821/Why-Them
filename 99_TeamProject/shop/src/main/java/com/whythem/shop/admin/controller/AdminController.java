@@ -30,6 +30,9 @@ public class AdminController {
 
         model.addAttribute("productList", productList);
         model.addAttribute("selectedCategory", categoryId);
+        model.addAttribute("stoppedCount", adminService.getStoppedProductCount());
+        model.addAttribute("recentProducts", adminService.getRecentProducts(5));
+        model.addAttribute("lowStockProducts", adminService.getLowStockProducts(5));
 
         return "admin/admin_main"; // 관리자 메인 페이지 JSP 이름
     }

@@ -24,7 +24,8 @@
     </c:if>
 
     <c:if test="${not empty cartList}">
-        <form action="/order/cartConfirm" method="post" id="orderForm">
+        <form id="orderForm" name="orderForm" action="${pageContext.request.contextPath}/order/cartConfirm" method="post">
+
             <table class="cart-table">
                 <colgroup>
                     <col style="width: 5%;"> <col style="width: 50%;"> <col style="width: 15%;"> <col style="width: 15%;"> <col style="width: 10%;">
@@ -43,6 +44,7 @@
                     <tr class="${item.status == 'STOP' ? 'item-stopped' : ''}">
                         <td>
                             <c:choose>
+                                <%-- 🚩 수정: 판매 중지 상품은 체크박스 비활성화 및 name 제거 --%>
                                 <c:when test="${item.status == 'STOP'}">
                                     <input type="checkbox" class="item-check" disabled>
                                 </c:when>
@@ -64,8 +66,9 @@
                                 </c:choose>
 
                                 <div class="text-wrap">
+                                        <%-- 🚩 수정: 판매 중지 배지 표시 --%>
                                     <c:if test="${item.status == 'STOP'}">
-                                        <span class="stop-badge">SOLD OUT (판매중지)</span>
+                                        <span class="stop-badge">SOLD OUT</span>
                                     </c:if>
                                     <p class="brand" style="font-size:11px; color:#888; margin-bottom:5px;">${item.brandName}</p>
                                     <p class="name" style="font-weight:500;">${item.productName}</p>
@@ -82,7 +85,9 @@
                         </td>
 
                         <td class="price-col">
-                            <fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###"/> KRW
+                            <span class="item-price" data-price="${item.price * item.quantity}">
+                                <fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###"/> KRW
+                            </span>
                         </td>
 
                         <td>
@@ -92,7 +97,7 @@
                 </c:forEach>
                 </tbody>
             </table>
-            <input type="hidden" name="totalPrice" value="${totalPrice}">
+
             <div class="cart-footer">
                 <div class="total-summary">
                     <div class="summary-row">
@@ -105,13 +110,15 @@
                     </div>
                     <div class="summary-row total">
                         <span>TOTAL</span>
-                        <span style="font-family: 'Cormorant Garamond';">
+                        <span id="totalPriceDisplay" style="font-family: 'Cormorant Garamond';">
                             <fmt:formatNumber value="${totalPrice}" pattern="#,###"/> KRW
                         </span>
                     </div>
                 </div>
-                <button type="submit" class="btn-checkout">CHECKOUT</button>
+                <input type="hidden" id="totalPriceInput" name="totalPrice" value="${totalPrice}">
+                <button type="button" class="btn-checkout" onclick="selectedItemsOrder()">CHECKOUT</button>
             </div>
+
         </form>
     </c:if>
 </div>
@@ -131,14 +138,51 @@
         }
     }
 
-    // 전체 선택/해제 스크립트 (UX용)
+    // 전체 선택/해제 스크립트
     const checkAll = document.getElementById('checkAll');
     if(checkAll) {
         checkAll.addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('.item-check');
+            // 🚩 수정: 판매 중지(disabled)가 아닌 체크박스만 선택
+            const checkboxes = document.querySelectorAll('.item-check:not(:disabled)');
             checkboxes.forEach(cb => cb.checked = this.checked);
+            updateTotalPrice();
         });
     }
+
+    // 개별 체크박스 변경 시 금액 업데이트 이벤트 등록
+    document.querySelectorAll('.item-check').forEach(cb => {
+        cb.addEventListener('change', updateTotalPrice);
+    });
+
+    // 상품 총 금액 구하기
+    function updateTotalPrice() {
+        const checkedItems = document.querySelectorAll('.item-check:checked');
+        let total = 0;
+
+        checkedItems.forEach(cb => {
+            const row = cb.closest('tr');
+            const priceElement = row.querySelector('.item-price');
+            const price = parseInt(priceElement.dataset.price);
+            total += price;
+        });
+
+        const formatted = total.toLocaleString('ko-KR') + " KRW";
+        document.getElementById('totalPriceDisplay').innerText = formatted;
+        document.getElementById('totalPriceInput').value = total;
+    }
+
+    // 선택항목 주문 전송
+    function selectedItemsOrder() {
+        if (!document.querySelector('.item-check:checked'))
+            return alert("주문할 상품을 선택해주세요!");
+
+        if (confirm("선택하신 상품을 주문하시겠습니까?")) {
+            document.getElementById('orderForm').submit();
+        }
+    }
+
+    // 🚩 초기 로딩 시 금액 업데이트 한 번 실행
+    window.onload = updateTotalPrice;
 </script>
 
 </body>

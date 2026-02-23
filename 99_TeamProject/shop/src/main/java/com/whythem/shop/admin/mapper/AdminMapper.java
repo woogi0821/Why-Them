@@ -53,4 +53,13 @@ public interface AdminMapper {
      * @param productId 판매 재개할 상품 번호
      */
     void restoreAdminProduct(Long productId);
+
+    /** 판매 중지 상품 총 개수 */
+    int getStoppedProductCount();
+
+    /** 최근 등록 상품 조회 (limit 개수만큼) */
+    List<AdminVO> getRecentProducts(@Param("limit") int limit);
+
+    /** 재고 부족 상품 조회 (5개 미만) */
+    List<AdminVO> getLowStockProducts(@Param("limit") int limit);
 }
