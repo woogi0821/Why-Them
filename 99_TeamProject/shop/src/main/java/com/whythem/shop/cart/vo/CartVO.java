@@ -14,7 +14,4 @@ public class CartVO {
     private Long memberId; //FK
     private Date createdAt;
     private Date updatedAt;
-
-    private String productStatus;
-
 }

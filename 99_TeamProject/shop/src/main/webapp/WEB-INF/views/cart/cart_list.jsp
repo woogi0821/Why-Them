@@ -14,7 +14,6 @@
 <jsp:include page="/common/header.jsp" />
 
 <div class="cart-container">
-
     <h2 class="cart-title">SHOPPING BAG</h2>
 
     <c:if test="${empty cartList}">
@@ -25,15 +24,15 @@
     </c:if>
 
     <c:if test="${not empty cartList}">
-
         <form action="/order/form" method="get" id="orderForm">
-
             <table class="cart-table">
                 <colgroup>
-                    <col style="width: 5%;">  <col style="width: 50%;"> <col style="width: 15%;"> <col style="width: 15%;"> <col style="width: 10%;"> </colgroup>
+                    <col style="width: 5%;"> <col style="width: 50%;"> <col style="width: 15%;"> <col style="width: 15%;"> <col style="width: 10%;">
+                </colgroup>
                 <thead>
                 <tr>
-                    <th><input type="checkbox" id="checkAll" checked></th> <th>PRODUCT</th>
+                    <th><input type="checkbox" id="checkAll" checked></th>
+                    <th>PRODUCT</th>
                     <th>QTY</th>
                     <th>PRICE</th>
                     <th>DELETE</th>
@@ -41,9 +40,16 @@
                 </thead>
                 <tbody>
                 <c:forEach var="item" items="${cartList}" varStatus="status">
-                    <tr>
+                    <tr class="${item.status == 'STOP' ? 'item-stopped' : ''}">
                         <td>
-                            <input type="checkbox" name="cartItemIds" value="${item.cartItemId}" class="item-check" checked>
+                            <c:choose>
+                                <c:when test="${item.status == 'STOP'}">
+                                    <input type="checkbox" class="item-check" disabled>
+                                </c:when>
+                                <c:otherwise>
+                                    <input type="checkbox" name="cartItemIds" value="${item.cartItemId}" class="item-check" checked>
+                                </c:otherwise>
+                            </c:choose>
                         </td>
 
                         <td>
@@ -58,6 +64,9 @@
                                 </c:choose>
 
                                 <div class="text-wrap">
+                                    <c:if test="${item.status == 'STOP'}">
+                                        <span class="stop-badge">SOLD OUT (판매중지)</span>
+                                    </c:if>
                                     <p class="brand" style="font-size:11px; color:#888; margin-bottom:5px;">${item.brandName}</p>
                                     <p class="name" style="font-weight:500;">${item.productName}</p>
                                 </div>
@@ -92,18 +101,17 @@
                     </div>
                     <div class="summary-row">
                         <span>SHIPPING</span>
-                        <span>FREE</span> </div>
+                        <span>FREE</span>
+                    </div>
                     <div class="summary-row total">
                         <span>TOTAL</span>
                         <span style="font-family: 'Cormorant Garamond';">
-                                <fmt:formatNumber value="${totalPrice}" pattern="#,###"/> KRW
-                            </span>
+                            <fmt:formatNumber value="${totalPrice}" pattern="#,###"/> KRW
+                        </span>
                     </div>
                 </div>
-
                 <button type="submit" class="btn-checkout">CHECKOUT</button>
             </div>
-
         </form>
     </c:if>
 </div>
