@@ -17,7 +17,7 @@
             ci.cart_item_id,
             ci.product_id,
             ci.quantity,
-            ci.size_val,
+<!--            ci.size_val,-->
             p.price
         FROM CART_ITEM ci
         JOIN CART c ON ci.cart_id = c.cart_id

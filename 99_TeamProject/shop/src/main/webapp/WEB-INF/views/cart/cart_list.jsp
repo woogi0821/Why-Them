@@ -24,7 +24,7 @@
     </c:if>
 
     <c:if test="${not empty cartList}">
-        <form action="/order/form" method="get" id="orderForm">
+        <form action="/order/cartConfirm" method="post" id="orderForm">
             <table class="cart-table">
                 <colgroup>
                     <col style="width: 5%;"> <col style="width: 50%;"> <col style="width: 15%;"> <col style="width: 15%;"> <col style="width: 10%;">
@@ -92,7 +92,7 @@
                 </c:forEach>
                 </tbody>
             </table>
-
+            <input type="hidden" name="totalPrice" value="${totalPrice}">
             <div class="cart-footer">
                 <div class="total-summary">
                     <div class="summary-row">
