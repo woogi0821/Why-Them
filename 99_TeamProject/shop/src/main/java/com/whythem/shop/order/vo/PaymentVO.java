@@ -21,5 +21,5 @@ public class PaymentVO {
 
     // 필드 추가
     private List<Long> cartItemIds;
-    private String cartItemIdsStr; // DB 저장용
+    private String cartItemIdsStr;
 }

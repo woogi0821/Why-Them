@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Payment Complete</title>
-    <link rel="stylesheet" href="/css/confirm.css">
+    <link rel="stylesheet" href="/css/order.css">
 </head>
 <body>
 <jsp:include page="/common/header.jsp"/>
@@ -45,17 +45,11 @@
         </div>
 
         <div class="btn-group">
-            <button class="btn btn-primary" onclick="goPage('/')">홈으로 이동</button>
-            <button class="btn btn-outline" onclick="goPage('/order/list')">주문내역 보기</button>
+            <a href="/" class="btn btn-primary">홈으로 이동</a>
+            <a href="/order/list" class="btn btn-outline">주문내역 보기</a>
         </div>
     </div>
 </div>
-
-<script>
-    function goPage(url) {
-        location.href = url;
-    }
-</script>
 
 </body>
 </html>

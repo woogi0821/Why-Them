@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Payment</title>
-    <link rel="stylesheet" href="/css/confirm.css">
+    <link rel="stylesheet" href="/css/order.css">
 </head>
 <body>
 <jsp:include page="/common/header.jsp"/>
