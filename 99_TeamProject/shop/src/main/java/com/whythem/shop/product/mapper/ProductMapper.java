@@ -1,6 +1,7 @@
 package com.whythem.shop.product.mapper;
 
 import com.whythem.shop.product.vo.ProductVO;
+import com.whythem.shop.promotion.vo.Promotion;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -25,4 +26,7 @@ public interface ProductMapper {
 
     // 5. 조회수 증가 (상세 페이지 호출 시 사용하여 조회수 올림)
     void updateViewCount(Long productId);
+
+    // 특정 ID로 프로모션 1건만 조회
+    Promotion getPromotionById(Long promotionId);
 }

@@ -80,10 +80,28 @@
     <p style="font-size: 12px; color: #999; margin-bottom: 15px;">
       VIEWS <c:out value="${product.viewCount}" default="0" />
     </p>
+<%-- 수정한 부분 --%>
+    <div class="price-text">
+      <%-- 프로모션이 있을 경우: 정가에 취소선을 긋고 할인가를 강조합니다 --%>
+      <c:choose>
+        <c:when test="${not empty product.promotion}">
+      <span style="text-decoration: line-through; color: #999; font-size: 14px; margin-right: 10px;">
+        KRW <fmt:formatNumber value="${product.price}" pattern="#,###"/>
+      </span>
+          <span style="color: #d9534f; font-weight: bold;">
+        KRW <fmt:formatNumber value="${product.salePrice}" pattern="#,###"/>
+      </span>
+          <div style="font-size: 12px; color: #d9534f; margin-top: 5px; letter-spacing: 0.5px;">
+            [<c:out value="${product.promotion.promotionTitle}"/>]
+          </div>
+        </c:when>
 
-    <p class="price-text">
-      KRW <fmt:formatNumber value="${product.price}" pattern="#,###"/>
-    </p>
+        <%-- 프로모션이 없을 경우: 기존 정가만 깔끔하게 보여줍니다 --%>
+        <c:otherwise>
+          KRW <fmt:formatNumber value="${product.price}" pattern="#,###"/>
+        </c:otherwise>
+      </c:choose>
+    </div>
 
     <div class="desc-text">
       <%-- 5. 상품 설명 보안 처리 (white-space: pre-wrap 유지) --%>

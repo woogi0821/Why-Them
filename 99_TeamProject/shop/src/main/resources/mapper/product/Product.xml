@@ -33,18 +33,27 @@
 <!--상세 페이지 조회-->
     <select id="findById" resultType="com.whythem.shop.product.vo.ProductVO">
         SELECT
-        PRODUCT_ID        AS productId,
-        CATEGORY_ID       AS categoryId,
-        PRODUCT_NAME      AS name,
-        BRAND_NAME        AS brandName,
-        PRICE             AS price,
-        STOCK_QUANTITY    AS stockQuantity,
-        DESCRIPTION       AS description,
-        STATUS            AS status,
-        IMAGE_URL         AS imageUrl
-        FROM PRODUCT
-        WHERE PRODUCT_ID = #{productId}
+        P.PRODUCT_ID        AS productId,
+        P.CATEGORY_ID       AS categoryId,
+        P.PRODUCT_NAME      AS name,
+        P.BRAND_NAME        AS brandName,
+        P.PRICE             AS price,
+        P.STOCK_QUANTITY    AS stockQuantity,
+        P.DESCRIPTION       AS description,
+        P.STATUS            AS status,
+        P.IMAGE_URL         AS imageUrl,
+<!--        추가 된 부분 -->
+        PR.PROMOTION_ID     AS "promotion.promotionId",
+        PR.PROMOTION_TITLE  AS "promotion.promotionTitle",
+        PR.DISCOUNT_TYPE    AS "promotion.discountType",
+        PR.DISCOUNT_VALUE   AS "promotion.discountValue",
+        PR.MIN_ORDER_AMOUNT AS "promotion.minOrderAmount"
+        FROM PRODUCT P
+        LEFT JOIN PROMOTION_PRODUCT PP ON P.PRODUCT_ID = PP.PRODUCT_ID
+        LEFT JOIN PROMOTION PR ON PP.PROMOTION_ID = PR.PROMOTION_ID
+        WHERE P.PRODUCT_ID = #{productId}
     </select>
+
 <!-- WeeklyBest    -->
     <select id="getWeeklyBest" resultType="com.whythem.shop.product.vo.ProductVO">
         SELECT * FROM (
@@ -80,6 +89,5 @@
         SET VIEW_COUNT = VIEW_COUNT + 1
         WHERE PRODUCT_ID = #{productId}
     </update>
-
 
 </mapper>

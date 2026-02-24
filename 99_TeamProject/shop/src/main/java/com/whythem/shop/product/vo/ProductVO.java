@@ -1,5 +1,6 @@
 package com.whythem.shop.product.vo;
 
+import com.whythem.shop.promotion.vo.Promotion;
 import lombok.*;
 import java.util.Date;
 
@@ -24,4 +25,6 @@ public class ProductVO {
     private Date createdAt;
     private Date updatedAt;
     private boolean wished;
+    private Promotion promotion;
+    private int salePrice; // 계산된 할인가를 담을 변수
 }
