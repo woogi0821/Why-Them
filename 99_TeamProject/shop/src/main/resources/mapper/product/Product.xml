@@ -16,6 +16,9 @@
         P.DESCRIPTION       AS description,
         P.STATUS            AS status,
         P.IMAGE_URL         AS imageUrl,
+        P.VIEW_COUNT        AS viewCount,
+
+
         (SELECT COUNT(*) FROM WISHLIST W WHERE W.PRODUCT_ID = P.PRODUCT_ID AND W.MEMBER_ID = #{memberId}) AS wished
         FROM PRODUCT P
         <where>
@@ -65,7 +68,8 @@
         IMAGE_URL    AS imageUrl,
         PRICE        AS price,
         BRAND_NAME   AS brandName,
-        CREATED_AT   AS createdAt
+        CREATED_AT   AS createdAt,
+        VIEW_COUNT   AS viewCount
         FROM PRODUCT
         WHERE STATUS = 'SALE' ORDER BY CREATED_AT DESC, PRODUCT_ID DESC
         )

@@ -1,0 +1,54 @@
+/* ... 기존 스타일 유지 ... */
+.detail-wrapper { max-width: 1100px; margin: 0 auto; padding: 60px 20px; display: flex; justify-content: space-between; }
+.image-section { width: 55%; }
+.image-section img { width: 100%; height: auto; display: block; border-radius: 2px; }
+.info-section { width: 38%; position: sticky; top: 50px; height: fit-content; }
+.brand-text { font-size: 13px; letter-spacing: 2px; color: #999; margin-bottom: 15px; text-transform: uppercase; }
+.title-text { font-size: 26px; font-weight: 300; margin-bottom: 25px; line-height: 1.4; color: #111; }
+.price-text { font-size: 18px; font-weight: 400; margin-bottom: 40px; color: #333; }
+.desc-text { font-size: 14px; line-height: 1.8; color: #666; margin-bottom: 50px; border-top: 1px solid #eee; padding-top: 30px; white-space: pre-wrap; }
+
+.action-btns { display: flex; flex-direction: column; gap: 12px; }
+.btn-buy { background: #111; color: #fff; padding: 18px; border: none; cursor: pointer; font-size: 14px; letter-spacing: 1px; transition: 0.3s; }
+.btn-buy:hover { background: #333; }
+
+/* 위시리스트 버튼 스타일 */
+.btn-cart {
+    background: #fff; color: #111; padding: 18px; border: 1px solid #111;
+    cursor: pointer; font-size: 14px; letter-spacing: 1px; transition: all 0.3s;
+}
+.btn-cart:hover { background: #f9f9f9; }
+
+.btn-cart.active { background: #111; color: #fff; border-color: #111; }
+
+#toast-msg {
+    font-family: 'Noto Sans KR', sans-serif;
+    position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+    background: rgba(26, 26, 26, 0.95); color: #fff; padding: 12px 24px;
+    border-radius: 30px; font-size: 13px; opacity: 0; transition: opacity 0.3s ease-in-out;
+    z-index: 9999; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.action-btns { display: flex; flex-direction: column; gap: 12px; }
+
+/* 1. 바로 구매 버튼 (강조 - 검정) */
+.btn-buy-now {
+    background: #111; color: #fff; padding: 18px; border: 1px solid #111;
+    cursor: pointer; font-size: 14px; letter-spacing: 1px; transition: 0.3s;
+}
+.btn-buy-now:hover { background: #333; }
+
+/* 2. 장바구니 / 3. 위시리스트 버튼 (서브 - 흰색) */
+.btn-cart, .btn-bag {
+    background: #fff; color: #111; padding: 18px; border: 1px solid #111;
+    cursor: pointer; font-size: 14px; letter-spacing: 1px; transition: all 0.3s;
+}
+.btn-cart:hover, .btn-bag:hover { background: #f9f9f9; }
+
+/* 찜 완료 상태 스타일 (검정 배경) */
+.btn-cart.active { background: #111; color: #fff; border-color: #111; }
+
+@media (max-width: 850px) {
+    .detail-wrapper { flex-direction: column; }
+    .image-section, .info-section { width: 100%; }
+    .info-section { margin-top: 40px; }
+}
