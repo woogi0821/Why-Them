@@ -61,20 +61,19 @@
     </select>
 
     <select id="getRecentProducts" resultType="com.whythem.shop.admin.vo.AdminVO">
-        <![CDATA[
-    SELECT * FROM (
+        SELECT * FROM (
         SELECT
-            PRODUCT_ID AS productId,
-            PRODUCT_NAME AS name,
-            PRICE AS price,         -- 이 부분이 추가되어야 가격이 나옵니다!
-            CREATED_AT
+        PRODUCT_ID AS productId,
+        PRODUCT_NAME AS name,
+        PRICE AS price,
+        CREATED_AT
         FROM PRODUCT
         ORDER BY CREATED_AT DESC
-    ) WHERE ROWNUM <= #{limit}
-    ]]>
+        )
+        WHERE ROWNUM <![CDATA[ <= ]]> #{limit}
     </select>
+
     <select id="getLowStockProducts" resultType="com.whythem.shop.admin.vo.AdminVO">
-        <![CDATA[
         SELECT * FROM (
             SELECT
                 PRODUCT_ID AS productId,
@@ -82,11 +81,11 @@
                 STOCK_QUANTITY AS stockQuantity,
                 PRICE AS price
             FROM PRODUCT
-            WHERE STATUS = 'SALE' AND STOCK_QUANTITY < 5
+            WHERE STATUS = 'SALE' AND STOCK_QUANTITY <![CDATA[ < ]]> 5
             ORDER BY STOCK_QUANTITY ASC
-        ) WHERE ROWNUM <= #{limit}
-        ]]>
+        ) WHERE ROWNUM <![CDATA[ <= ]]> #{limit}
     </select>
+
     <insert id="insertAdminProduct" parameterType="com.whythem.shop.admin.vo.AdminVO">
         <selectKey keyProperty="productId" resultType="long" order="BEFORE">
             SELECT PRODUCT_SEQ.NEXTVAL FROM DUAL
