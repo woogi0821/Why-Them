@@ -1,0 +1,26 @@
+/* 기존 스타일 유지 */
+body { margin: 0; font-family: 'Pretendard', sans-serif; background-color: #f4f7f9; display: flex; height: 100vh; overflow: hidden; }
+a { text-decoration: none; color: inherit; }
+
+.main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+.top-nav { height: 60px; background: #fff; display: flex; align-items: center; padding: 0 30px; border-bottom: 1px solid #dee2e6; }
+.content-body { padding: 35px; }
+.list-container { background: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 25px; }
+.list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+
+table { width: 100%; border-collapse: collapse; }
+th { background-color: #f8f9fa; text-align: left; padding: 15px; border-bottom: 2px solid #dee2e6; font-size: 0.85rem; color: #666; }
+td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: middle; font-size: 0.9rem; }
+.prod-img { width: 60px; height: 60px; border-radius: 4px; object-fit: cover; border: 1px solid #eee; }
+
+/* [판매 재개 버튼 전용 스타일] */
+.btn-restore {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    color: #27ae60; /* 초록색 */
+    font-weight: bold;
+}
+.btn-restore:hover { text-decoration: underline; }

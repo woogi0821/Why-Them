@@ -14,7 +14,6 @@
 <jsp:include page="/common/header.jsp" />
 
 <div class="cart-container">
-
     <h2 class="cart-title">SHOPPING BAG</h2>
 
     <c:if test="${empty cartList}">
@@ -25,15 +24,16 @@
     </c:if>
 
     <c:if test="${not empty cartList}">
-
         <form id="orderForm" name="orderForm" action="${pageContext.request.contextPath}/order/cartConfirm" method="post">
 
             <table class="cart-table">
                 <colgroup>
-                    <col style="width: 5%;">  <col style="width: 50%;"> <col style="width: 15%;"> <col style="width: 15%;"> <col style="width: 10%;"> </colgroup>
+                    <col style="width: 5%;"> <col style="width: 50%;"> <col style="width: 15%;"> <col style="width: 15%;"> <col style="width: 10%;">
+                </colgroup>
                 <thead>
                 <tr>
-                    <th><input type="checkbox" id="checkAll" checked></th> <th>PRODUCT</th>
+                    <th><input type="checkbox" id="checkAll" checked></th>
+                    <th>PRODUCT</th>
                     <th>QTY</th>
                     <th>PRICE</th>
                     <th>DELETE</th>
@@ -41,9 +41,17 @@
                 </thead>
                 <tbody>
                 <c:forEach var="item" items="${cartList}" varStatus="status">
-                    <tr>
+                    <tr class="${item.status == 'STOP' ? 'item-stopped' : ''}">
                         <td>
-                            <input type="checkbox" name="cartItemIds" value="${item.cartItemId}" class="item-check" checked>
+                            <c:choose>
+                                <%-- 🚩 수정: 판매 중지 상품은 체크박스 비활성화 및 name 제거 --%>
+                                <c:when test="${item.status == 'STOP'}">
+                                    <input type="checkbox" class="item-check" disabled>
+                                </c:when>
+                                <c:otherwise>
+                                    <input type="checkbox" name="cartItemIds" value="${item.cartItemId}" class="item-check" checked>
+                                </c:otherwise>
+                            </c:choose>
                         </td>
 
                         <td>
@@ -58,6 +66,10 @@
                                 </c:choose>
 
                                 <div class="text-wrap">
+                                        <%-- 🚩 수정: 판매 중지 배지 표시 --%>
+                                    <c:if test="${item.status == 'STOP'}">
+                                        <span class="stop-badge">SOLD OUT</span>
+                                    </c:if>
                                     <p class="brand" style="font-size:11px; color:#888; margin-bottom:5px;">${item.brandName}</p>
                                     <p class="name" style="font-weight:500;">${item.productName}</p>
                                 </div>
@@ -94,7 +106,8 @@
                     </div>
                     <div class="summary-row">
                         <span>SHIPPING</span>
-                        <span>FREE</span> </div>
+                        <span>FREE</span>
+                    </div>
                     <div class="summary-row total">
                         <span>TOTAL</span>
                         <span id="totalPriceDisplay" style="font-family: 'Cormorant Garamond';">
@@ -102,7 +115,7 @@
                         </span>
                     </div>
                 </div>
-                <input type="hidden" id="totalPriceInput" name="totalPrice" value="${totalPrice}" readonly>
+                <input type="hidden" id="totalPriceInput" name="totalPrice" value="${totalPrice}">
                 <button type="button" class="btn-checkout" onclick="selectedItemsOrder()">CHECKOUT</button>
             </div>
 
@@ -125,16 +138,18 @@
         }
     }
 
-    // 전체 선택/해제 스크립트 (UX용)
+    // 전체 선택/해제 스크립트
     const checkAll = document.getElementById('checkAll');
     if(checkAll) {
         checkAll.addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('.item-check');
+            // 🚩 수정: 판매 중지(disabled)가 아닌 체크박스만 선택
+            const checkboxes = document.querySelectorAll('.item-check:not(:disabled)');
             checkboxes.forEach(cb => cb.checked = this.checked);
             updateTotalPrice();
         });
     }
-    // 개별 체크박스 금액 변경
+
+    // 개별 체크박스 변경 시 금액 업데이트 이벤트 등록
     document.querySelectorAll('.item-check').forEach(cb => {
         cb.addEventListener('change', updateTotalPrice);
     });
@@ -151,21 +166,23 @@
             total += price;
         });
 
-        // 숫자 포맷 (콤마)
         const formatted = total.toLocaleString('ko-KR') + " KRW";
-
         document.getElementById('totalPriceDisplay').innerText = formatted;
         document.getElementById('totalPriceInput').value = total;
     }
 
-    // 선택항목 주문
+    // 선택항목 주문 전송
     function selectedItemsOrder() {
         if (!document.querySelector('.item-check:checked'))
             return alert("주문할 상품을 선택해주세요!");
 
-        if (confirm("선택하신 상품을 주문하시겠습니까?"))
-            orderForm.submit();
+        if (confirm("선택하신 상품을 주문하시겠습니까?")) {
+            document.getElementById('orderForm').submit();
+        }
     }
+
+    // 🚩 초기 로딩 시 금액 업데이트 한 번 실행
+    window.onload = updateTotalPrice;
 </script>
 
 </body>

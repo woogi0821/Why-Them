@@ -9,28 +9,7 @@
     <meta charset="UTF-8">
     <title>LALA BOUTIQUE | WEEKLY BEST</title>
     <link rel="stylesheet" href="/css/index.css">
-    <style>
-        /* 순위 배지 스타일 보완 */
-        .product-card { position: relative; cursor: pointer; }
-        .rank-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: #000;
-            color: #fff;
-            padding: 5px 12px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            z-index: 10;
-            border-radius: 2px;
-        }
-        /* 상품 정보 스타일 */
-        .info-box { padding: 10px 0; text-align: center; }
-        .info-box .name { font-weight: bold; margin-bottom: 5px; }
-        .info-box .price { color: #555; }
-        /* 조회수 스타일 */
-        .view-count { font-size: 11px; color: #999; margin-bottom: 4px; }
-    </style>
+    <link rel="stylesheet" href="/css/product_weekly_best.css">
 </head>
 <body>
 <div id="main-wrapper">
@@ -85,8 +64,5 @@
     <jsp:include page="/common/footer.jsp" />
 
 </div>
-
-<script src="/js/data.js"></script>
-<script src="/js/homepage.js"></script>
 </body>
 </html>

@@ -18,11 +18,27 @@
         IMAGE_URL         AS imageUrl
         FROM PRODUCT
         <where>
-            <if test="categoryId != null">
-                AND CATEGORY_ID = #{categoryId}
-            </if>
+            STATUS = 'SALE' <if test="categoryId != null">
+            AND CATEGORY_ID = #{categoryId}
+        </if>
         </where>
         ORDER BY PRODUCT_ID DESC
+    </select>
+
+    <select id="getStoppedProductList" resultType="com.whythem.shop.admin.vo.AdminVO">
+        SELECT
+        PRODUCT_ID        AS productId,
+        CATEGORY_ID       AS categoryId,
+        PRODUCT_NAME      AS name,
+        BRAND_NAME        AS brandName,
+        PRICE             AS price,
+        STOCK_QUANTITY    AS stockQuantity,
+        DESCRIPTION       AS description,
+        STATUS            AS status,
+        IMAGE_URL         AS imageUrl
+        FROM PRODUCT
+        WHERE STATUS = 'STOP'
+        ORDER BY UPDATED_AT DESC
     </select>
 
     <select id="findAdminProductById" resultType="com.whythem.shop.admin.vo.AdminVO">
@@ -38,6 +54,37 @@
         IMAGE_URL         AS imageUrl
         FROM PRODUCT
         WHERE PRODUCT_ID = #{productId}
+    </select>
+
+    <select id="getStoppedProductCount" resultType="int">
+        SELECT COUNT(*) FROM PRODUCT WHERE STATUS = 'STOP'
+    </select>
+
+    <select id="getRecentProducts" resultType="com.whythem.shop.admin.vo.AdminVO">
+        SELECT * FROM (
+        SELECT
+        PRODUCT_ID AS productId,
+        PRODUCT_NAME AS name,
+        PRICE AS price,
+        CREATED_AT
+        FROM PRODUCT
+        WHERE STATUS = 'SALE'
+        ORDER BY CREATED_AT DESC
+        )
+        WHERE ROWNUM <![CDATA[ <= ]]> #{limit}
+    </select>
+
+    <select id="getLowStockProducts" resultType="com.whythem.shop.admin.vo.AdminVO">
+        SELECT * FROM (
+            SELECT
+                PRODUCT_ID AS productId,
+                PRODUCT_NAME AS name,
+                STOCK_QUANTITY AS stockQuantity,
+                PRICE AS price
+            FROM PRODUCT
+            WHERE STATUS = 'SALE' AND STOCK_QUANTITY <![CDATA[ < ]]> 5
+            ORDER BY STOCK_QUANTITY ASC
+        ) WHERE ROWNUM <![CDATA[ <= ]]> #{limit}
     </select>
 
     <insert id="insertAdminProduct" parameterType="com.whythem.shop.admin.vo.AdminVO">
@@ -69,8 +116,18 @@
         WHERE PRODUCT_ID = #{productId}
     </update>
 
-    <delete id="deleteAdminProduct">
-        DELETE FROM PRODUCT WHERE PRODUCT_ID = #{productId}
-    </delete>
+    <update id="deleteAdminProduct">
+        UPDATE PRODUCT
+        SET STATUS = 'STOP',
+        UPDATED_AT = SYSDATE
+        WHERE PRODUCT_ID = #{productId}
+    </update>
+
+    <update id="restoreAdminProduct">
+        UPDATE PRODUCT
+        SET STATUS = 'SALE',
+        UPDATED_AT = SYSDATE
+        WHERE PRODUCT_ID = #{productId}
+    </update>
 
 </mapper>

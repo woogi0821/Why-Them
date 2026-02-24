@@ -61,10 +61,11 @@
            ========================================= */
         .main-swiper-container {
             width: 100%;
-            height: 600px; /* 배너 높이 (필요시 조절) */
-            position: relative;
-            margin-bottom: 80px; /* 상품 섹션과의 간격 */
+            aspect-ratio: 16 / 5;
+            max-height: 600px;
+            margin-bottom: 80px;
         }
+
 
         .main-swiper {
             width: 100%;

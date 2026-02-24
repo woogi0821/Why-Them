@@ -2,7 +2,7 @@ package com.whythem.shop.cart.controller;
 
 import com.whythem.shop.cart.service.CartService;
 import com.whythem.shop.cart.vo.CartItemVO;
-import com.whythem.shop.member.vo.MemberVO; // MemberVO 임포트 필요
+import com.whythem.shop.member.vo.MemberVO;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -23,15 +23,11 @@ public class CartController {
     // 1. 장바구니 담기
     @PostMapping("/add")
     public String addCart(CartItemVO cartItemVO, HttpSession session) {
-
         MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
-
         if (loginMember == null) {
             return "redirect:/member/login";
         }
-
         cartService.addCart(loginMember.getMemberId(), cartItemVO);
-
         return "redirect:/cart/list";
     }
 
@@ -46,10 +42,8 @@ public class CartController {
 
         List<CartItemVO> list = cartService.getMyCartList(loginMember.getMemberId());
 
-        long totalPrice = 0;
-        for (CartItemVO item : list) {
-            totalPrice += (item.getPrice() * item.getQuantity());
-        }
+        // 🚩 [수정] 서비스의 계산 메서드 호출 (SALE 상태인 것만 계산됨)
+        long totalPrice = cartService.calculateTotalPrice(list);
 
         model.addAttribute("cartList", list);
         model.addAttribute("totalPrice", totalPrice);
@@ -60,25 +54,21 @@ public class CartController {
     // 3. 수량 변경
     @PostMapping("/update")
     public String update(@RequestParam("cartItemId") Long cartItemId,
-                         @RequestParam("quantity") int quantity,HttpSession session) {
-
+                         @RequestParam("quantity") int quantity, HttpSession session) {
         if (session.getAttribute("loginMember") == null) {
             return "redirect:/member/login";
         }
-
         cartService.updateQuantity(cartItemId, quantity);
         return "redirect:/cart/list";
     }
 
-    //4.삭제
+    // 4. 삭제
     @PostMapping("/remove")
     public String remove(@RequestParam("cartItemId") Long cartItemId,
                          HttpSession session) {
-
         if (session.getAttribute("loginMember") == null) {
             return "redirect:/member/login";
         }
-
         cartService.removeCartItem(cartItemId);
         return "redirect:/cart/list";
     }
@@ -100,10 +90,13 @@ public class CartController {
         cartItemVO.setQuantity(quantity);
 
         cartService.addCart(loginMember.getMemberId(),cartItemVO);
+
+        // 장바구니 개수 세션 업데이트 (헤더 표시용)
         int currentCartCount = cartService.getMyCartList(loginMember.getMemberId()).size();
-        session.setAttribute("cartCount",currentCartCount);
+        session.setAttribute("cartCount", currentCartCount);
+
         resultMap.put("status","success");
-        resultMap.put("cartCount",currentCartCount);
+        resultMap.put("cartCount", currentCartCount);
         return resultMap;
     }
 }

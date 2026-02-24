@@ -92,12 +92,54 @@
         padding: 2px 4px; border-radius: 3px; letter-spacing: 0;
         display: none; /* 평소엔 숨겨둠 */
     }
+    /* 햄버거 버튼 기본 숨김 */
+    .mobile-toggle {
+        display: none;
+        font-size: 26px;
+        cursor: pointer;
+    }
+
+    /* 반응형 */
+    @media (max-width: 1024px) {
+
+        .mobile-toggle {
+            display: block;
+        }
+
+        .top-utils {
+            position: absolute;
+            top: 70px;
+            right: 0;
+            width: 240px;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            gap: 15px;
+            z-index: 999;
+        }
+
+        .top-utils.active {
+            display: flex;
+        }
+
+        .top-utils .util-link,
+        .top-utils .user-txt {
+            display: block;
+            margin: 5px 0;
+        }
+    }
 </style>
 
 <header class="top-bar">
     <h1 class="logo" onclick="location.href='/'">LALA BOUTIQUE</h1>
 
-    <aside class="top-utils">
+    <!-- ✅ 햄버거 버튼 (모바일 전용) -->
+    <div class="mobile-toggle" onclick="toggleMenu()">☰</div>
+
+    <!-- ✅ 기존 top-utils 에 id 추가 -->
+    <aside class="top-utils" id="headerRight">
         <c:choose>
 
             <c:when test="${empty sessionScope.loginMember}">
@@ -105,12 +147,10 @@
                 <span class="util-link" onclick="location.href='/member/join'">JOIN</span>
             </c:when>
 
-
             <c:otherwise>
                 <span class="user-txt" style="font-weight:bold; margin-right:10px;">
                     ${sessionScope.loginMember.memberName}님
                 </span>
-
 
                 <c:if test="${sessionScope.loginMember.memberGrade == 'Y'}">
                     <span class="util-link" onclick="location.href='/admin/admin_main'" style="color:red;">ADMIN</span>
@@ -118,21 +158,21 @@
 
                 <span class="util-link" onclick="location.href='/member/logout'">LOGOUT</span>
                 <span class="util-link" onclick="location.href='/member/mypage'">MYPAGE</span>
+
                 <span class="util-link badge-wrapper" onclick="location.href='/wishlist/list'">
                     WISHLIST
                     <span id="header-wish-badge" class="wish-badge">N</span>
                 </span>
 
-                <%-- ★ [수정됨] 장바구니 뱃지 --%>
                 <span class="util-link badge-wrapper" onclick="location.href='/cart/list'">
                     CART
-                    <%-- 서버에서 세션에 cartCount를 담아준다고 가정한 JSTL 처리 --%>
                     <span id="header-cart-badge" class="cart-badge"
                           style="display: ${empty sessionScope.cartCount || sessionScope.cartCount == 0 ? 'none' : 'flex'}">
                             ${empty sessionScope.cartCount ? 0 : sessionScope.cartCount}
                     </span>
                 </span>
             </c:otherwise>
+
         </c:choose>
     </aside>
 </header>
@@ -383,3 +423,23 @@
         alert('<c:out value="${msg}"/>');
     </script>
 </c:if>
+<script>
+    function toggleMenu(event) {
+        event.stopPropagation(); // 버튼 클릭이 바깥 클릭으로 인식되지 않게
+        document.getElementById("headerRight").classList.toggle("active");
+    }
+
+    // 햄버거 버튼에 이벤트 연결
+    document.querySelector(".mobile-toggle").addEventListener("click", toggleMenu);
+
+    // 화면 아무 곳이나 클릭하면 메뉴 닫기
+    document.addEventListener("click", function (event) {
+        const menu = document.getElementById("headerRight");
+        const toggle = document.querySelector(".mobile-toggle");
+
+        // 메뉴 영역이나 햄버거 버튼이 아닌 곳 클릭 시 닫기
+        if (!menu.contains(event.target) && !toggle.contains(event.target)) {
+            menu.classList.remove("active");
+        }
+    });
+</script>

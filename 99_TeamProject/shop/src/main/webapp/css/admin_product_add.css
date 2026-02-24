@@ -1,0 +1,115 @@
+/* 1. 기본 스타일 리셋 */
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* 2. 폼 컨테이너 (상품 카드 느낌 계승) */
+.form-container {
+    background-color: #fff;
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.form-container h2 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    color: #333;
+    text-align: center;
+}
+
+/* 3. 입력 그룹 스타일 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #888;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    resize: vertical; /* 사용자가 높이 조절 가능 */
+    min-height: 120px;
+    font-family: inherit;
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: #000;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #333;
+    background-color: #fdfdfd;
+    transition: all 0.3s ease;
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #000;
+    background-color: #fff;
+}
+
+/* 4. 등록 버튼 (기존 btn-add 스타일 계승) */
+.btn-submit {
+    width: 100%;
+    padding: 15px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-submit:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+/* 하단 돌아가기 링크 */
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #999;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}

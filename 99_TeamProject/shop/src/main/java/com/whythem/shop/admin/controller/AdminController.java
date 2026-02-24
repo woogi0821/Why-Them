@@ -30,34 +30,39 @@ public class AdminController {
 
         model.addAttribute("productList", productList);
         model.addAttribute("selectedCategory", categoryId);
+        model.addAttribute("stoppedCount", adminService.getStoppedProductCount());
+        model.addAttribute("recentProducts", adminService.getRecentProducts(5));
+        model.addAttribute("lowStockProducts", adminService.getLowStockProducts(5));
 
         return "admin/admin_main"; // 관리자 메인 페이지 JSP 이름
     }
+    // 🚩 2. 판매 중지 상품 목록 조회 (추가)
+    @GetMapping("/stopped_list") // 🚩 주소 확인
+    public String stoppedList(Model model) throws Exception {
+        List<AdminVO> stoppedList = adminService.getStoppedProductList();
 
-    // 2. 상품 등록 페이지 이동
+        model.addAttribute("productList", stoppedList);
+        model.addAttribute("showStopped", true); // 🚩 중요: 이게 있어야 사이드바가 반응함
+
+        // selectedCategory는 보내지 않습니다. (null 상태 유지)
+        return "admin/stopped_list";
+    }
+
+    // 3. 상품 등록 페이지 이동
     @GetMapping("/product/add")
     public String addPage() {
         return "admin/product_add";
     }
 
-    // 3. 상품 등록 처리
+    // 4. 상품 등록 처리
     @PostMapping("/product/add")
-    public String addProcess(AdminVO product) {
-        MultipartFile file = product.getProductImage();
-
-        if (file != null && !file.isEmpty()) {
-            String path = saveFile(file);
-            product.setImageUrl(path);
-            // savedPaths.add(path); <- 이 부분도 이제 필요 없으니 삭제
-        }
-
-        // AdminService의 등록 메서드 호출 (인수 1개로 맞춤)
+    public String addProcess(AdminVO product) throws Exception {
+        // 서비스에서 발생한 예외가 여기까지 전달됩니다.
         adminService.registerAdminProduct(product);
-
         return "redirect:/admin/admin_main";
     }
 
-    // 4. 상품 수정 페이지 이동
+    // 5. 상품 수정 페이지 이동
     @GetMapping("/product/edit")
     public String editPage(@RequestParam("productId") Long productId, Model model) {
         // AdminService의 상세 조회 호출
@@ -67,21 +72,29 @@ public class AdminController {
         return "admin/product_edit";
     }
 
-    // 5. 상품 수정 처리
+    // 6. 상품 수정 처리
     @PostMapping("/product/edit")
-    public String editProcess(AdminVO product) {
-        // AdminService의 수정 메서드 호출
+    public String updateProcess(AdminVO product) throws Exception {
+        // 수정 로직 역시 서비스에서 예외를 던지므로 throws를 붙입니다.
         adminService.updateAdminProduct(product);
 
         return "redirect:/admin/admin_main";
     }
 
-
-    @GetMapping("/product/delete")
-    public String deleteProcess(@RequestParam("productId") Long productId) {
-        adminService.deleteAdminProduct(productId);
-        return "redirect:/admin/admin_main";
+// 7. 상품 삭제
+@PostMapping("/product/delete") // Get을 Post로 변경
+public String deleteProcess(@RequestParam("productId") Long productId) throws Exception {
+    adminService.deleteAdminProduct(productId);
+    return "redirect:/admin/admin_main";
+}
+    // 🚩 8. 판매 재개 처리 (STOP -> SALE) (추가)
+    @PostMapping("/product/restore")
+    public String restoreProcess(@RequestParam("productId") Long productId) throws Exception {
+        adminService.restoreAdminProduct(productId);
+        // 복구 후에는 중지 목록 페이지로 다시 이동합니다.
+        return "redirect:/admin/stopped_list";
     }
+
 
     // [수정된 로직] CommonUtil의 saveFile을 호출
     private String saveFile(MultipartFile file) {
