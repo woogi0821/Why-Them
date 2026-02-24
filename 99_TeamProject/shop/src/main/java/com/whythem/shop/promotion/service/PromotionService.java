@@ -35,33 +35,24 @@ public class PromotionService {
      * @return 할인 적용된 최종 가격
      */
     public int calculateDiscountedPrice(int originalPrice, Promotion promotion) {
-        // 1. 프로모션이 없거나 ACTIVE 상태가 아니면 원가 그대로 반환
-        if (promotion == null || !"ACTIVE".equals(promotion.getStatus())) {
-            return originalPrice;
-        }
-
-        // 2. 최소 주문 금액 체크 (DB의 min_order_amount 사용)
-        int minOrderAmount = promotion.getMinOrderAmount();
-        if (originalPrice < minOrderAmount) {
+        // ACTIVE 또는 ongoing 둘 다 허용하도록 방어적으로 수정
+        if (promotion == null || promotion.getStatus() == null ||
+                (!promotion.getStatus().trim().equalsIgnoreCase("ACTIVE") &&
+                        !promotion.getStatus().trim().equalsIgnoreCase("ongoing"))) {
             return originalPrice;
         }
 
         int discountValue = promotion.getDiscountValue();
-        int finalPrice = originalPrice;
+        String type = promotion.getDiscountType().trim().toUpperCase();
+        double resultPrice = originalPrice;
 
-        // 3. 타입에 따른 계산 (AMOUNT: 정액, RATE: 정률)
-        if ("AMOUNT".equals(promotion.getDiscountType())) {
-            finalPrice = originalPrice - discountValue;
-        } else if ("RATE".equals(promotion.getDiscountType())) {
-            // 소수점 처리는 Math.round로 처리
-            finalPrice = (int) Math.round(originalPrice * (1 - discountValue / 100.0));
+        if ("PERCENT".equals(type) || "RATE".equals(type)) {
+            resultPrice = originalPrice * (1 - (discountValue / 100.0));
+        } else if ("AMOUNT".equals(type)) {
+            resultPrice = originalPrice - discountValue;
         }
 
-        // 4. 1단위 버리고 10원으로 끝나도록 조정 (예: 17,856원 -> 17,850원)
-        int truncatedPrice = (finalPrice / 10) * 10;
-
-        // 최종 가격이 음수가 되지 않도록 방어
-        return Math.max(0, truncatedPrice);
+        return (int) resultPrice;
     }
 
     /**

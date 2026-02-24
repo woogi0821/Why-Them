@@ -74,19 +74,19 @@
   <c:if test="${status == 'ongoing'}">
     <div class="promotion-item">
       <span class="status-badge badge-ongoing">진행중</span>
-      <img src="/upload/event_ootd.png" alt="OOTD 이벤트">
+      <a href="/product/detail?productId=118"> <img src="/upload/event_ootd.png" alt="OOTD 이벤트"></a>
     </div>
     <div class="promotion-item">
       <span class="status-badge badge-ongoing">진행중</span>
-      <img src="/upload/daily_basic.png" alt="데일리 베이직">
+      <a href="/product/detail?productId=47"> <img src="/upload/daily_basic.png" alt="데일리 베이직"></a>
     </div>
     <div class="promotion-item">
       <span class="status-badge badge-ongoing">진행중</span>
-      <img src="/upload/weekly_dress.png" alt="개강 코디">
+      <a href="/product/detail?productId=102"><img src="/upload/weekly_dress.png" alt="개강 코디"></a>
     </div>
     <div class="promotion-item">
       <span class="status-badge badge-ongoing">진행중</span>
-      <img src="/upload/outer_preview.png" alt="아우터 프리뷰">
+      <a href="/product/detail?productId=34"><img src="/upload/outer_preview.png" alt="아우터 프리뷰"></a>
     </div>
   </c:if>
 
