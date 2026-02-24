@@ -1,0 +1,13 @@
+/* [추가] 하트 버튼 스타일 (메인 페이지와 동일) */
+.product-card { position: relative; cursor: pointer; }
+.btn-wish-icon {
+    position: absolute; top: 15px; right: 15px; z-index: 20;
+    font-size: 24px; color: #ccc; background: rgba(255, 255, 255, 0.3);
+    border: none; border-radius: 50%; width: 35px; height: 35px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+}
+.btn-wish-icon:hover { transform: scale(1.1); background: rgba(255, 255, 255, 0.8); }
+.btn-wish-icon.active { color: #e74c3c; }
+/* 조회수 스타일 */
+.view-count { font-size: 11px; color: #999; margin-bottom: 2px; }
