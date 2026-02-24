@@ -68,7 +68,6 @@
         PRICE AS price,
         CREATED_AT
         FROM PRODUCT
-        WHERE STATUS = 'SALE'
         ORDER BY CREATED_AT DESC
         )
         WHERE ROWNUM <![CDATA[ <= ]]> #{limit}
