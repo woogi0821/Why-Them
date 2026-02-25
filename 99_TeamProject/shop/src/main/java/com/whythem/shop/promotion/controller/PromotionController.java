@@ -58,7 +58,7 @@ public class PromotionController {
         // 검색 결과가 0건일 때 처리
         if (totalCount == 0 && criteria.getSearchKeyword() != null && !criteria.getSearchKeyword().isEmpty()) {
             rttr.addFlashAttribute("msg", "SEARCH_EMPTY");
-            return "redirect:/admin/promotion_list";}
+            return "redirect:admin/promotion_list";}
 
             //  계산된 offset이 담긴 criteria를 넘겨서 목록을 조회합니다.
             List<Promotion> list = promotionService.getPromotionList(criteria);
@@ -133,5 +133,8 @@ public class PromotionController {
             // 서비스에서 3가지 지표를 담은 Map을 가져와 반환 (자동으로 JSON 변환됨)
             return promotionService.getDashboardStats();
         }
-
+    @GetMapping("/event/list")
+    public String promotionList(@RequestParam(value="status", required=false, defaultValue="ongoing") String status) {
+        return "promotion/event_list";
+    }
 }

@@ -38,7 +38,7 @@ class ProductServiceTest {
     @DisplayName("상품 조회 - 정상 케이스") // 테스트 목적을 명확히 기록
     void findById() {
         Long productId = 60L;
-        ProductVO productVO = productService.findById(productId);
+        ProductVO productVO = productService.findById(productId, 0L);
         assertThat(productVO).isNotNull();
         log.info("조회성공 -> 상품명:{}, 가격:{}", productVO.getName(),productVO.getPrice());
     }
@@ -49,7 +49,7 @@ class ProductServiceTest {
         Long nonExistId = 999999L;
 
         // 2. When
-        ProductVO product = productService.findById(nonExistId);
+        ProductVO product = productService.findById(nonExistId, 0L);
 
         // 3. Then: 데이터가 없으므로 null이어야 함
         assertThat(product).isNull();

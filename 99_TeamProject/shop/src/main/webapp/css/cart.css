@@ -164,20 +164,5 @@ body { font-family: 'Noto Sans KR', sans-serif; color: #1a1a1a; }
 }
 .btn-go-home:hover { background: #333; }
 
-/* 판매 중지 상품 전용 스타일 */
-.item-stopped {
-    opacity: 0.5; /* 흐리게 표시 */
-    background-color: #fcfcfc;
-}
-.stop-badge {
-    display: inline-block;
-    background: #ff7675;
-    color: #fff;
-    font-size: 10px;
-    padding: 2px 5px;
-    margin-bottom: 5px;
-    border-radius: 2px;
-}
-
 /* 7. 푸터 */
 footer { padding: 60px 0; text-align: center; font-size: 11px; color: #bbb; border-top: 1px solid #eee; margin-top: 100px; }

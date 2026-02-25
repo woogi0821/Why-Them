@@ -24,4 +24,6 @@ public class Promotion {
 
     private String isActive;        // Y or N
     private String imagePath;
+    private int minOrderAmount; // 추가: DB의 min_order_amount와 매핑됨
+    private String status;
 }

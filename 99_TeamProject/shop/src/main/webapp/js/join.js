@@ -96,22 +96,3 @@ function joinCheck() {
     // 전송
     document.getElementById("joinForm").submit();
 }
-// ★ [추가] 회원가입 비밀번호 일치 검사
-function checkJoinPw() {
-    const pw = document.getElementById("loginPw").value;
-    const confirmPw = document.getElementById("loginPwConfirm").value;
-    const msg = document.getElementById("joinPwMsg");
-
-    if (confirmPw === "") {
-        msg.innerText = "";
-        return;
-    }
-
-    if (pw === confirmPw) {
-        msg.style.color = "#27ae60";
-        msg.innerText = "비밀번호가 일치합니다.";
-    } else {
-        msg.style.color = "#e74c3c";
-        msg.innerText = "비밀번호가 일치하지 않습니다.";
-    }
-}

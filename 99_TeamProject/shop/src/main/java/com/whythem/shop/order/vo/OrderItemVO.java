@@ -13,9 +13,4 @@ public class OrderItemVO {
     private Long productId;     // FK
     private int quantity;
     private Double price;
-
-//  필드추가
-    private String productName;
-    private String imageUrl;
-    private Double totalPrice;
 }

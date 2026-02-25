@@ -9,7 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/homepage.css">
-    <link rel="stylesheet" href="/css/member_mypage.css">
+    <link rel="stylesheet" href="/css/mypage.css">
     <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
     <link rel="shortcut icon" href="/images/favicon.ico" />
@@ -29,8 +29,7 @@
         <div class="welcome-desc">라라 부티크에 오신 것을 환영합니다. 나의 쇼핑 정보를 확인하세요.</div>
     </div>
 
-    <%-- ★ [수정] 2x2 퀵 메뉴 그리드 (회원탈퇴 추가) --%>
-    <div class="quick-menu-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 40px;">
+    <div class="quick-menu-grid">
         <a href="<c:url value='/wishlist/list'/>" class="quick-item">
             <span class="quick-icon"><i class="fa-regular fa-heart"></i></span>
             <span class="quick-text"><c:out value="Wishlist"/></span>
@@ -45,67 +44,75 @@
             <span class="quick-icon"><i class="fa-solid fa-lock"></i></span>
             <span class="quick-text"><c:out value="Change Password"/></span>
         </a>
-
-        <a href="javascript:void(0)" class="quick-item" onclick="withdrawMember()">
-            <span class="quick-icon"><i class="fa-solid fa-user-slash"></i></span>
-            <span class="quick-text"><c:out value="Delete Account"/></span>
-        </a>
     </div>
 
-    <%-- (주문 상태 및 개인정보 수정 섹션은 기존 코드 유지...) --%>
+    <div class="order-status-wrap">
+        <div class="section-header" style="margin-top:0; border-bottom:none;">
+            <span class="section-title" style="font-size:18px;">Order Status</span>
+        </div>
+        <div class="status-list">
+            <div class="status-step"><span class="step-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span><span class="step-text">입금대기</span><span class="step-count">0</span></div>
+            <div class="status-step"><span class="step-icon"><i class="fa-solid fa-box-open"></i></span><span class="step-text">결제완료</span><span class="step-count">0</span></div>
+            <div class="status-step"><span class="step-icon"><i class="fa-solid fa-gift"></i></span><span class="step-text">배송준비</span><span class="step-count">0</span></div>
+            <div class="status-step"><span class="step-icon"><i class="fa-solid fa-truck-fast"></i></span><span class="step-text">배송중</span><span class="step-count">0</span></div>
+            <div class="status-step"><span class="step-icon"><i class="fa-solid fa-circle-check"></i></span><span class="step-text">배송완료</span><span class="step-count">0</span></div>
+        </div>
+    </div>
 
-    <%-- ★ [수정] 안전한 비밀번호 변경 섹션 --%>
-    <section class="info-section" id="password-section" style="display: none;">
+    <section class="info-section">
         <div class="section-header">
-            <span class="section-title">Security & Password</span>
+            <span class="section-title">Account Info</span>
         </div>
 
-        <form action="/member/resetPw" method="post" id="pwChangeForm" onsubmit="return validateMyPageResetForm()">
-            <%-- 기존 컨트롤러에 필요한 정보를 세션에서 뽑아 몰래(Hidden) 보냅니다 --%>
-            <input type="hidden" name="loginId" value="${sessionScope.loginMember.loginId}">
-            <input type="hidden" name="memberName" value="${sessionScope.loginMember.memberName}">
-            <input type="hidden" name="phoneNumber" value="${sessionScope.loginMember.phoneNumber}">
-            <input type="hidden" name="from" value="mypage">
+        <form action="/member/update" method="post" onsubmit="return validateForm()">
+            <input type="hidden" id="originalId" value="${sessionScope.loginMember.loginId}">
+            <input type="hidden" id="idCheckStatus" value="1">
 
-            <div style="margin-bottom: 25px; padding: 15px; background: #f9f9f9; font-size: 12px; color: #666; line-height: 1.5;">
-                <i class="fa-solid fa-shield-halved" style="margin-right: 5px;"></i>
-                안전한 정보 보호를 위해 <strong>현재 비밀번호</strong>를 먼저 확인합니다.
+            <div class="info-row">
+                <div class="info-label">User ID</div>
+                <div class="info-value">
+                    <input type="text" name="loginId" id="loginId"
+                           value="${sessionScope.loginMember.loginId}"
+                           class="clean-input" placeholder="아이디를 입력하세요"
+                           oninput="resetIdCheck()">
+                    <button type="button" class="btn-check-square" onclick="checkDuplicateId()">Check</button>
+                </div>
+                <span id="checkMsg" class="msg-area"></span>
             </div>
 
             <div class="info-row">
-                <div class="info-label">Current PW</div>
+                <div class="info-label">Name</div>
                 <div class="info-value">
-                    <input type="password" id="currentPw" class="clean-input" placeholder="현재 비밀번호를 입력하세요">
-                    <button type="button" class="btn-check-square" onclick="verifyCurrentPw()">Check</button>
+                    <input type="text" name="memberName"
+                           value="${sessionScope.loginMember.memberName}"
+                           class="clean-input" readonly>
                 </div>
-                <span id="currentPwMsg" class="msg-area"></span>
             </div>
 
-            <%-- 현재 비밀번호가 맞아야만 아래 새 비밀번호 창이 나타납니다 --%>
-            <div id="newPwArea" style="display: none;">
-                <div class="info-row">
-                    <div class="info-label">New PW</div>
-                    <div class="info-value">
-                        <input type="password" name="newPw" id="newPw" class="clean-input" placeholder="새로운 비밀번호" oninput="checkNewPwMatch()">
-                    </div>
+            <div class="info-row">
+                <div class="info-label">Phone</div>
+                <div class="info-value">
+                    <input type="text" name="phoneNumber"
+                           value="${sessionScope.loginMember.phoneNumber}"
+                           class="clean-input" placeholder="010-0000-0000"
+                           oninput="autoHyphen(this)" maxlength="13">
                 </div>
+            </div>
 
-                <div class="info-row">
-                    <div class="info-label">Confirm PW</div>
-                    <div class="info-value">
-                        <input type="password" id="confirmPw" class="clean-input" placeholder="새로운 비밀번호 확인" oninput="checkNewPwMatch()">
-                    </div>
-                    <span id="pwMsg" class="msg-area"></span>
+            <div class="info-row">
+                <div class="info-label">Email</div>
+                <div class="info-value">
+                    <input type="text" name="email"
+                           value="${sessionScope.loginMember.email}"
+                           class="clean-input" placeholder="이메일을 입력하세요">
                 </div>
+            </div>
 
-                <div style="text-align: right;">
-                    <button type="submit" class="btn-update" style="background: #1a1a1a; color: #fff;">Change Password</button>
-                </div>
+            <div style="text-align: right;">
+                <button type="submit" class="btn-update">Save Changes</button>
             </div>
         </form>
     </section>
-
-    <%-- (배송지 섹션 기존 코드 유지...) --%>
     <section class="info-section" id="password-section" style="display: none;">
         <div class="section-header">
             <span class="section-title">Security & Password</span>
@@ -179,7 +186,7 @@
 
 <jsp:include page="/common/footer.jsp" />
 
-<script src="/js/member_mypage.js"></script>
+<script src="/js/mypage.js"></script>
 
 </body>
 </html>

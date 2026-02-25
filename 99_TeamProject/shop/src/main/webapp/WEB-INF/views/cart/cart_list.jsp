@@ -7,13 +7,14 @@
 <head>
     <meta charset="UTF-8">
     <title>LALA BOUTIQUE - CART</title>
-    <link rel="stylesheet" href="/css/cart_list.css">
+    <link rel="stylesheet" href="/css/cart.css">
 </head>
 <body>
 
 <jsp:include page="/common/header.jsp" />
 
 <div class="cart-container">
+
     <h2 class="cart-title">SHOPPING BAG</h2>
 
     <c:if test="${empty cartList}">
@@ -24,16 +25,15 @@
     </c:if>
 
     <c:if test="${not empty cartList}">
-        <form id="orderForm" name="orderForm" action="${pageContext.request.contextPath}/order/cartConfirm" method="post">
+
+        <form action="/order/form" method="get" id="orderForm">
 
             <table class="cart-table">
                 <colgroup>
-                    <col style="width: 5%;"> <col style="width: 50%;"> <col style="width: 15%;"> <col style="width: 15%;"> <col style="width: 10%;">
-                </colgroup>
+                    <col style="width: 5%;">  <col style="width: 50%;"> <col style="width: 15%;"> <col style="width: 15%;"> <col style="width: 10%;"> </colgroup>
                 <thead>
                 <tr>
-                    <th><input type="checkbox" id="checkAll" checked></th>
-                    <th>PRODUCT</th>
+                    <th><input type="checkbox" id="checkAll" checked></th> <th>PRODUCT</th>
                     <th>QTY</th>
                     <th>PRICE</th>
                     <th>DELETE</th>
@@ -41,17 +41,9 @@
                 </thead>
                 <tbody>
                 <c:forEach var="item" items="${cartList}" varStatus="status">
-                    <tr class="${item.status == 'STOP' ? 'item-stopped' : ''}">
+                    <tr>
                         <td>
-                            <c:choose>
-                                <%-- 🚩 수정: 판매 중지 상품은 체크박스 비활성화 및 name 제거 --%>
-                                <c:when test="${item.status == 'STOP'}">
-                                    <input type="checkbox" class="item-check" disabled>
-                                </c:when>
-                                <c:otherwise>
-                                    <input type="checkbox" name="cartItemIds" value="${item.cartItemId}" class="item-check" checked>
-                                </c:otherwise>
-                            </c:choose>
+                            <input type="checkbox" name="cartItemIds" value="${item.cartItemId}" class="item-check" checked>
                         </td>
 
                         <td>
@@ -66,10 +58,6 @@
                                 </c:choose>
 
                                 <div class="text-wrap">
-                                        <%-- 🚩 수정: 판매 중지 배지 표시 --%>
-                                    <c:if test="${item.status == 'STOP'}">
-                                        <span class="stop-badge">SOLD OUT</span>
-                                    </c:if>
                                     <p class="brand" style="font-size:11px; color:#888; margin-bottom:5px;">${item.brandName}</p>
                                     <p class="name" style="font-weight:500;">${item.productName}</p>
                                 </div>
@@ -85,9 +73,7 @@
                         </td>
 
                         <td class="price-col">
-                            <span class="item-price" data-price="${item.price * item.quantity}">
-                                <fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###"/> KRW
-                            </span>
+                            <fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###"/> KRW
                         </td>
 
                         <td>
@@ -106,17 +92,16 @@
                     </div>
                     <div class="summary-row">
                         <span>SHIPPING</span>
-                        <span>FREE</span>
-                    </div>
+                        <span>FREE</span> </div>
                     <div class="summary-row total">
                         <span>TOTAL</span>
-                        <span id="totalPriceDisplay" style="font-family: 'Cormorant Garamond';">
-                            <fmt:formatNumber value="${totalPrice}" pattern="#,###"/> KRW
-                        </span>
+                        <span style="font-family: 'Cormorant Garamond';">
+                                <fmt:formatNumber value="${totalPrice}" pattern="#,###"/> KRW
+                            </span>
                     </div>
                 </div>
-                <input type="hidden" id="totalPriceInput" name="totalPrice" value="${totalPrice}">
-                <button type="button" class="btn-checkout" onclick="selectedItemsOrder()">CHECKOUT</button>
+
+                <button type="submit" class="btn-checkout">CHECKOUT</button>
             </div>
 
         </form>
@@ -129,7 +114,24 @@
     <input type="hidden" name="cartItemId" id="removeTargetId">
 </form>
 
-<script src="${pageContext.request.contextPath}/js/cart_list.js"></script>
+<script>
+    // 개별 삭제 스크립트
+    function removeCartItem(cartItemId) {
+        if(confirm('이 상품을 장바구니에서 삭제하시겠습니까?')) {
+            document.getElementById('removeTargetId').value = cartItemId;
+            document.getElementById('removeForm').submit();
+        }
+    }
+
+    // 전체 선택/해제 스크립트 (UX용)
+    const checkAll = document.getElementById('checkAll');
+    if(checkAll) {
+        checkAll.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.item-check');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+        });
+    }
+</script>
 
 </body>
 </html>
