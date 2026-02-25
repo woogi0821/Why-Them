@@ -69,6 +69,7 @@
         <where>
             AND P.STATUS = 'SALE' <if test="categoryId != null">AND P.CATEGORY_ID = #{categoryId}</if>
         </where>
+
         ORDER BY P.PRODUCT_ID DESC
     </select>
 
@@ -113,8 +114,10 @@
         FROM PRODUCT P <include refid="promoJoin"/>
         WHERE P.STATUS = 'SALE' ORDER BY P.CREATED_AT DESC, P.PRODUCT_ID DESC
         ) WHERE ROWNUM &lt;= #{limit}
+
     </select>
 
+<!--조회수 업로드-->
     <update id="updateViewCount">
         UPDATE PRODUCT
         SET VIEW_COUNT = NVL(VIEW_COUNT, 0) + 1
