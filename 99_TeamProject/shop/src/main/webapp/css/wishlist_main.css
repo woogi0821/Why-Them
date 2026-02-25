@@ -1,0 +1,192 @@
+/* === 위시리스트 전용 스타일 === */
+.wish-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 20px 120px;
+    min-height: 600px;
+}
+
+/* 1. 페이지 타이틀 & 상단 요약 */
+.page-header {
+    text-align: center;
+    margin-bottom: 60px;
+    position: relative;
+}
+.page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    letter-spacing: 3px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+}
+
+/* 총 금액 박스 */
+.summary-box {
+    display: inline-block;
+    background-color: #f9f9f9;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-size: 14px;
+    color: #555;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.summary-box strong {
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 18px;
+    margin-left: 10px;
+    font-family: 'Cormorant Garamond', serif; /* 숫자 강조 */
+}
+
+/* 전체 삭제 버튼 (오른쪽 상단 배치) */
+.top-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+.btn-delete-all {
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #888;
+    padding: 8px 15px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Noto Sans KR';
+}
+.btn-delete-all:hover {
+    border-color: #1a1a1a;
+    color: #1a1a1a;
+    background: #fff;
+}
+
+/* 2. 상품 리스트 그리드 (카드형) */
+.wish-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개 */
+    gap: 40px 20px;
+}
+
+.wish-item {
+    position: relative;
+    text-align: left;
+}
+
+/* 이미지 영역 */
+.img-box {
+    position: relative;
+    width: 100%;
+    height: 350px; /* 세로로 긴 이미지 비율 유지 */
+    overflow: hidden;
+    background-color: #f4f4f4;
+    margin-bottom: 15px;
+}
+.img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.wish-item:hover .img-box img {
+    transform: scale(1.05); /* 호버 시 살짝 확대 */
+}
+
+/* 개별 삭제 버튼 (X) */
+.btn-remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    width: 30px; height: 30px;
+    font-size: 16px;
+    color: #1a1a1a;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+.btn-remove:hover {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+/* 상품 정보 */
+.item-info h4 {
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 5px;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.item-info .price {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+/* 장바구니 버튼 */
+.btn-cart {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background: #1a1a1a;
+    color: #fff;
+    border: 1px solid #1a1a1a;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    opacity: 0; /* 평소엔 숨김 */
+    transform: translateY(10px);
+}
+.wish-item:hover .btn-cart {
+    opacity: 1; /* 호버 시 등장 */
+    transform: translateY(0);
+}
+.btn-cart:hover {
+    background: #fff;
+    color: #1a1a1a;
+}
+
+/* 텅 비었을 때 */
+.empty-state {
+    text-align: center;
+    padding: 100px 0;
+    grid-column: 1 / -1; /* 전체 너비 차지 */
+}
+.empty-state p {
+    color: #999;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+.btn-go-shop {
+    display: inline-block;
+    padding: 12px 30px;
+    border: 1px solid #1a1a1a;
+    color: #1a1a1a;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.3s;
+}
+.btn-go-shop:hover {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+    .wish-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+    .wish-grid { grid-template-columns: repeat(2, 1fr); gap: 20px 10px; }
+    .img-box { height: 250px; }
+    .btn-cart { opacity: 1; transform: translateY(0); margin-top: 10px; } /* 모바일은 항상 보임 */
+}

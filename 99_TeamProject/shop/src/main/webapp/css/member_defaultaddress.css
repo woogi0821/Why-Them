@@ -1,0 +1,62 @@
+/* ... 기존 스타일 유지 ... */
+.lala-form-wrapper {
+    padding: 40px 20px;
+    background: #fff;
+    border-top: 1px solid #1a1a1a;
+    margin-top: 30px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.lala-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    color: #1a1a1a;
+    text-align: center;
+}
+.lala-input-group { margin-bottom: 20px; position: relative; }
+.lala-label {
+    display: block; font-size: 11px; color: #888; letter-spacing: 1px;
+    margin-bottom: 5px; text-transform: uppercase;
+}
+.lala-input {
+    width: 100%; padding: 10px 0; border: none; border-bottom: 1px solid #ddd;
+    font-size: 13px; color: #333; outline: none; transition: border-color 0.3s; border-radius: 0;
+}
+.lala-input:focus { border-bottom: 1px solid #1a1a1a; }
+.lala-input[readonly] { color: #999; background-color: transparent; cursor: not-allowed; }
+
+.lala-btn-black {
+    background: #1a1a1a; color: #fff; border: 1px solid #1a1a1a;
+    padding: 12px 30px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s; width: 100%;
+}
+.lala-btn-black:hover { background: #fff; color: #1a1a1a; }
+.lala-btn-outline {
+    background: #fff; color: #1a1a1a; border: 1px solid #ddd;
+    padding: 5px 10px; font-size: 10px; cursor: pointer; letter-spacing: 1px;
+}
+
+/* ★ [추가] 미니 버튼 (+ / -) 스타일 */
+.btn-mini {
+    background: #fff; border: 1px solid #ddd; color: #1a1a1a;
+    width: 30px; height: 30px; line-height: 28px; text-align: center;
+    cursor: pointer; font-size: 16px; margin-left: 5px;
+    display: inline-block; transition: all 0.2s;
+}
+.btn-mini:hover { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+.btn-mini.remove { color: #d9534f; border-color: #d9534f; } /* 삭제 버튼은 붉은색 포인트 */
+.btn-mini.remove:hover { background: #d9534f; color: #fff; }
+
+.phone-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px; /* 입력창 사이 간격 */
+}
+
+.lala-checkbox-wrapper {
+    display: flex; align-items: center; gap: 8px; margin: 20px 0 30px;
+    font-size: 12px; color: #555; justify-content: center;
+}

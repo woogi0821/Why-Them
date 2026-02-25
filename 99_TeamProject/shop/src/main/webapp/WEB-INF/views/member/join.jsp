@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <title>라라 부티크 | JOIN</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/join.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/member_join.css">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
     <style>
@@ -103,7 +103,7 @@
         </form>
     </section>
 </div>
-<script src="${pageContext.request.contextPath}/js/join.js"></script>
+<script src="${pageContext.request.contextPath}/js/member_join.js"></script>
 <script>
     <c:if test="${not empty errorMsg}">
     alert("<c:out value='${errorMsg}'/>");

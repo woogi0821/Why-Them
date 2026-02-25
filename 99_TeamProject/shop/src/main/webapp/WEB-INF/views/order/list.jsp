@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>LALA BOUTIQUE - LIST</title>
-    <link rel="stylesheet" href="/css/cart.css">
+    <link rel="stylesheet" href="/css/cart_list.css">
 </head>
 <body>
 <jsp:include page="/common/header.jsp" />
