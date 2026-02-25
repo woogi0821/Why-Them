@@ -9,7 +9,7 @@
     <style>
         body { margin: 0; font-family: 'Pretendard', sans-serif; background-color: #f4f7f9; display: flex; height: 100vh; overflow: hidden; }
         a { text-decoration: none; color: inherit; }
-        /* 사이드바 스타일 (스크린샷 일치) */
+        /* 사이드바 스타일 일치 */
         .sidebar { width: 240px; background-color: #34495e; color: #ecf0f1; display: flex; flex-direction: column; flex-shrink: 0; }
         .sidebar-header { padding: 30px 20px; font-size: 1.4rem; font-weight: bold; background-color: #2c3e50; text-align: center; cursor: pointer; }
         .sidebar-header a { color: #fff; letter-spacing: 2px; }
@@ -134,25 +134,21 @@
                                     <span class="status-badge status-d">삭제됨</span>
                                 </c:when>
                                 <c:otherwise>
+                                    <%-- 진행중/중단됨 표시 --%>
                                     <span class="status-badge ${promotion.isActive eq 'Y' ? 'status-y' : 'status-n'}">
-                                            ${promotion.isActive eq 'Y' ? '진행중' : '일시중단'}
+                                            ${promotion.isActive eq 'Y' ? '진행중' : '중단됨'}
                                     </span>
                                 </c:otherwise>
                             </c:choose>
                         </td>
                         <td>
+                                <%-- 관리 버튼: 진행중(Y)일 때만 중지 버튼 노출 --%>
                             <c:if test="${promotion.isActive eq 'Y'}">
-                                <form action="/event/admin/promotion/end" method="post" style="display:inline;">
-                                    <input type="hidden" name="promotionId" value="${promotion.promotionId}"/>
-                                    <button type="submit" style="color: #e74c3c; background:none; border:none; font-weight:bold; cursor:pointer;">종료</button>
-                                </form>
+
                             </c:if>
                         </td>
                     </tr>
                 </c:forEach>
-                <c:if test="${empty list}">
-                    <tr><td colspan="5" style="text-align:center; padding: 50px; color: #999;">데이터가 존재하지 않습니다.</td></tr>
-                </c:if>
                 </tbody>
             </table>
 
@@ -177,12 +173,21 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        fetch('/event/api/promotion/dashboard-stats')
-            .then(res => res.json())
+        // 주소의 's' 유무와 전체 경로를 컨트롤러(@RequestMapping)와 일치시킴
+        fetch('/api/promotions/dashboard-stats')
+            .then(res => {
+                if (!res.ok) throw new Error('데이터를 가져오는데 실패했습니다 (404/500)');
+                return res.json();
+            })
             .then(data => {
+                // Service에서 Map에 담아준 Key값들과 일치 확인
                 document.getElementById('activeCount').innerText = (data.activePromotions || 0);
                 document.getElementById('productCount').innerText = (data.discountedProducts || 0);
                 document.getElementById('salesAmount').innerText = (data.todaySales || 0).toLocaleString();
+            })
+            .catch(err => {
+                console.error('Fetch error:', err);
+                // 에러 발생 시 0으로 유지하거나 알림
             });
 
         const msg = "${msg}";
@@ -194,3 +199,4 @@
 </script>
 </body>
 </html>
+<%--러햐애ㅗㅓㅑㄷ해ㅑㅗㄷ옿ㅇ롱--%>

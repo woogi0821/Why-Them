@@ -73,7 +73,7 @@
     </update>
 
     <select id="countActivePromotions" resultType="int">
-        SELECT COUNT(*) FROM promotion WHERE status = 'ACTIVE'
+        SELECT COUNT(*) FROM promotion WHERE IS_ACTIVE = 'Y'
     </select>
 
     <select id="countDiscountedProducts" resultType="int">
