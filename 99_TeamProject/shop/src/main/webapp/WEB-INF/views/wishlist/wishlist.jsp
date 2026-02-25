@@ -249,13 +249,13 @@
                         </button>
 
                         <div class="img-box">
-                            <a href="/product/detail?id=${item.productId}">
+                            <a href="/product/detail?productId=${item.productId}">
                                 <img src="${empty item.imageUrl ? '/images/no_img.png' : item.imageUrl}" alt="${item.productName}">
                             </a>
                         </div>
 
                         <div class="item-info">
-                            <a href="/product/detail?id=${item.productId}" style="text-decoration:none;">
+                            <a href="/product/detail?productId=${item.productId}" style="text-decoration:none;">
                                 <h4>${item.productName}</h4>
                             </a>
                             <div class="price"><fmt:formatNumber value="${item.price}" /></div>
