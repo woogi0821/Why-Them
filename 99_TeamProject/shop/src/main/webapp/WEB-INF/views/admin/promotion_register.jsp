@@ -3,88 +3,95 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <title>프로모션 ${promotion == null ? '추가' : '수정'}</title>
+  <title>프로모션 ${promotion == null ? '등록' : '수정'}</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { background-color: #f4f7f9; }
+    .form-container { background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+  </style>
 </head>
-<body>
-<jsp:include page="/common/header.jsp"/>
+<body class="p-6">
 
-<div class="container mx-auto mt-8 px-3">
-  <h1 class="text-2xl font-bold mb-6">프로모션 ${promotion == null ? '추가' : '상세조회'}</h1>
+<div class="max-w-2xl mx-auto form-container p-8 mt-10">
+  <h1 class="text-3xl font-extrabold text-gray-800 mb-8 border-b pb-4">
+    프로모션 ${promotion == null ? '신규 등록' : '정보 수정'}
+  </h1>
 
-  <form id="addForm" name="addForm" method="post">
+  <form id="addForm" method="post">
     <c:if test="${promotion != null}">
-      <input type="hidden" id="promotionId" name="promotionId" value="<c:out value="${promotion.promotionId}"/>" />
+      <input type="hidden" id="promotionId" name="promotionId" value="${promotion.promotionId}" />
     </c:if>
 
-    <div class="mb-4">
-      <label class="block mb-1 font-bold">프로모션 제목</label>
-      <input type="text" name="promotionTitle"
-             class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring focus:ring-blue-500"
-             value="<c:out value="${promotion.promotionTitle}"/>" placeholder="제목을 입력하세요">
-    </div>
-
-    <div class="mb-4">
-      <label class="block mb-1 font-bold">할인 설정</label>
-      <div class="flex gap-2">
-        <select name="discountType" class="border border-gray-300 rounded p-2">
-          <option value="PERCENT" ${promotion.discountType == 'PERCENT' ? 'selected' : ''}>%</option>
-          <option value="AMOUNT" ${promotion.discountType == 'AMOUNT' ? 'selected' : ''}>원</option>
-        </select>
-        <input type="number" name="discountValue" class="flex-1 border border-gray-300 rounded p-2"
-               value="${promotion.discountValue}" placeholder="할인 수치">
+    <div class="space-y-6">
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">프로모션 제목</label>
+        <input type="text" name="promotionTitle" required
+               class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition"
+               value="<c:out value="${promotion.promotionTitle}"/>" placeholder="예: 여름 정기 세일">
       </div>
-    </div>
 
-    <div class="mb-4 flex gap-4">
-      <div class="flex-1">
-        <label class="block mb-1 font-bold">시작일</label>
-        <input type="date" name="startDate" class="w-full border border-gray-300 rounded p-2"
-               value="${promotion.startDate}">
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">할인 설정</label>
+        <div class="flex gap-3">
+          <select name="discountType" class="border border-gray-300 rounded-lg p-3 bg-gray-50">
+            <option value="PERCENT" ${promotion.discountType == 'PERCENT' ? 'selected' : ''}>정률 (%)</option>
+            <option value="AMOUNT" ${promotion.discountType == 'AMOUNT' ? 'selected' : ''}>정액 (원)</option>
+          </select>
+          <input type="number" name="discountValue" required
+                 class="flex-1 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                 value="${promotion.discountValue}" placeholder="숫자만 입력">
+        </div>
       </div>
-      <div class="flex-1">
-        <label class="block mb-1 font-bold">종료일</label>
-        <input type="date" name="endDate" class="w-full border border-gray-300 rounded p-2"
-               value="${promotion.endDate}">
-      </div>
-    </div>
 
-    <c:if test="${promotion != null}">
-      <div class="mb-4">
-        <label class="block mb-1 font-bold">상태 설정</label>
-        <select name="isActive" class="w-full border border-gray-300 rounded p-2">
-          <option value="Y" ${promotion.isActive == 'Y' ? 'selected' : ''}>활성화 (진행중)</option>
-          <option value="N" ${promotion.isActive == 'N' ? 'selected' : ''}>비활성화 (중단됨)</option>
-        </select>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">시작일</label>
+          <input type="date" name="startDate" required
+                 class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+                 value="${promotion.startDate}">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">종료일</label>
+          <input type="date" name="endDate" required
+                 class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+                 value="${promotion.endDate}">
+        </div>
       </div>
-    </c:if>
 
-    <div class="mb-4 flex gap-2">
-      <c:choose>
-        <c:when test="${promotion == null}">
-          <button type="button" class="w-full bg-blue-700 text-white p-2 rounded hover:bg-blue-800"
-                  onclick="fn_save('add')">저장</button>
-        </c:when>
-        <c:otherwise>
-          <button type="button" class="flex-1 bg-green-700 text-white p-2 rounded hover:bg-green-800"
-                  onclick="fn_save('edit')">수정</button>
-          <button type="button" class="flex-1 bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
-                  onclick="location.href='/admin/promotion_list'">취소</button>
-        </c:otherwise>
-      </c:choose>
+      <c:if test="${promotion != null}">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">활성화 상태</label>
+          <select name="isActive" class="w-full border border-gray-300 rounded-lg p-3 bg-gray-50">
+            <option value="Y" ${promotion.isActive == 'Y' ? 'selected' : ''}>진행 가능 (Y)</option>
+            <option value="N" ${promotion.isActive == 'N' ? 'selected' : ''}>일시 중단 (N)</option>
+          </select>
+        </div>
+      </c:if>
+
+      <div class="flex gap-4 pt-4">
+        <button type="button"
+                onclick="fn_save('${promotion == null ? 'add' : 'edit'}')"
+                class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-lg">
+          ${promotion == null ? '등록하기' : '수정완료'}
+        </button>
+        <button type="button"
+                onclick="history.back()"
+                class="flex-1 bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300 transition">
+          취소
+        </button>
+      </div>
     </div>
   </form>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script type="text/javascript">
+<script>
   function fn_save(mode) {
-    if(mode === 'add') {
-      $("#addForm").attr("action", "/admin/promotion/add").submit();
-    } else {
-      $("#addForm").attr("action", "/admin/promotion/update").submit();
-    }
+    // 간단한 유효성 검사
+    if(!$("input[name='promotionTitle']").val()) { alert("제목을 입력해주세요."); return; }
+
+    const actionPath = (mode === 'add') ? "/admin/promotion/add" : "/admin/promotion/update";
+    $("#addForm").attr("action", actionPath).submit();
   }
 </script>
 </body>

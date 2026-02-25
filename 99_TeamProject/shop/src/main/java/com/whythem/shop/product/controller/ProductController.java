@@ -3,9 +3,7 @@ package com.whythem.shop.product.controller;
 import com.whythem.shop.member.vo.MemberVO;
 import com.whythem.shop.product.service.ProductService;
 import com.whythem.shop.product.vo.ProductVO;
-import com.whythem.shop.wishlist.service.WishlistService;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequiredArgsConstructor // 생성자 자동 생성 (의존성 주입 해결)
 public class ProductController {
 
     private final ProductService productService;
-    private final WishlistService wishlistService; // 위시리스트 서비스 정상 연결
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     /**
      * 1. 메인 페이지 (index.jsp)
@@ -28,37 +28,18 @@ public class ProductController {
         MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
         Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
 
-        // 1. 신상품 / 베스트 상품 각각 4개씩 가져오기
+        // [수정된 부분]
+        // 기존의 getProductList(null, memberId) 대신,
+        // 상품팀이 만든 전용 메서드를 사용해서 각각 4개씩 가져옵니다.
         List<ProductVO> newList = productService.getNewArrivals(4, memberId);
         List<ProductVO> bestList = productService.getWeeklyBest(4, memberId);
 
-        // 2. 로그인한 회원이라면 찜 여부(wished) 확인해서 하트 불 켜주기
-        if (memberId != 0L) {
-            List<Long> myWishedProductIds = wishlistService.getWishlistProductIds(memberId);
-
-            if (myWishedProductIds != null && !myWishedProductIds.isEmpty()) {
-                // 신상품 찜 체크
-                for (ProductVO p : newList) {
-                    if (myWishedProductIds.contains(p.getProductId())) {
-                        p.setWished(true);
-                    }
-                }
-                // 베스트 상품 찜 체크
-                for (ProductVO p : bestList) {
-                    if (myWishedProductIds.contains(p.getProductId())) {
-                        p.setWished(true);
-                    }
-                }
-            }
-        }
-
-        // ★ 3. JSP가 기다리는 데이터 최종 전송! (팀장님이 찾으시던 그 부분!)
+        // JSP가 애타게 찾던 그 이름표(newList, bestList)를 달아서 보냅니다.
         model.addAttribute("newList", newList);
         model.addAttribute("bestList", bestList);
 
         return "index";
     }
-
 
     /**
      * 2. Weekly Best 전체보기 페이지 (product/weekly_best.jsp)
@@ -119,10 +100,15 @@ public class ProductController {
      * 5. 상품 상세 페이지 (product/product_detail.jsp)
      */
     @GetMapping("/product/detail")
-    public String productDetail(@RequestParam("productId") Long productId, Model model) {
-        // 서비스 내부에서 조회수 증가(updateViewCount) 후 데이터를 가져옴
-        ProductVO product = productService.findById(productId);
+    public String productDetail(@RequestParam("productId") Long productId, Model model, HttpSession session) {
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+        Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
+
+        // 서비스에 memberId도 같이 던져서 'isWished' 상태까지 한 번에 가져오게 수정합니다.
+        ProductVO product = productService.findById(productId, memberId);
+
         model.addAttribute("product", product);
+        // 이제 별도의 isWished 변수 없이 ${product.wished}로 JSP에서 바로 쓸 수 있습니다.
 
         return "product/product_detail";
     }
