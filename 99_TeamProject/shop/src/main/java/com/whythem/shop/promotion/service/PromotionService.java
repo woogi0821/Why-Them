@@ -31,7 +31,34 @@ public class PromotionService {
     }
 
     /**
-     * 프로모션 목록 조회 (페이징 포함)
+     * 가격 계산 로직 (유효성 검사 및 할인 적용)
+     * @param originalPrice 상품 원가
+     * @param promotion 적용할 프로모션 객체
+     * @return 할인 적용된 최종 가격
+     */
+    public int calculateDiscountedPrice(int originalPrice, Promotion promotion) {
+        // ACTIVE 또는 ongoing 둘 다 허용하도록 방어적으로 수정
+        if (promotion == null || promotion.getStatus() == null ||
+                (!promotion.getStatus().trim().equalsIgnoreCase("ACTIVE") &&
+                        !promotion.getStatus().trim().equalsIgnoreCase("ongoing"))) {
+            return originalPrice;
+        }
+
+        int discountValue = promotion.getDiscountValue();
+        String type = promotion.getDiscountType().trim().toUpperCase();
+        double resultPrice = originalPrice;
+
+        if ("PERCENT".equals(type) || "RATE".equals(type)) {
+            resultPrice = originalPrice * (1 - (discountValue / 100.0));
+        } else if ("AMOUNT".equals(type)) {
+            resultPrice = originalPrice - discountValue;
+        }
+
+        return (int) resultPrice;
+    }
+
+    /**
+     * 프로모션 목록 조회 (페이징 포함 - 관리자용)
      */
     public List<Promotion> getPromotionList(Criteria criteria) {
         // 별도의 상태 계산 로직 없이 DB 목록만 반환

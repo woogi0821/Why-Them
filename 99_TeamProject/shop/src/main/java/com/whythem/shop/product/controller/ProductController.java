@@ -119,10 +119,15 @@ public class ProductController {
      * 5. 상품 상세 페이지 (product/product_detail.jsp)
      */
     @GetMapping("/product/detail")
-    public String productDetail(@RequestParam("productId") Long productId, Model model) {
-        // 서비스 내부에서 조회수 증가(updateViewCount) 후 데이터를 가져옴
-        ProductVO product = productService.findById(productId);
+    public String productDetail(@RequestParam("productId") Long productId, Model model, HttpSession session) {
+        MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
+        Long memberId = (loginMember == null) ? 0L : loginMember.getMemberId();
+
+        // 서비스에 memberId도 같이 던져서 'isWished' 상태까지 한 번에 가져오게 수정합니다.
+        ProductVO product = productService.findById(productId, memberId);
+
         model.addAttribute("product", product);
+        // 이제 별도의 isWished 변수 없이 ${product.wished}로 JSP에서 바로 쓸 수 있습니다.
 
         return "product/product_detail";
     }

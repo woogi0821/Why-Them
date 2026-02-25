@@ -18,7 +18,10 @@ import java.util.Map;
 public class PromotionApiController {
 
     private final PromotionService promotionService;
-
+    @GetMapping("/dashboard-stats")
+    public Map<String, Object> getDashboardStats() {
+        return promotionService.getDashboardStats();
+    }
     @GetMapping("/active")
     public List<Promotion> getActivePromotions() {
         return promotionService.getActivePromotionList();

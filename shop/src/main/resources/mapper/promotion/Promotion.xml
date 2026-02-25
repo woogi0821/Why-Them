@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whythem.shop.promotion.mapper.PromotionMapper">
+
+    <select id="selectPromotion" parameterType="long" resultType="com.whythem.shop.promotion.vo.Promotion">
+        SELECT promotion_id, promotion_title, discount_type, discount_value, start_date, end_date, is_active
+        FROM promotion
+        WHERE promotion_id = #{promotionId}
+    </select>
+
+    <select id="getPromotionById" parameterType="long" resultType="com.whythem.shop.promotion.vo.Promotion">
+        SELECT promotion_id, promotion_title, discount_type, discount_value, min_order_amount, status
+        FROM promotion
+        WHERE promotion_id = #{promotionId}
+    </select>
+
+    <select id="getActivePromotionList" resultType="com.whythem.shop.promotion.vo.Promotion">
+        SELECT
+        promotion_id AS promotionId,
+        promotion_title AS promotionTitle,
+        discount_type AS discountType,
+        discount_value AS discountValue,
+        start_date AS startDate,
+        end_date AS endDate,
+        image_path AS imagePath,
+        status
+        FROM promotion
+        WHERE status = 'ACTIVE'
+        AND TRUNC(SYSDATE) BETWEEN TRUNC(start_date) AND TRUNC(end_date)
+        ORDER BY promotion_id DESC
+    </select>
+
+    <select id="selectPromotionList" parameterType="com.whythem.shop.common.Criteria" resultType="com.whythem.shop.promotion.vo.Promotion">
+        SELECT promotion_id, promotion_title, discount_type, discount_value, start_date, end_date, is_active AS isActive
+        FROM promotion
+        WHERE 1=1
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND promotion_title LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        ORDER BY promotion_id DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="selectPromotionTotalCount" parameterType="com.whythem.shop.common.Criteria" resultType="int">
+        SELECT COUNT(*) FROM promotion WHERE 1 = 1
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND promotion_title LIKE '%' || #{searchKeyword} || '%'
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.whythem.shop.promotion.vo.Promotion">
+        INSERT INTO promotion (promotion_id, promotion_title, discount_type, discount_value, start_date, end_date, is_active, status)
+        VALUES (promotion_seq.NEXTVAL, #{promotionTitle}, #{discountType}, #{discountValue}, #{startDate}, #{endDate}, 'Y', 'ACTIVE')
+    </insert>
+
+    <update id="updatePromotion" parameterType="com.whythem.shop.promotion.vo.Promotion">
+        UPDATE promotion
+        SET promotion_title = #{promotionTitle},
+        discount_type = #{discountType},
+        discount_value = #{discountValue},
+        start_date = #{startDate},
+        end_date = #{endDate},
+        is_active = #{isActive}
+        WHERE promotion_id = #{promotionId}
+    </update>
+
+    <update id="updatePromotionStatus" parameterType="long">
+        UPDATE promotion SET is_active = 'N' WHERE promotion_id = #{promotionId}
+    </update>
+
+    <update id="deletePromotion" parameterType="long">
+        UPDATE promotion SET is_active = 'D' WHERE promotion_id = #{promotionId}
+    </update>
+
+    <select id="countActivePromotions" resultType="int">
+        SELECT COUNT(*) FROM promotion WHERE IS_ACTIVE = 'Y'
+    </select>
+
+    <select id="countDiscountedProducts" resultType="int">
+        SELECT COUNT(*) FROM product WHERE discount_rate > 0
+    </select>
+
+    <select id="sumTodayPromotionSales" resultType="long">
+        SELECT 0 FROM DUAL
+    </select>
+</mapper>
