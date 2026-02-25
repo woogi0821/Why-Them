@@ -146,4 +146,17 @@
         ORDER BY p.payment_id DESC
     </select>
 
+    <!-- cartItemIds에 결제한 상품 저장 -->
+    <update id="updatePaymentCartItems">
+        UPDATE PAYMENTS
+        SET cart_item_ids = #{cartItemIds}
+        WHERE order_id = #{orderId}
+    </update>
+    <!-- 결제 완료 시 장바구니 ID 조회 -->
+    <select id="getCartItemIdsByPayment" resultType="string">
+        SELECT cart_item_ids
+        FROM PAYMENTS
+        WHERE order_id = #{orderId}
+    </select>
+
 </mapper>

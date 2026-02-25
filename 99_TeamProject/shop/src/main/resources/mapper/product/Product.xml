@@ -5,81 +5,119 @@
 
 <mapper namespace="com.whythem.shop.product.mapper.ProductMapper">
 
-    <select id="getProductList" resultType="com.whythem.shop.product.vo.ProductVO">
+    <resultMap id="productMap" type="com.whythem.shop.product.vo.ProductVO">
+        <id property="productId" column="PRODUCT_ID"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="name" column="PRODUCT_NAME"/>
+        <result property="brandName" column="BRAND_NAME"/>
+        <result property="price" column="PRICE"/>
+        <result property="stockQuantity" column="STOCK_QUANTITY"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="status" column="STATUS"/>
+        <result property="imageUrl" column="IMAGE_URL"/>
+        <result property="viewCount" column="VIEW_COUNT"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="wished" column="IS_WISHED"/>
+
+        <association property="promotion" javaType="com.whythem.shop.promotion.vo.Promotion">
+            <id property="promotionId" column="PR_ID"/>
+            <result property="promotionTitle" column="PR_TITLE"/>
+            <result property="discountType" column="PR_TYPE"/>
+            <result property="discountValue" column="PR_VALUE"/>
+            <result property="minOrderAmount" column="PR_MIN_AMOUNT"/>
+            <result property="status" column="PR_STATUS"/>
+        </association>
+    </resultMap>
+
+    <sql id="promoJoin">
+        LEFT JOIN (
+        SELECT * FROM (
         SELECT
-        P.PRODUCT_ID        AS productId,
-        P.CATEGORY_ID       AS categoryId,
-        P.PRODUCT_NAME      AS name,
-        P.BRAND_NAME        AS brandName,
-        P.PRICE             AS price,
-        P.STOCK_QUANTITY    AS stockQuantity,
-        P.DESCRIPTION       AS description,
-        P.STATUS            AS status,
-        P.IMAGE_URL         AS imageUrl,
-        P.VIEW_COUNT        AS viewCount,
+        PP.PRODUCT_ID,
+        PR.PROMOTION_ID,
+        PR.PROMOTION_TITLE,
+        PR.DISCOUNT_TYPE,
+        PR.DISCOUNT_VALUE,
+        PR.MIN_ORDER_AMOUNT,
+        PR.STATUS,
+        ROW_NUMBER() OVER(PARTITION BY PP.PRODUCT_ID ORDER BY PR.PROMOTION_ID DESC) as RN
+        FROM PROMOTION_PRODUCT PP
+        JOIN PROMOTION PR ON PP.PROMOTION_ID = PR.PROMOTION_ID
+        -- WHERE 절 삭제함 (무조건 표시)
+        ) WHERE RN = 1
+        ) PROMO ON P.PRODUCT_ID = PROMO.PRODUCT_ID
+    </sql>
 
+    <select id="getProductList" resultMap="productMap">
+        SELECT
+        P.PRODUCT_ID, P.CATEGORY_ID, P.PRODUCT_NAME, P.BRAND_NAME,
+        P.PRICE, P.STOCK_QUANTITY, P.DESCRIPTION, P.STATUS,
+        P.IMAGE_URL, P.VIEW_COUNT, P.CREATED_AT,
 
-        (SELECT COUNT(*) FROM WISHLIST W WHERE W.PRODUCT_ID = P.PRODUCT_ID AND W.MEMBER_ID = #{memberId}) AS wished
+        PROMO.PROMOTION_ID     AS PR_ID,
+        PROMO.PROMOTION_TITLE  AS PR_TITLE,
+        PROMO.DISCOUNT_TYPE    AS PR_TYPE,
+        PROMO.DISCOUNT_VALUE   AS PR_VALUE,
+        PROMO.MIN_ORDER_AMOUNT AS PR_MIN_AMOUNT,
+        PROMO.STATUS           AS PR_STATUS,
+
+        (SELECT COUNT(*) FROM WISHLIST W
+        WHERE W.PRODUCT_ID = P.PRODUCT_ID AND W.MEMBER_ID = #{memberId}) AS IS_WISHED
+
         FROM PRODUCT P
+        <include refid="promoJoin"/>
         <where>
-            AND P.STATUS = 'SALE'
-            <if test="categoryId != null">
-                AND P.CATEGORY_ID = #{categoryId}
-            </if>
+            AND P.STATUS = 'SALE' <if test="categoryId != null">AND P.CATEGORY_ID = #{categoryId}</if>
         </where>
         ORDER BY P.PRODUCT_ID DESC
     </select>
 
-    <select id="findById" resultType="com.whythem.shop.product.vo.ProductVO">
+    <select id="findById" resultMap="productMap">
         SELECT
-        PRODUCT_ID        AS productId,
-        CATEGORY_ID       AS categoryId,
-        PRODUCT_NAME      AS name,
-        BRAND_NAME        AS brandName,
-        PRICE             AS price,
-        STOCK_QUANTITY    AS stockQuantity,
-        DESCRIPTION       AS description,
-        STATUS            AS status,
-        IMAGE_URL         AS imageUrl
-        FROM PRODUCT
-        WHERE PRODUCT_ID = #{productId}
-        AND STATUS = 'SALE' </select>
+        P.PRODUCT_ID, P.CATEGORY_ID, P.PRODUCT_NAME, P.BRAND_NAME,
+        P.PRICE, P.STOCK_QUANTITY, P.DESCRIPTION, P.STATUS,
+        P.IMAGE_URL, P.VIEW_COUNT, P.CREATED_AT,
 
-    <select id="getWeeklyBest" resultType="com.whythem.shop.product.vo.ProductVO">
-        SELECT * FROM (
-        SELECT
-        PRODUCT_ID        AS productId,
-        PRODUCT_NAME      AS name,
-        BRAND_NAME        AS brandName,
-        PRICE             AS price,
-        IMAGE_URL         AS imageUrl,
-        VIEW_COUNT        AS viewCount
-        FROM PRODUCT
-        WHERE STATUS = 'SALE' ORDER BY VIEW_COUNT DESC, PRODUCT_ID DESC
-        )
-        WHERE ROWNUM &lt;= #{limit}
+        PROMO.PROMOTION_ID     AS PR_ID,
+        PROMO.PROMOTION_TITLE  AS PR_TITLE,
+        PROMO.DISCOUNT_TYPE    AS PR_TYPE,
+        PROMO.DISCOUNT_VALUE   AS PR_VALUE,
+        PROMO.MIN_ORDER_AMOUNT AS PR_MIN_AMOUNT,
+        PROMO.STATUS           AS PR_STATUS,
+
+        0 AS IS_WISHED
+        FROM PRODUCT P
+        <include refid="promoJoin"/>
+        WHERE P.PRODUCT_ID = #{productId}
     </select>
 
-    <select id="getNewArrivals" resultType="com.whythem.shop.product.vo.ProductVO">
+    <select id="getWeeklyBest" resultMap="productMap">
         SELECT * FROM (
         SELECT
-        PRODUCT_ID   AS productId,
-        PRODUCT_NAME AS name,
-        IMAGE_URL    AS imageUrl,
-        PRICE        AS price,
-        BRAND_NAME   AS brandName,
-        CREATED_AT   AS createdAt,
-        VIEW_COUNT   AS viewCount
-        FROM PRODUCT
-        WHERE STATUS = 'SALE' ORDER BY CREATED_AT DESC, PRODUCT_ID DESC
-        )
-        WHERE ROWNUM &lt;= #{limit}
+        P.PRODUCT_ID, P.PRODUCT_NAME, P.BRAND_NAME, P.PRICE, P.IMAGE_URL, P.VIEW_COUNT, P.CREATED_AT,
+        PROMO.PROMOTION_ID AS PR_ID, PROMO.PROMOTION_TITLE AS PR_TITLE, PROMO.DISCOUNT_TYPE AS PR_TYPE,
+        PROMO.DISCOUNT_VALUE AS PR_VALUE, PROMO.MIN_ORDER_AMOUNT AS PR_MIN_AMOUNT, PROMO.STATUS AS PR_STATUS,
+        0 AS IS_WISHED
+        FROM PRODUCT P <include refid="promoJoin"/>
+        WHERE P.STATUS = 'SALE' ORDER BY P.VIEW_COUNT DESC, P.PRODUCT_ID DESC
+        ) WHERE ROWNUM &lt;= #{limit}
+    </select>
+
+    <select id="getNewArrivals" resultMap="productMap">
+        SELECT * FROM (
+        SELECT
+        P.PRODUCT_ID, P.PRODUCT_NAME, P.BRAND_NAME, P.PRICE, P.IMAGE_URL, P.VIEW_COUNT, P.CREATED_AT,
+        PROMO.PROMOTION_ID AS PR_ID, PROMO.PROMOTION_TITLE AS PR_TITLE, PROMO.DISCOUNT_TYPE AS PR_TYPE,
+        PROMO.DISCOUNT_VALUE AS PR_VALUE, PROMO.MIN_ORDER_AMOUNT AS PR_MIN_AMOUNT, PROMO.STATUS AS PR_STATUS,
+        0 AS IS_WISHED
+        FROM PRODUCT P <include refid="promoJoin"/>
+        WHERE P.STATUS = 'SALE' ORDER BY P.CREATED_AT DESC, P.PRODUCT_ID DESC
+        ) WHERE ROWNUM &lt;= #{limit}
     </select>
 
     <update id="updateViewCount">
         UPDATE PRODUCT
-        SET VIEW_COUNT = VIEW_COUNT + 1
+        SET VIEW_COUNT = NVL(VIEW_COUNT, 0) + 1
         WHERE PRODUCT_ID = #{productId}
     </update>
-
 </mapper>

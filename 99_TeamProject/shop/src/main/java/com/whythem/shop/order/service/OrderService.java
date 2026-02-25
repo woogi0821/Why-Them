@@ -11,16 +11,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
     @Autowired
     private OrderMapper orderMapper;
-/*
-    1. 주문 (상세페이지, 장바구니 주문 공통로직)
-*/
+
+    /*
+        1. 주문 (상세페이지, 장바구니 주문 공통로직)
+    */
     //  상세페이지 주문
     @Transactional
     public Long processDirectOrder(Long memberId, Long productId, int quantity) {
@@ -52,13 +55,18 @@ public class OrderService {
         }
 
         Long orderId = createOrder(memberId, orderItems, requestTotalPrice);
-        orderMapper.deleteSelectedCartItems(memberId, cartItemIds);
+//        orderMapper.deleteSelectedCartItems(memberId, cartItemIds);
+
+        String cartIdsStr = cartItemIds.stream()
+            .map(String::valueOf)
+            .collect(Collectors.joining(","));
+        orderMapper.updatePaymentCartItems(orderId, cartIdsStr);
 
         return orderId;
     }
 
 
-//  주문 생성 공통 로직
+    //  주문 생성 공통 로직
     @Transactional
     public Long createOrder(Long memberId, List<OrderItemVO> orderItems, Double requestTotalPrice) {
         double calculatedTotal = 0;
@@ -83,33 +91,35 @@ public class OrderService {
         payment.setOrderId(order.getOrderId());
         payment.setAmount(calculatedTotal);
         payment.setPaymentMethod("0");
+
         orderMapper.insertPayment(payment);
 
         return order.getOrderId();
     }
 
-/*
-    2. 주문 단계
-*/
+    /*
+        2. 주문 단계
+    */
     public List<OrderItemVO> getOrderItems(Long orderId, Long memberId) {
         List<OrderItemVO> items = orderMapper.selectOrderList(orderId, memberId);
 
-        if(items == null || items.isEmpty()) {
+        if (items == null || items.isEmpty()) {
             throw new IllegalArgumentException("주문이 존재하지 않거나 접근 권한이 없습니다.");
         }
         return items;
     }
+
     public MemberAddressVO getMemberInfo(Long memberId) {
         return orderMapper.selectMemberById(memberId);
     }
 
-/*
-    3. 결제 단계
-*/
+    /*
+        3. 결제 단계
+    */
     @Transactional
-    public void completePayment(Long orderId, String paymentMethod){
+    public void completePayment(Long orderId, String paymentMethod, Long memberId) {
         int result = orderMapper.updatePaymentCompleted(orderId, paymentMethod, "PAID");
-        if(result == 0) {
+        if (result == 0) {
             throw new RuntimeException("결제 업데이트 실패: orderId=" + orderId);
         }
         orderMapper.updateOrderStatus(orderId, "ORDERED");
@@ -118,15 +128,25 @@ public class OrderService {
         for (OrderItemVO item : itemList) {
             int updated = orderMapper.reduceStock(item.getProductId(), item.getQuantity());
 
-            if(updated == 0) {
+            System.out.println("상품ID=" + item.getProductId() +", 주문 수량= "+item.getQuantity()+", update="+updated);
+            if (updated == 0) {
                 throw new RuntimeException("재고가 부족한 상품이 포함되었습니다.");
             }
         }
+
+        String cartIdsStr = orderMapper.getCartItemIdsByPayment(orderId);
+        if (cartIdsStr != null && !cartIdsStr.isEmpty()) {
+            List<Long> cartItemIds = Arrays.stream(cartIdsStr.split(","))
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+            orderMapper.deleteSelectedCartItems(memberId, cartItemIds);
+        }
+
     }
 
-    public PaymentVO getPaymentInfo(Long orderId){
+    public PaymentVO getPaymentInfo(Long orderId) {
         PaymentVO payment = orderMapper.selectPaymentByOrderId(orderId);
-        if(payment == null) throw new RuntimeException("결제 정보가 존재하지 않습니다. orderId=" + orderId);
+        if (payment == null) throw new RuntimeException("결제 정보가 존재하지 않습니다. orderId=" + orderId);
         return payment;
     }
 

@@ -46,9 +46,9 @@
                     </td>
                     <td>
                         <c:choose>
-                            <c:when test="${item.paymentMethod == 'k'}">카카오페이</c:when>
-                            <c:when test="${item.paymentMethod == 'n'}">네이버페이</c:when>
-                            <c:when test="${item.paymentMethod == 'c'}">신용/체크카드</c:when>
+                            <c:when test="${item.paymentMethod == 'K'}">카카오페이</c:when>
+                            <c:when test="${item.paymentMethod == 'N'}">네이버페이</c:when>
+                            <c:when test="${item.paymentMethod == 'C'}">신용/체크카드</c:when>
                             <c:when test="${item.paymentMethod == '0'}"> </c:when>
                             <c:otherwise>기타</c:otherwise>
                         </c:choose>

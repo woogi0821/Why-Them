@@ -158,8 +158,7 @@ CREATE TABLE ORDERS (
                         MEMBER_ID       NUMBER(19)          NOT NULL,
                         TOTAL_PRICE     NUMBER(10, 2)       NOT NULL,
                         STATUS          VARCHAR2(20)        DEFAULT 'PENDING',
-                        CREATED_AT      DATE                DEFAULT SYSDATE,
-                        UPDATED_AT      DATE                DEFAULT SYSDATE,
+                        CREATED_AT      DATE                DEFAULT SYSDATE
                         CONSTRAINT PK_ORDERS PRIMARY KEY (ORDER_ID),
                         CONSTRAINT FK_ORDER_MEMBER FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
 );
