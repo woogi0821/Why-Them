@@ -71,50 +71,34 @@
                             <p class="brand"><c:out value="${item.brandName}" default="LALA BOUTIQUE" /></p>
 
                                 <%-- ★★★ [수정됨] 가격 표시 로직 (VO 타입별 할인 적용) ★★★ --%>
-                            <div class="price-area" style="margin-top: 5px;">
-                                <c:choose>
-                                    <%-- 1. 프로모션이 있고, 할인가가 계산되어 있을 때 --%>
-                                    <c:when test="${not empty item.promotion && item.salePrice > 0}">
-                                        <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                                                <%-- 정가 (취소선) --%>
-                                            <span style="text-decoration: line-through; color: #bbb; font-size: 13px;">
-                                                ₩ <fmt:formatNumber value="${item.price}" pattern="#,###"/>
-                                            </span>
+                                        <%-- [수정] 리스트 가격 표시 : 여기도 조건 강화 --%>
+                                    <div class="price-area" style="margin-top: 5px;">
+                                        <c:choose>
+                                            <%-- 조건 강화: salePrice < price (진짜 할인이 될 때만 빨간색) --%>
+                                            <c:when test="${not empty item.promotion && item.salePrice > 0 && item.salePrice < item.price}">
+                                                <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                    <span style="text-decoration: line-through; color: #bbb; font-size: 13px;">
+                        ₩ <fmt:formatNumber value="${item.price}" pattern="#,###"/>
+                    </span>
+                                                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #d9534f; font-weight: bold; font-size: 16px;">
+                            ₩ <fmt:formatNumber value="${item.salePrice}" pattern="#,###"/>
+                        </span>
+                                                        <span style="font-size: 11px; color: #fff; background-color: #d9534f; padding: 2px 4px; border-radius: 2px;">
+                           SALE
+                        </span>
+                                                    </div>
+                                                </div>
+                                            </c:when>
+                                            <%-- 할인 안 하거나 가격 똑같으면 그냥 정가 표시 --%>
+                                            <c:otherwise>
+                                                <p class="price" style="font-size: 16px; font-weight: 500; color: #333; margin:0;">
+                                                    ₩ <fmt:formatNumber value="${item.price}" pattern="#,###"/>
+                                                </p>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
 
-                                            <div style="display: flex; align-items: center; gap: 8px;">
-                                                    <%-- 할인가 (빨간색 강조) --%>
-                                                <span style="color: #d9534f; font-weight: bold; font-size: 16px;">
-                                                    ₩ <fmt:formatNumber value="${item.salePrice}" pattern="#,###"/>
-                                                </span>
-
-                                                    <%-- 할인 뱃지 (VO 타입에 따라 다르게 표시) --%>
-                                                <span style="font-size: 11px; color: #fff; background-color: #d9534f; padding: 2px 4px; border-radius: 2px;">
-                                                    <c:choose>
-                                                        <%-- 정률 할인 (RATE) : 10% OFF --%>
-                                                        <c:when test="${item.promotion.discountType == 'RATE'}">
-                                                            <c:out value="${item.promotion.discountValue}"/>% OFF
-                                                        </c:when>
-                                                        <%-- 정액 할인 (PRICE) : -5000 --%>
-                                                        <c:when test="${item.promotion.discountType == 'PRICE'}">
-                                                            -<fmt:formatNumber value="${item.promotion.discountValue}" pattern="#,###"/>
-                                                        </c:when>
-                                                        <%-- 그 외 : SALE --%>
-                                                        <c:otherwise>SALE</c:otherwise>
-                                                    </c:choose>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </c:when>
-
-                                    <%-- 2. 할인이 없을 때 (정가만 표시) --%>
-                                    <c:otherwise>
-                                        <p class="price" style="font-size: 16px; font-weight: 500; color: #333; margin:0;">
-                                            ₩ <fmt:formatNumber value="${item.price}" pattern="#,###"/>
-                                        </p>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                                <%-- ★★★ 가격 로직 끝 ★★★ --%>
 
                         </div>
                     </div>
