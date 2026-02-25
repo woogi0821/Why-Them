@@ -5,11 +5,11 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Payment</title>
-    <link rel="stylesheet" href="/css/confirm.css">
+    <link rel="stylesheet" href="/css/order.css">
 </head>
 <body>
 <jsp:include page="/common/header.jsp"/>
-<form method="post" action="/order/${orderId}/payment">
+<form method="post" action="${pageContext.request.contextPath}/order/${orderId}/payment">
     <div class="page">
         <div class="steps">
             <span>주문 확인</span>
@@ -22,17 +22,17 @@
             <input type="hidden" name="orderId" value="<c:out value="${orderId}"/>" >
             <div class="payment-method">
                 <label class="method-item">
-                    <input type="radio" name="payment" value="k" checked onclick="toggleCard(false)">
+                    <input type="radio" name="payment" value="K" checked onclick="toggleCard(false)">
                     <span class="method-label">카카오페이</span>
                 </label>
 
                 <label class="method-item">
-                    <input type="radio" name="payment" value="n" onclick="toggleCard(false)">
+                    <input type="radio" name="payment" value="N" onclick="toggleCard(false)">
                     <span class="method-label">네이버페이</span>
                 </label>
 
                 <label class="method-item">
-                    <input type="radio" name="payment" value="c" onclick="toggleCard(true)">
+                    <input type="radio" name="payment" value="C" onclick="toggleCard(true)">
                     <span class="method-label">신용/체크카드</span>
                 </label>
 

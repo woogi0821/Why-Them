@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Order Confirm</title>
-    <link rel="stylesheet" href="/css/confirm.css">
+    <link rel="stylesheet" href="/css/order.css">
 </head>
 <body>
 <jsp:include page="/common/header.jsp"/>
@@ -43,11 +43,26 @@
     </div>
 
     <div class="section">
-        <div class="section-title">배송지 정보</div>
+        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div class="section-title">배송지 정보</div>
+            <button type="button" id="addrEditBtn" onclick="fn_toggleAddrEdit()">변경</button>
+        </div>
+
         <div class="shipping-info">
-            <p><strong><c:out value="${memberInfo.recipientName}"/></strong></p>
-            <p><c:out value="${memberInfo.recipientPhone}"/></p>
-            <p><c:out value="${memberInfo.fullAddress}"/></p>
+            <div id="viewMode">
+                <p><strong><span id="txtRecipientName"><c:out value="${memberInfo.recipientName}"/></span></strong></p>
+                <p><span id="txtRecipientPhone"><c:out value="${memberInfo.recipientPhone}"/></span></p>
+                <p><span id="txtFullAddress"><c:out value="${memberInfo.fullAddress}"/></span></p>
+            </div>
+
+            <div id="editMode" style="display: none;">
+                <p><input type="text" id="iptRecipientName" value="${memberInfo.recipientName}" style="width: 100%; margin-bottom: 5px;"></p>
+                <p><input type="text" id="iptRecipientPhone" value="${memberInfo.recipientPhone}" style="width: 100%; margin-bottom: 5px;"></p>
+                <p class="address-row">
+                    <input type="text" id="iptFullAddress" value="${memberInfo.fullAddress}" placeholder="주소를 검색하세요">
+                    <button type="button" class="lala-btn-outline" onclick="execDaumPostcode()">SEARCH</button>
+                </p>
+            </div>
         </div>
     </div>
 
@@ -75,17 +90,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script>
-    function fn_payment() {
-        var orderId = $("input[name='orderId']").val();
-        if (!orderId) {
-            alert("주문 정보가 없습니다.");
-            return;
-        }
-        // payment 페이지로 이동
-        window.location.href = "/order/" + orderId + "/payment";
-    }
-</script>
+<script src="/js/order_confirm.js"></script>
 
 </body>
 </html>

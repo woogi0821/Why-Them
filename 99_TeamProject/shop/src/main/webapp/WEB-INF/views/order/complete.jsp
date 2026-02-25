@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Payment Complete</title>
-    <link rel="stylesheet" href="/css/confirm.css">
+    <link rel="stylesheet" href="/css/order.css">
 </head>
 <body>
 <jsp:include page="/common/header.jsp"/>
@@ -33,9 +33,9 @@
             <div class="summary-row">
                 <span>결제 수단</span>
                 <span>
-                    ${paymentMethod == 'kakao' ? '카카오페이' :
-                      paymentMethod == 'naver' ? '네이버페이' :
-                      paymentMethod == 'card'  ? '신용/체크카드':'기타'}
+                    ${paymentMethod == 'K' ? '카카오페이' :
+                      paymentMethod == 'N' ? '네이버페이' :
+                      paymentMethod == 'C'  ? '신용/체크카드':'기타'}
                 </span>
             </div>
             <div class="summary-row">
@@ -45,17 +45,11 @@
         </div>
 
         <div class="btn-group">
-            <button class="btn btn-primary" onclick="goPage('/')">홈으로 이동</button>
-            <button class="btn btn-outline" onclick="goPage('/order/list')">주문내역 보기</button>
+            <a href="/" class="btn btn-primary">홈으로 이동</a>
+            <a href="/order/list" class="btn btn-outline">주문내역 보기</a>
         </div>
     </div>
 </div>
-
-<script>
-    function goPage(url) {
-        location.href = url;
-    }
-</script>
 
 </body>
 </html>
