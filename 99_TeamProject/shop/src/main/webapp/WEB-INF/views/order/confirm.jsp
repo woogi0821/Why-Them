@@ -45,7 +45,7 @@
     <div class="section">
         <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <div class="section-title">배송지 정보</div>
-            <button type="button" id="addrEditBtn" onclick="fn_toggleAddrEdit()">변경</button>
+            <button type="button" id="addrEditBtn" onclick="fn_toggleAddrEdit()" style="cursor:pointer; background:#111; color:#fff; border:none; padding:5px 10px; font-size:12px;">새 배송지 입력</button>
         </div>
 
         <div class="shipping-info">
@@ -55,13 +55,16 @@
                 <p><span id="txtFullAddress"><c:out value="${memberInfo.fullAddress}"/></span></p>
             </div>
 
-            <div id="editMode" style="display: none;">
-                <p><input type="text" id="iptRecipientName" value="${memberInfo.recipientName}" style="width: 100%; margin-bottom: 5px;"></p>
-                <p><input type="text" id="iptRecipientPhone" value="${memberInfo.recipientPhone}" style="width: 100%; margin-bottom: 5px;"></p>
-                <p class="address-row">
-                    <input type="text" id="iptFullAddress" value="${memberInfo.fullAddress}" placeholder="주소를 검색하세요">
-                    <button type="button" class="lala-btn-outline" onclick="execDaumPostcode()">SEARCH</button>
-                </p>
+            <div id="editMode" style="display: none; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+
+                <jsp:include page="/WEB-INF/views/member/defaultAddress.jsp">
+                    <jsp:param name="from" value="order" />
+                    <jsp:param name="orderId" value="${orderId}" />
+                </jsp:include>
+
+                <div style="text-align: right; margin-top: 10px;">
+                    <button type="button" class="lala-btn-outline" onclick="fn_toggleAddrEdit()">닫기</button>
+                </div>
             </div>
         </div>
     </div>

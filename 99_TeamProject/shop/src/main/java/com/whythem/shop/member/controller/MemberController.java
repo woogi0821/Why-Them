@@ -125,41 +125,45 @@ public class MemberController {
     }
     @PostMapping("/address/save")
     public String saveAddress(MemberAddressVO addressVO,
-           @RequestParam(value = "from",required = false,defaultValue = "mypage")
-           String from,HttpSession session,RedirectAttributes rttr){
+                              @RequestParam(value = "from", required = false, defaultValue = "mypage") String from,
+                              @RequestParam(value = "orderId", required = false) Long orderId, // ★ 1. 주문번호 받기 추가
+                              HttpSession session,
+                              RedirectAttributes rttr) {
+
         MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
-        if (loginMember == null){
+        if (loginMember == null) {
             return "redirect:/member/login";
         }
+
         addressVO.setMemberId(loginMember.getMemberId());
+
         try {
             memberAddressService.addAddress(addressVO);
-            rttr.addFlashAttribute("msg","배송지가 성공적으로 저장되었습니다.");
-        } catch (Exception e){
-            log.error("배송지 저장 중 오류 발생",e);
-            rttr.addFlashAttribute("msg","배송지 저장 중 오류가 발생했습니다.");
-            if ("order".equals(from)) return "redirect:/oredr/checkout";
-            else return "redirect:/member/mypage";
+            rttr.addFlashAttribute("msg", "배송지가 성공적으로 저장되었습니다.");
+        } catch (Exception e) {
+            log.error("배송지 저장 중 오류 발생", e);
+            rttr.addFlashAttribute("msg", "배송지 저장 중 오류가 발생했습니다.");
+            if ("order".equals(from) && orderId != null) {
+                return "redirect:/order/" + orderId + "/confirm";
+            } else {
+                return "redirect:/member/mypage";
+            }
         }
-        if ("order".equals(from)){
+        if ("order".equals(from) && orderId != null) {
             rttr.addFlashAttribute("newAddId", addressVO.getAddressId());
-            return "redirect:/order/checkout";
-        }else {
+            return "redirect:/order/" + orderId + "/confirm";
+        } else {
             return "redirect:/member/mypage#address-section";
         }
     }
-    // [복구] 비밀번호 확인 (AJAX 용) - MemberController.java 안에 있어야 합니다!
     @PostMapping("/checkPw")
     @ResponseBody
     public boolean checkPw(@RequestParam("currentPw") String currentPw, HttpSession session) {
         MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
 
-        // 로그인이 풀렸으면 false
         if (loginMember == null) {
             return false;
         }
-
-        // 서비스단에 검증 요청
         return memberService.checkPassword(loginMember.getLoginId(), currentPw);
     }
 }
