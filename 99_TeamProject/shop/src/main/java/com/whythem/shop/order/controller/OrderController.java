@@ -100,15 +100,17 @@ public class OrderController {
             return "redirect:/member/login";
         }
 
-        try{
-            orderService.completePayment(orderId, paymentMethod);
-            redirectAttributes.addFlashAttribute("message", "결제가 완료되었습니다.");
+        Long memberId = loginMember.getMemberId();
 
+        try{
+            orderService.completePayment(orderId, paymentMethod, memberId);
+            redirectAttributes.addFlashAttribute("message", "결제가 완료되었습니다.");
             return "redirect:/order/" + orderId + "/complete";
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            model.addAttribute("msg", e.getMessage());
+            model.addAttribute("orderId", orderId);
 
-            return "redirect:/order/" + orderId + "/payment";
+            return "order/payment";
         }
     }
 
@@ -129,6 +131,7 @@ public class OrderController {
 
         return "order/complete";
     }
+
 
     // 주문 내역 확인
     @GetMapping("/order/list")
