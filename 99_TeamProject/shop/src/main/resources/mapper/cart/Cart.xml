@@ -35,9 +35,9 @@
             P.PRODUCT_NAME    AS productName,
             P.PRICE           AS price,
             P.IMAGE_URL       AS imageUrl,
-            P.BRAND_NAME      AS brandName,
-            P.STATUS          AS status  FROM CART_ITEM CI
-                                                  INNER JOIN PRODUCT P ON CI.PRODUCT_ID = P.PRODUCT_ID
+            P.BRAND_NAME      AS brandName
+        FROM CART_ITEM CI
+                 INNER JOIN PRODUCT P ON CI.PRODUCT_ID = P.PRODUCT_ID
         WHERE CI.CART_ID = #{cartId}
         ORDER BY CI.CREATED_AT DESC
     </select>

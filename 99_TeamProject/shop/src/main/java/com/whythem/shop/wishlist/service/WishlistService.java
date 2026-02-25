@@ -44,8 +44,4 @@ public class WishlistService {
     public int removeAllWishlist(Long memberId){
         return wishlistMapper.deleteAllWishlist(memberId);
     }
-
-    public List<Long> getWishlistProductIds(Long memberId){
-        return wishlistMapper.selectWishlistProductIds(memberId);
-    }
 }

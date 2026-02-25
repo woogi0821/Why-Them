@@ -1,6 +1,7 @@
 package com.whythem.shop.product.mapper;
 
 import com.whythem.shop.product.vo.ProductVO;
+import com.whythem.shop.promotion.vo.Promotion;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;

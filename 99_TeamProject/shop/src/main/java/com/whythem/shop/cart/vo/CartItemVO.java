@@ -20,5 +20,4 @@ public class CartItemVO {
     private Long price;
     private String imageUrl;
     private String brandName;
-    private String status;
 }

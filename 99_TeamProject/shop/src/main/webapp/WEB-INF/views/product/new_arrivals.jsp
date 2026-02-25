@@ -86,5 +86,7 @@
 
 </div>
 
+<script src="/js/data.js"></script>
+<script src="/js/homepage.js"></script>
 </body>
 </html>

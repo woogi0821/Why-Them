@@ -57,13 +57,4 @@ public class MemberService {
         memberVO.setLoginPw(encodedPw);
         memberMapper.updatePassword(memberVO);
     }
-    // [복구] 현재 비밀번호 일치 여부 확인
-    public boolean checkPassword(String loginId, String rawPassword) {
-        MemberVO dbMember = memberMapper.selectMemberById(loginId);
-        if (dbMember == null) {
-            return false;
-        }
-        // passwordEncoder.matches(입력한비번, DB의암호화된비번)
-        return passwordEncoder.matches(rawPassword, dbMember.getLoginPw());
-    }
 }

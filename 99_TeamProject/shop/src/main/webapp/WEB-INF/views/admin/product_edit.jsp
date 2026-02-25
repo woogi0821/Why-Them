@@ -3,7 +3,15 @@
 <html>
 <head>
     <title>상품 수정</title>
-    <link rel="stylesheet" href="/css/admin_product_edit.css">
+    <style>
+        /* 기존 product_add.jsp의 스타일을 그대로 복사해서 사용하세요 */
+        .form-container { max-width: 500px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input[type="text"], input[type="number"], textarea, select { width: 100%; padding: 8px; }
+        .btn-submit { background-color: #000; color: #fff; padding: 10px; width: 100%; cursor: pointer; }
+        .current-img { width: 100px; margin-top: 10px; display: block; }
+    </style>
 </head>
 <body>
 <div class="form-container">

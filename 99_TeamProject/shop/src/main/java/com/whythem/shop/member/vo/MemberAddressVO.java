@@ -17,9 +17,4 @@ public class MemberAddressVO {
     private String baseAddress;
     private String detailAddress;
     private String isDefault;
-
-//  추가 메서드
-    public String getFullAddress() {
-        return "( " + zipCode + " ) " + baseAddress + ", " + detailAddress;
-    }
 }

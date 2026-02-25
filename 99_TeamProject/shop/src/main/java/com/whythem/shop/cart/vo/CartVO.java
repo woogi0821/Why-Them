@@ -9,10 +9,10 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class
-CartVO {
+public class CartVO {
     private Long cartId; //PK
     private Long memberId; //FK
     private Date createdAt;
     private Date updatedAt;
+
 }

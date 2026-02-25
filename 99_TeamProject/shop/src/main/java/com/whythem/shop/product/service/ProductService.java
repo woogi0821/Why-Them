@@ -2,6 +2,7 @@ package com.whythem.shop.product.service;
 
 import com.whythem.shop.product.mapper.ProductMapper;
 import com.whythem.shop.product.vo.ProductVO;
+import com.whythem.shop.promotion.service.PromotionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import java.util.List;
 public class ProductService {
 
     private final ProductMapper productMapper;
+    private final PromotionService promotionService;
 
     /**
      * 상품 목록 가져오기
@@ -70,5 +72,4 @@ public class ProductService {
     public List<ProductVO> getNewArrivals(int limit, Long memberId) {
         return productMapper.getNewArrivals(limit, memberId);
     }
-
 }
