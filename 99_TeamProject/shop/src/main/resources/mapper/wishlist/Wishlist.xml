@@ -49,7 +49,7 @@
         WHERE w.member_id = #{memberId}
     </select>
 
-    <delete id="deleteAllWishlsit" parameterType="long">
+    <delete id="deleteAllWishlist" parameterType="long">
         DELETE FROM wishlist
         WHERE member_id = #{memberId}
     </delete>
