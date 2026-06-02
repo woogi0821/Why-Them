@@ -141,21 +141,21 @@
                 <div class="swiper-wrapper">
                     <%-- 슬라이드 1 --%>
                     <div class="swiper-slide">
-                        <img src="https://placehold.co/1920x600/222222/666666?text=1920x600" alt="Slide 1">
+                        <img src="/upload/001.png" alt="Slide 1">
                         <div class="slide-text-box">
                             <%-- 여기에 텍스트 필요할 경우 p태그 h태그로 넣어주세요 --%>
                         </div>
                     </div>
                     <%-- 슬라이드 2 --%>
                     <div class="swiper-slide">
-                        <img src="https://placehold.co/1920x600/333333/777777?text=1920x600" alt="Slide 2">
+                        <img src="/upload/002.png" alt="Slide 2">
                         <div class="slide-text-box">
                             <%-- 여기에 텍스트 필요할 경우 p태그 h태그로 넣어주세요 --%>
                         </div>
                     </div>
                     <%-- 슬라이드 3 (이벤트 등) --%>
                     <div class="swiper-slide">
-                        <img src="https://placehold.co/1920x600/444444/888888?text=1920x600" alt="Slide 3">
+                        <img src="/upload/003.png" alt="Slide 3">
                         <div class="slide-text-box">
                             <%-- 여기에 텍스트 필요할 경우 p태그 h태그로 넣어주세요 --%>
                         </div>

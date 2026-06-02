@@ -60,79 +60,79 @@ public class PromotionController {
             rttr.addFlashAttribute("msg", "SEARCH_EMPTY");
             return "redirect:admin/promotion_list";}
 
-            //  계산된 offset이 담긴 criteria를 넘겨서 목록을 조회합니다.
-            List<Promotion> list = promotionService.getPromotionList(criteria);
+        //  계산된 offset이 담긴 criteria를 넘겨서 목록을 조회합니다.
+        List<Promotion> list = promotionService.getPromotionList(criteria);
 
-            // 뷰로 전달 (이제 PageVO를 따로 생성하지 않고 criteria를 넘깁니다)
-            model.addAttribute("list", list);
-            model.addAttribute("criteria", criteria); // JSP에서 criteria.startPage 등으로 사용
+        // 뷰로 전달 (이제 PageVO를 따로 생성하지 않고 criteria를 넘깁니다)
+        model.addAttribute("list", list);
+        model.addAttribute("criteria", criteria); // JSP에서 criteria.startPage 등으로 사용
 
-            return "admin/promotion_list";
-        }
-        /**
-         * 프로모션 등록 페이지(입력 폼)로 이동
-         * 경로: /admin/promotion/register
-         */
-        @GetMapping("/admin/promotion_register")
-        public String createPromotionView () {
-            // admin/promotion(폴더명), register(jsp명)
-            return "admin/promotion_register";
-        }
-        /**
-         * 프로모션 실제 저장 처리
-         * @ModelAttribute: JSP 폼의 name값들을 Promotion 객체에 자동으로 담아줍니다.
-         */
-        @PostMapping("/admin/promotion/add")
-        public String insert (@ModelAttribute Promotion promotion, RedirectAttributes rttr){
-            promotionService.insertPromotion(promotion);
+        return "admin/promotion_list";
+    }
+    /**
+     * 프로모션 등록 페이지(입력 폼)로 이동
+     * 경로: /admin/promotion/register
+     */
+    @GetMapping("/admin/promotion_register")
+    public String createPromotionView () {
+        // admin/promotion(폴더명), register(jsp명)
+        return "admin/promotion_register";
+    }
+    /**
+     * 프로모션 실제 저장 처리
+     * @ModelAttribute: JSP 폼의 name값들을 Promotion 객체에 자동으로 담아줍니다.
+     */
+    @PostMapping("/admin/promotion/add")
+    public String insert (@ModelAttribute Promotion promotion, RedirectAttributes rttr){
+        promotionService.insertPromotion(promotion);
 
-            // 리다이렉트 후 JSP에서 사용할 수 있는 일회성 데이터를 전달합니다.
-            rttr.addFlashAttribute("msg", "INSERT_SUCCESS");
+        // 리다이렉트 후 JSP에서 사용할 수 있는 일회성 데이터를 전달합니다.
+        rttr.addFlashAttribute("msg", "INSERT_SUCCESS");
 
-            // 목록 페이지로 돌아가기 (이때 최신 글이 제일 위에 보이도록 ORDER BY promotion_id DESC 필수)
-            return "redirect:/admin/promotion_list";
-        }
-        /**
-         * 프로모션 수정 페이지로 이동 (promotion_register.jsp 재활용)
-         */
-        @GetMapping("/admin/promotion/edit/{promotionId}")
-        public String editPromotionView (@PathVariable Long promotionId,
-                @ModelAttribute("criteria") Criteria criteria,
-                Model model){
-            Promotion promotion = promotionService.getPromotion(promotionId);
-            model.addAttribute("promotion", promotion);
-            return "admin/promotion_register";
-        }
+        // 목록 페이지로 돌아가기 (이때 최신 글이 제일 위에 보이도록 ORDER BY promotion_id DESC 필수)
+        return "redirect:/admin/promotion_list";
+    }
+    /**
+     * 프로모션 수정 페이지로 이동 (promotion_register.jsp 재활용)
+     */
+    @GetMapping("/admin/promotion/edit/{promotionId}")
+    public String editPromotionView (@PathVariable Long promotionId,
+                                     @ModelAttribute("criteria") Criteria criteria,
+                                     Model model){
+        Promotion promotion = promotionService.getPromotion(promotionId);
+        model.addAttribute("promotion", promotion);
+        return "admin/promotion_register";
+    }
 
-        /**
-         * 프로모션 수정 실행 (이름, 날짜, 활성화 여부 등 모두 반영)
-         */
-        @PostMapping("/admin/promotion/update")
-        public String update (@ModelAttribute Promotion promotion, RedirectAttributes rttr){
-            promotionService.updatePromotion(promotion);
-            rttr.addFlashAttribute("msg", "UPDATE_SUCCESS");
-            // 수정 후에는 보던 상세 페이지로 다시 이동
-            return "redirect:/admin/promotion_list";
-        }
-        @PostMapping("/admin/promotion/delete")
-        public String delete (@RequestParam("promotionId") Long promotionId, RedirectAttributes rttr){
-            int result = promotionService.removePromotion(promotionId);
+    /**
+     * 프로모션 수정 실행 (이름, 날짜, 활성화 여부 등 모두 반영)
+     */
+    @PostMapping("/admin/promotion/update")
+    public String update (@ModelAttribute Promotion promotion, RedirectAttributes rttr){
+        promotionService.updatePromotion(promotion);
+        rttr.addFlashAttribute("msg", "UPDATE_SUCCESS");
+        // 수정 후에는 보던 상세 페이지로 다시 이동
+        return "redirect:/admin/promotion_list";
+    }
+    @PostMapping("/admin/promotion/delete")
+    public String delete (@RequestParam("promotionId") Long promotionId, RedirectAttributes rttr){
+        int result = promotionService.removePromotion(promotionId);
 
-            System.out.println("DB 수정 결과 건수: " + result);
+        System.out.println("DB 수정 결과 건수: " + result);
 
-            if (result > 0) {
-                rttr.addFlashAttribute("msg", "DELETE_SUCCESS"); // 1개 이상 삭제 성공
-            } else {
-                rttr.addFlashAttribute("msg", "DELETE_FAIL");    // 삭제된 행이 없음
-            }
-            return "redirect:/admin/promotion_list";
+        if (result > 0) {
+            rttr.addFlashAttribute("msg", "DELETE_SUCCESS"); // 1개 이상 삭제 성공
+        } else {
+            rttr.addFlashAttribute("msg", "DELETE_FAIL");    // 삭제된 행이 없음
         }
-        @GetMapping("/api/promotion/dashboard-stats")
-        @ResponseBody // 데이터(JSON)만 쏙 보내줘야 할 때 사용하는 어노테이션
-        public Map<String, Object> getDashboardStats () {
-            // 서비스에서 3가지 지표를 담은 Map을 가져와 반환 (자동으로 JSON 변환됨)
-            return promotionService.getDashboardStats();
-        }
+        return "redirect:/admin/promotion_list";
+    }
+    @GetMapping("/api/promotion/dashboard-stats")
+    @ResponseBody // 데이터(JSON)만 쏙 보내줘야 할 때 사용하는 어노테이션
+    public Map<String, Object> getDashboardStats () {
+        // 서비스에서 3가지 지표를 담은 Map을 가져와 반환 (자동으로 JSON 변환됨)
+        return promotionService.getDashboardStats();
+    }
     @GetMapping("/event/list")
     public String promotionList(@RequestParam(value="status", required=false, defaultValue="ongoing") String status) {
         return "promotion/event_list";

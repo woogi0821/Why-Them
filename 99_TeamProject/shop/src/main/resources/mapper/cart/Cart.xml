@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.whythem.shop.cart.mapper.CartMapper">
 
+    <!-- 회원의 장바구니 조회 -->
     <select id="getCartByMemberId" resultType="com.whythem.shop.cart.vo.CartVO">
         SELECT
             CART_ID      AS cartId,
@@ -12,6 +13,7 @@
         WHERE MEMBER_ID = #{memberId}
     </select>
 
+    <!-- 장바구니 생성 -->
     <insert id="insertCart" parameterType="com.whythem.shop.cart.vo.CartVO">
         <selectKey keyProperty="cartId" resultType="long" order="BEFORE">
             SELECT CART_SEQ.NEXTVAL FROM DUAL
@@ -20,11 +22,13 @@
         VALUES (#{cartId}, #{memberId})
     </insert>
 
+    <!-- 장바구니 아이템 추가 -->
     <insert id="insertCartItem" parameterType="com.whythem.shop.cart.vo.CartItemVO">
         INSERT INTO CART_ITEM (CART_ITEM_ID, CART_ID, PRODUCT_ID, QUANTITY)
         VALUES (CART_ITEM_SEQ.NEXTVAL, #{cartId}, #{productId}, #{quantity})
     </insert>
 
+    <!-- 장바구니 아이템 목록 (상품 정보 JOIN) -->
     <select id="getCartItemList" resultType="com.whythem.shop.cart.vo.CartItemVO">
         SELECT
             CI.CART_ITEM_ID   AS cartItemId,
@@ -36,18 +40,37 @@
             P.PRICE           AS price,
             P.IMAGE_URL       AS imageUrl,
             P.BRAND_NAME      AS brandName,
-            P.STATUS          AS status  FROM CART_ITEM CI
-                                                  INNER JOIN PRODUCT P ON CI.PRODUCT_ID = P.PRODUCT_ID
+            P.STATUS          AS status
+        FROM CART_ITEM CI
+        INNER JOIN PRODUCT P ON CI.PRODUCT_ID = P.PRODUCT_ID
         WHERE CI.CART_ID = #{cartId}
         ORDER BY CI.CREATED_AT DESC
     </select>
 
+    <!--
+        동일 상품이 이미 담겨 있는지 조회 (중복 담기 방지용)
+        CartService.addCart() 에서 호출 → 있으면 수량 합산, 없으면 INSERT
+    -->
+    <select id="getCartItemByProductId" resultType="com.whythem.shop.cart.vo.CartItemVO">
+        SELECT
+            CART_ITEM_ID   AS cartItemId,
+            CART_ID        AS cartId,
+            PRODUCT_ID     AS productId,
+            QUANTITY       AS quantity,
+            CREATED_AT     AS createdAt
+        FROM CART_ITEM
+        WHERE CART_ID   = #{cartId}
+          AND PRODUCT_ID = #{productId}
+    </select>
+
+    <!-- 수량 변경 -->
     <update id="updateCartItemQuantity">
         UPDATE CART_ITEM
         SET QUANTITY = #{quantity}
         WHERE CART_ITEM_ID = #{cartItemId}
     </update>
 
+    <!-- 아이템 삭제 -->
     <delete id="deleteCartItem">
         DELETE FROM CART_ITEM
         WHERE CART_ITEM_ID = #{cartItemId}

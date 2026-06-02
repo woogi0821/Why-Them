@@ -30,6 +30,12 @@ public interface OrderMapper {
     List<OrderItemVO> getOrderItems(Long orderId);
     int reduceStock(@Param("productId") Long productId, @Param("quantity") int quantity);
 
+    // 현재 재고 조회
+    Integer getStockQuantity(Long productId);
+
+    // 상품 상태 변경
+    int updateProductStatus(@Param("productId") Long productId, @Param("status") String status);
+
     // 결제 확인
     PaymentVO selectPaymentByOrderId(@Param("orderId") Long orderId);
     List<PaymentVO> selectPaymentsByMemberId(@Param("memberId") Long memberId);

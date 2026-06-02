@@ -112,4 +112,20 @@ public class PromotionService {
     public void endPromotion(Long promotionId) {
         promotionMapper.updatePromotionStatus(promotionId);
     }
+    // PromotionService.java 파일에 추가
+    public int getActivePromotionProductCount() {
+        // 매퍼의 getActivePromotionProductCount 쿼리를 호출합니다.
+        return promotionMapper.getActivePromotionProductCount();
+    }
+    // PromotionService.java
+
+    public int countActivePromotions() {
+        // XML의 id="countActivePromotions"를 호출
+        return promotionMapper.countActivePromotions();
+    }
+
+    public Long sumTodayPromotionSales() {
+        // XML의 id="sumTodayPromotionSales"를 호출
+        return promotionMapper.sumTodayPromotionSales();
+    }
 }

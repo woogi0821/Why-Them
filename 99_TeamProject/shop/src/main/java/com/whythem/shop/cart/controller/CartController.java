@@ -20,7 +20,7 @@ public class CartController {
 
     private final CartService cartService;
 
-    // 1. 장바구니 담기
+    // 1. 장바구니 담기 (폼 방식)
     @PostMapping("/add")
     public String addCart(CartItemVO cartItemVO, HttpSession session) {
         MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
@@ -41,8 +41,6 @@ public class CartController {
         }
 
         List<CartItemVO> list = cartService.getMyCartList(loginMember.getMemberId());
-
-        // 🚩 [수정] 서비스의 계산 메서드 호출 (SALE 상태인 것만 계산됨)
         long totalPrice = cartService.calculateTotalPrice(list);
 
         model.addAttribute("cartList", list);
@@ -51,7 +49,7 @@ public class CartController {
         return "cart/cart_list";
     }
 
-    // 3. 수량 변경
+    // 3. 수량 변경 (폼 방식 - 기존 유지)
     @PostMapping("/update")
     public String update(@RequestParam("cartItemId") Long cartItemId,
                          @RequestParam("quantity") int quantity, HttpSession session) {
@@ -62,7 +60,31 @@ public class CartController {
         return "redirect:/cart/list";
     }
 
-    // 4. 삭제
+    // 4. 수량 변경 (AJAX 방식) ← 신규 추가
+    @PostMapping("/updateAjax")
+    @ResponseBody
+    public Map<String, Object> updateAjax(@RequestParam("cartItemId") Long cartItemId,
+                                          @RequestParam("quantity") int quantity,
+                                          HttpSession session) {
+        Map<String, Object> result = new HashMap<>();
+
+        if (session.getAttribute("loginMember") == null) {
+            result.put("status", "login");
+            return result;
+        }
+
+        // 수량 유효성 검사 (1~99)
+        if (quantity < 1 || quantity > 99) {
+            result.put("status", "invalid");
+            return result;
+        }
+
+        cartService.updateQuantity(cartItemId, quantity);
+        result.put("status", "success");
+        return result;
+    }
+
+    // 5. 삭제
     @PostMapping("/remove")
     public String remove(@RequestParam("cartItemId") Long cartItemId,
                          HttpSession session) {
@@ -73,29 +95,31 @@ public class CartController {
         return "redirect:/cart/list";
     }
 
+    // 6. 장바구니 담기 (AJAX 방식) - 중복 상품 수량 합산 처리 포함
     @PostMapping("/addAjax")
     @ResponseBody
     public Map<String, Object> addCartAjax(@RequestParam Long productId,
                                            @RequestParam(defaultValue = "1") int quantity,
-                                           HttpSession session){
+                                           HttpSession session) {
         Map<String, Object> resultMap = new HashMap<>();
         MemberVO loginMember = (MemberVO) session.getAttribute("loginMember");
 
         if (loginMember == null) {
-            resultMap.put("status","login");
+            resultMap.put("status", "login");
             return resultMap;
         }
+
         CartItemVO cartItemVO = new CartItemVO();
         cartItemVO.setProductId(productId);
         cartItemVO.setQuantity(quantity);
 
-        cartService.addCart(loginMember.getMemberId(),cartItemVO);
+        cartService.addCart(loginMember.getMemberId(), cartItemVO);
 
-        // 장바구니 개수 세션 업데이트 (헤더 표시용)
+        // 헤더 표시용 카트 개수 갱신
         int currentCartCount = cartService.getMyCartList(loginMember.getMemberId()).size();
         session.setAttribute("cartCount", currentCartCount);
 
-        resultMap.put("status","success");
+        resultMap.put("status", "success");
         resultMap.put("cartCount", currentCartCount);
         return resultMap;
     }

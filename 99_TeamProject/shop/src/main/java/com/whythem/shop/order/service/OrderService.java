@@ -128,6 +128,18 @@ public class OrderService {
         for (OrderItemVO item : itemList) {
             int updated = orderMapper.reduceStock(item.getProductId(), item.getQuantity());
 
+            if (updated > 0) {
+                // 2. 차감 후 남은 재고 확인
+                int currentStock = orderMapper.getStockQuantity(item.getProductId());
+
+                // 3. 재고가 0이면 상태를 SOLD_OUT으로 변경
+                if (currentStock == 0) {
+                    orderMapper.updateProductStatus(item.getProductId(), "SOLD_OUT");
+                }
+            } else {
+                throw new RuntimeException("재고가 부족하여 결제를 진행할 수 없습니다.");
+            }
+
             System.out.println("상품ID=" + item.getProductId() +", 주문 수량= "+item.getQuantity()+", update="+updated);
             if (updated == 0) {
                 throw new RuntimeException("재고가 부족한 상품이 포함되었습니다.");

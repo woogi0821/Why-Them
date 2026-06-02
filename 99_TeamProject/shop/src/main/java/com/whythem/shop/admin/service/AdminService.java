@@ -68,28 +68,42 @@ public class AdminService {
      */
     @Transactional
     public void updateAdminProduct(AdminVO product) throws Exception {
+        // 1. 기존 데이터를 먼저 조회 (기존 상태와 이미지 경로를 알기 위해)
         AdminVO oldData = adminMapper.findAdminProductById(product.getProductId());
-        MultipartFile newFile = product.getProductImage();
+        if (oldData == null) return;
 
+        // 2. [핵심] 재고에 따른 상태(STATUS) 결정 로직 추가
+        String currentStatus = oldData.getStatus(); // DB에 저장되어 있던 현재 상태 (SALE, SOLD_OUT, STOP 중 하나)
+
+        if ("STOP".equals(currentStatus)) {
+            // 관리자가 명시적으로 '판매중지' 시킨 상품은 재고를 늘려도 계속 STOP 유지
+            product.setStatus("STOP");
+        } else {
+            // 판매중이거나 품절이었던 상품은 재고 수량에 따라 상태 결정
+            if (product.getStockQuantity() > 0) {
+                product.setStatus("SALE");
+            } else {
+                product.setStatus("SOLD_OUT");
+            }
+        }
+
+        // 3. 이미지 파일 처리 (기존 로직 유지)
+        MultipartFile newFile = product.getProductImage();
         if (newFile != null && !newFile.isEmpty()) {
-            // 기존 파일 삭제
-            if (oldData != null && oldData.getImageUrl() != null) {
+            if (oldData.getImageUrl() != null && oldData.getImageUrl().length() > 8) {
                 String oldFileName = oldData.getImageUrl().substring(8);
                 File file = new File("C:/shop/upload", oldFileName);
                 if(file.exists()) file.delete();
             }
-
-            // 새 파일 저장
             String newFileName = UUID.randomUUID().toString() + "_" + newFile.getOriginalFilename();
             File saveFile = new File("C:/shop/upload", newFileName);
             newFile.transferTo(saveFile);
             product.setImageUrl("/upload/" + newFileName);
         } else {
-            if (oldData != null) {
-                product.setImageUrl(oldData.getImageUrl());
-            }
+            product.setImageUrl(oldData.getImageUrl());
         }
 
+        // 4. 드디어 DB 업데이트 실행 (XML의 #{status}에 값이 전달됨)
         adminMapper.updateAdminProduct(product);
     }
 

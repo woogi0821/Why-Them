@@ -159,4 +159,16 @@
         WHERE order_id = #{orderId}
     </select>
 
+    <select id="getStockQuantity" resultType="int">
+        SELECT STOCK_QUANTITY
+        FROM PRODUCT
+        WHERE PRODUCT_ID = #{productId}
+    </select>
+
+    <update id="updateProductStatus">
+        UPDATE PRODUCT
+        SET STATUS = #{status}
+        WHERE PRODUCT_ID = #{productId}
+    </update>
+
 </mapper>

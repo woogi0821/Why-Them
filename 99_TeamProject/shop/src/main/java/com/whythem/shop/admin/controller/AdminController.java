@@ -3,12 +3,14 @@ package com.whythem.shop.admin.controller;
 import com.whythem.shop.admin.service.AdminService;
 import com.whythem.shop.admin.vo.AdminVO;
 import com.whythem.shop.common.CommonUtil; // 패키지 경로 일치 확인!
+import com.whythem.shop.product.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.whythem.shop.product.service.ProductService;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +23,7 @@ public class AdminController {
 
     private final AdminService adminService;
     private final CommonUtil commonUtil; // CommonUtil 추가
+    private final ProductService productService;
 
     // 1. 관리자 메인 (상품 목록 관리 페이지)
     @GetMapping("/admin_main")
@@ -113,5 +116,12 @@ public String deleteProcess(@RequestParam("productId") Long productId) throws Ex
 
         // 3. DB 저장용 경로
         return "/upload/" + uuidName;
+    }
+
+    @GetMapping("/admin/product/list")
+    public String adminProductList(Model model) {
+        List<ProductVO> allProducts = productService.getAdminProductList();
+        model.addAttribute("productList", allProducts);
+        return "admin/product_list"; // 관리자 상품 목록 JSP 경로
     }
 }

@@ -134,18 +134,44 @@
       <input type="hidden" name="quantity" value="1">
 
       <div class="action-btns">
-        <button type="button" class="btn-buy" onclick="buyNow()">BUY NOW</button>
+        <c:choose>
+          <%-- ★ [추가] 품절 상태일 때: 버튼 비활성화 --%>
+          <c:when test="${product.status eq 'SOLD_OUT'}">
+            <button type="button" class="btn-buy" disabled
+                    style="background: #ccc; border-color: #ccc; cursor: not-allowed; color: #fff;">
+              SOLD OUT (품절)
+            </button>
 
-        <button type="button" class="btn-cart" onclick="addToCart()">ADD TO BAG</button>
+            <button type="button" class="btn-cart" disabled
+                    style="color: #999; border-color: #eee; cursor: not-allowed;">
+              OUT OF STOCK
+            </button>
 
-        <button type="button" id="btn-wish"
-                class="btn-cart ${isWished ? 'active' : ''}"
-                onclick="toggleDetailWish('<c:out value="${product.productId}"/>')">
-          <c:choose>
-            <c:when test="${isWished}">REMOVE FROM WISHLIST</c:when>
-            <c:otherwise>ADD TO WISHLIST</c:otherwise>
-          </c:choose>
-        </button>
+            <%-- 위시리스트는 품절이어도 담을 수 있게 유지 --%>
+            <button type="button" id="btn-wish"
+                    class="btn-cart ${isWished ? 'active' : ''}"
+                    onclick="toggleDetailWish('<c:out value="${product.productId}"/>')">
+              <c:choose>
+                <c:when test="${isWished}">REMOVE FROM WISHLIST</c:when>
+                <c:otherwise>ADD TO WISHLIST</c:otherwise>
+              </c:choose>
+            </button>
+          </c:when>
+
+          <%-- ★ 판매 중일 때: 기존 버튼 그대로 노출 --%>
+          <c:otherwise>
+            <button type="button" class="btn-buy" onclick="buyNow()">BUY NOW</button>
+            <button type="button" class="btn-cart" onclick="addToCart()">ADD TO BAG</button>
+            <button type="button" id="btn-wish"
+                    class="btn-cart ${isWished ? 'active' : ''}"
+                    onclick="toggleDetailWish('<c:out value="${product.productId}"/>')">
+              <c:choose>
+                <c:when test="${isWished}">REMOVE FROM WISHLIST</c:when>
+                <c:otherwise>ADD TO WISHLIST</c:otherwise>
+              </c:choose>
+            </button>
+          </c:otherwise>
+        </c:choose>
       </div>
     </form>
 

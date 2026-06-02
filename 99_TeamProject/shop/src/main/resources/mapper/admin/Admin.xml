@@ -18,7 +18,7 @@
         IMAGE_URL         AS imageUrl
         FROM PRODUCT
         <where>
-            STATUS = 'SALE' <if test="categoryId != null">
+            STATUS IN ('SALE', 'SOLD_OUT', 'STOP') <if test="categoryId != null">
             AND CATEGORY_ID = #{categoryId}
         </if>
         </where>
@@ -112,6 +112,7 @@
         STOCK_QUANTITY = #{stockQuantity},
         DESCRIPTION    = #{description, jdbcType=CLOB},
         IMAGE_URL      = #{imageUrl, jdbcType=VARCHAR},
+        STATUS         = #{status, jdbcType=VARCHAR},
         UPDATED_AT     = SYSDATE
         WHERE PRODUCT_ID = #{productId}
     </update>
@@ -125,9 +126,12 @@
 
     <update id="restoreAdminProduct">
         UPDATE PRODUCT
-        SET STATUS = 'SALE',
+        SET
+        STATUS = CASE
+        WHEN STOCK_QUANTITY = 0 THEN 'SOLD_OUT'
+        ELSE 'SALE'
+        END,
         UPDATED_AT = SYSDATE
         WHERE PRODUCT_ID = #{productId}
     </update>
-
 </mapper>

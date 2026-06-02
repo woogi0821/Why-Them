@@ -63,4 +63,6 @@ public interface PromotionMapper {
 
     // 특정 ID로 프로모션 1건 조회 (계산용) - 서비스 호출명과 통일
     Promotion getPromotionById(@Param("promotionId") Long promotionId);
+    // 현재 진행중인 이벤트 수
+    int getActivePromotionProductCount();
 }

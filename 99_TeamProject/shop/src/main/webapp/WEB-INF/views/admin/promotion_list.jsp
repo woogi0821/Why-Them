@@ -173,21 +173,27 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // 주소의 's' 유무와 전체 경로를 컨트롤러(@RequestMapping)와 일치시킴
+        // 우리가 만든 API 경로 호출
         fetch('/api/promotions/dashboard-stats')
             .then(res => {
-                if (!res.ok) throw new Error('데이터를 가져오는데 실패했습니다 (404/500)');
+                if (!res.ok) throw new Error('데이터를 가져오는데 실패했습니다');
                 return res.json();
             })
             .then(data => {
-                // Service에서 Map에 담아준 Key값들과 일치 확인
-                document.getElementById('activeCount').innerText = (data.activePromotions || 0);
-                document.getElementById('productCount').innerText = (data.discountedProducts || 0);
+                // [중요] 컨트롤러에서 보낸 Key값과 매칭
+                // data.activePromotionCount (O) / data.activeCount (X)
+                document.getElementById('activeCount').innerText = (data.activePromotionCount || 0);
+
+                // data.discountedProductCount (O) / data.productCount (X)
+                document.getElementById('productCount').innerText = (data.discountedProductCount || 0);
+
+                // data.todaySales
                 document.getElementById('salesAmount').innerText = (data.todaySales || 0).toLocaleString();
+
+                console.log("대시보드 업데이트 완료:", data);
             })
             .catch(err => {
                 console.error('Fetch error:', err);
-                // 에러 발생 시 0으로 유지하거나 알림
             });
 
         const msg = "${msg}";
@@ -199,4 +205,3 @@
 </script>
 </body>
 </html>
-<%--러햐애ㅗㅓㅑㄷ해ㅑㅗㄷ옿ㅇ롱--%>

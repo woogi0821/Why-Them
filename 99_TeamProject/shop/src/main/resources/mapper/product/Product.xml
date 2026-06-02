@@ -67,9 +67,25 @@
         FROM PRODUCT P
         <include refid="promoJoin"/>
         <where>
-            AND P.STATUS = 'SALE' <if test="categoryId != null">AND P.CATEGORY_ID = #{categoryId}</if>
+            AND P.STATUS IN ('SALE', 'SOLD_OUT')
+            <if test="categoryId != null">
+                AND P.CATEGORY_ID = #{categoryId}
+            </if>
         </where>
 
+        ORDER BY P.PRODUCT_ID DESC
+    </select>
+
+    <select id="getAdminProductList" resultMap="productMap">
+        SELECT
+        P.*,
+        PROMO.PROMOTION_ID AS PR_ID,
+        PROMO.PROMOTION_TITLE AS PR_TITLE
+        /* 필요한 컬럼들... */
+        FROM PRODUCT P
+        <include refid="promoJoin"/>
+        /* WHERE 절에서 STATUS 조건을 없애거나, 모든 상태를 포함시킵니다 */
+        WHERE P.STATUS IN ('SALE', 'SOLD_OUT', 'STOP')
         ORDER BY P.PRODUCT_ID DESC
     </select>
 

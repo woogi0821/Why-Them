@@ -81,6 +81,16 @@
     </select>
 
     <select id="sumTodayPromotionSales" resultType="long">
-        SELECT 0 FROM DUAL
+        SELECT NVL(SUM(0), 0) FROM DUAL
+    </select>
+    <select id="getActivePromotionProductCount" resultType="int">
+        SELECT COUNT(DISTINCT PP.PRODUCT_ID)
+        FROM PROMOTION_PRODUCT PP
+        /* PP테이블과 PR테이블을 PROMOTION_ID로 연결 */
+        JOIN PROMOTION PR ON PP.PROMOTION_ID = PR.PROMOTION_ID
+        WHERE PR.STATUS = 'ACTIVE'
+        AND UPPER(PR.IS_ACTIVE) = 'Y'
+        /* 오라클 날짜 비교 최적화 */
+        AND TRUNC(SYSDATE) BETWEEN TRUNC(PR.START_DATE) AND TRUNC(PR.END_DATE)
     </select>
 </mapper>

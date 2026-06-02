@@ -88,4 +88,8 @@ public class ProductService {
         return list.stream()
                 .anyMatch(p -> p.getProductId().equals(productId) && p.isWished());
     }
+
+    public List<ProductVO> getAdminProductList() {
+        return productMapper.getAdminProductList();
+    }
 }

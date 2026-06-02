@@ -30,4 +30,6 @@ public interface ProductMapper {
     // 특정 ID로 프로모션 1건만 조회
     Promotion getPromotionById(Long promotionId);
 
+    List<ProductVO> getAdminProductList();
+
 }
